@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<App /> displays entry to widget 1`] = `
+<div>
+  <div>
+    Loading...
+  </div>
+</div>
+`;

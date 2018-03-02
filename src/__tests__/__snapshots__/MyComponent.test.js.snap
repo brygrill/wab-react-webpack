@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MyComponent /> initially shows loader 1`] = `
+<div>
+  Loading...
+</div>
+`;
+
+exports[`<MyComponent /> shows children after load 1`] = `
+<div
+  className="my-react-widget-back"
+>
+  <h1>
+    Hello
+  </h1>
+  <MyChildComponent
+    msg="WAB"
+  />
+</div>
+`;

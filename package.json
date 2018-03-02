@@ -1,0 +1,75 @@
+{
+  "name": "wab-widget-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "author": "EBA Engineering",
+  "jest": {
+    "setupFiles": [
+      "./src/setupTests.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/__mock__/"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__tests__/__mock__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/src/__tests__/__mock__/styleMock.js"
+    }
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "prop-types": "^15.6.1"
+  },
+  "peerDependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-lodash": "^3.2.11",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.10",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "browser-sync": "^2.18.7",
+    "css-loader": "^0.28.8",
+    "dotenv-webpack": "^1.5.4",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.2",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-class-property": "^1.0.6",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "jest": "^21.2.1",
+    "lint-staged": "^4.0.4",
+    "lodash-webpack-plugin": "^0.11.4",
+    "prettier": "^1.7.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-test-renderer": "^16.0.0",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.8.1",
+    "webpack-stream": "^4.0.0"
+  },
+  "scripts": {
+    "build": "webpack --progress --profile --colors",
+    "start": "gulp",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "format": "prettier --single-quote --trailing-comma all --write './src/**/*.js'",
+    "webpack:dist": "webpack --config webpack.prod.config.js --progress --profile --colors",
+    "deploy": "gulp deploy"
+  }
+}

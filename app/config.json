@@ -1,0 +1,151 @@
+{
+  "theme": {
+    "name": "FoldableTheme",
+    "styles": [
+      "default",
+      "black",
+      "blue",
+      "cyan",
+      "green",
+      "purple",
+      "red",
+      "yellow"
+    ],
+    "version": "2.4"
+  },
+  "portalUrl": "http://geoit.maps.arcgis.com/",
+  "appId": "",
+  "authorizedCrossOriginDomains": [],
+  "title": "WAB Dev",
+  "subtitle": "",
+  "keepAppState": true,
+  "logo": "images/app-logo.png",
+  "geometryService": "https://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer",
+  "links": [],
+  "widgetOnScreen": {
+    "widgets": [
+      {
+        "uri": "themes/FoldableTheme/widgets/HeaderController/Widget",
+        "position": {
+          "left": 0,
+          "top": 0,
+          "right": 0,
+          "height": 40,
+          "paddingRight": 275,
+          "relativeTo": "browser"
+        },
+        "version": "2.4",
+        "id": "themes_FoldableTheme_widgets_HeaderController_Widget_1",
+        "name": "HeaderController"
+      },
+      {
+        "position": {
+          "left": 14,
+          "top": 12,
+          "width": 700,
+          "relativeTo": "map"
+        },
+        "placeholderIndex": 1,
+        "id": "widgets_MyReactWidget_Widget_1",
+        "name": "MyReactWidget",
+        "label": "Popup Widget",
+        "version": "2.4",
+        "closeable": true,
+        "IsController": false,
+        "uri": "widgets/MyReactWidget/Widget",
+        "openAtStart": true
+      }
+    ],
+    "panel": {
+      "uri": "jimu/OnScreenWidgetPanel",
+      "position": {
+        "relativeTo": "map"
+      }
+    }
+  },
+  "map": {
+    "3D": false,
+    "2D": true,
+    "position": {
+      "left": 0,
+      "top": 40,
+      "right": 0,
+      "bottom": 0
+    },
+    "itemId": "aea0b8bf28884a27bfb5523b3d6d6aeb",
+    "mapOptions": {
+      "extent": {
+        "xmin": -8974338.141300933,
+        "ymin": 4843916.759294323,
+        "xmax": -8741969.575313909,
+        "ymax": 4975694.196058017,
+        "spatialReference": {
+          "wkid": 102100
+        }
+      }
+    },
+    "id": "map",
+    "portalUrl": "http://geoit.maps.arcgis.com/"
+  },
+  "widgetPool": {
+    "panel": {
+      "uri": "themes/FoldableTheme/panels/FoldablePanel/Panel",
+      "position": {
+        "top": 5,
+        "right": 5,
+        "bottom": 5,
+        "zIndex": 5,
+        "relativeTo": "map"
+      }
+    },
+    "widgets": [
+    ]
+  },
+  "mobileLayout": {
+    "widgetOnScreen": {
+      "widgets": [
+
+      ]
+    },
+    "map": {
+      "position": {
+        "left": 0,
+        "top": 40,
+        "right": 0,
+        "bottom": 0
+      }
+    },
+    "widgetPool": {
+      "panel": {
+        "uri": "themes/FoldableTheme/panels/FoldablePanel/Panel",
+        "position": {
+          "top": 5,
+          "right": 5,
+          "bottom": 5,
+          "zIndex": 5
+        }
+      }
+    }
+  },
+  "loadingPage": {
+    "backgroundColor": "#508dca",
+    "backgroundImage": {
+      "visible": false
+    },
+    "loadingGif": {
+      "visible": true,
+      "uri": "configs/loading/images/predefined_loading_1.gif",
+      "width": 58,
+      "height": 29
+    }
+  },
+  "wabVersion": "2.4",
+  "isTemplateApp": true,
+  "isWebTier": false,
+  "httpProxy": {
+    "useProxy": true,
+    "alwaysUseProxy": false,
+    "url": "",
+    "rules": []
+  }
+}

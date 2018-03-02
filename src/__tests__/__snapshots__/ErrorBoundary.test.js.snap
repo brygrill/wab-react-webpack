@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ErrorBoundary /> should display children without error 1`] = `
+<div>
+  App
+</div>
+`;
+
+exports[`<ErrorBoundary /> should display error message when there is error 1`] = `<ErrorMessage />`;
