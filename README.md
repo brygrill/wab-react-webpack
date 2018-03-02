@@ -158,6 +158,7 @@ Fork or download this repo or download [the latest release](https://github.com/E
 
 ### Commands
 
+- `yarn rename`: rename the widget to the value set at `widgetName` in `package.json`. Only run once!
 - `yarn start`: run webpack and gulp, start a dev server at https://localhost:3000/ with Browsersync, automatically reload on changes
 - `yarn test`: run Jest
 - `yarn test:watch`: run Just in watch mode
@@ -309,13 +310,17 @@ Throughout the app, the widget is referred to as `MyReactWidget`. To change this
 - `webpack.config.js`
 - `webpack.prod.config.js`
 - `gulpfile.js`
-- `.gitignore`
 - `src/manifest.json`
 - `src/config.json`
 - `src/Widget.html`
 - `src/Widget.js`
 
-> TODO: write a script to do this
+To rename the widget, set the `widgetName` value in `package.json` and run the rename command:
+```shell
+$ yarn rename
+```
+
+This will update the widget name in the above files. This will only work the first time, when renaming from `MyReactWidget`.
 
 ## Customize Basemap
 
