@@ -5,7 +5,7 @@
   "main": "",
   "license": "MIT",
   "author": "EBA Engineering",
-  "widgetName": "MyReactWidget",
+  "widgetName": "OfficeListWidget",
   "jest": {
     "setupFiles": [
       "./src/setupTests.js"

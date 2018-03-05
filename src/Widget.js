@@ -24,7 +24,7 @@ define(
   ],
   (declare, BaseWidget, LayerInfos, FeatureLayer, React, ReactDOM, App) => {
     return declare([BaseWidget], {
-      baseClass: 'my-react-widget',
+      baseClass: 'office-list-widget',
       // ------------------------ //
       //          REACT
       // ------------------------ //
@@ -38,7 +38,7 @@ define(
           LayerInfos,
           FeatureLayer,
         };
-        const root = document.getElementById('my-react-widget-root');
+        const root = document.getElementById('office-list-widget-root');
         ReactDOM.render(<App wab={wab} esriJS={esriJS} />, root);
       },
       // ------------------------ //

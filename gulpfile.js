@@ -8,7 +8,7 @@ const webpackConfig = require('./webpack.config.js');
 const webpackProdConfig = require('./webpack.prod.config.js');
 
 const PATHS = {
-  name: 'MyReactWidget',
+  name: 'OfficeListWidget',
   app: 'app',
   src: 'src/**/*.*',
   entry: 'src/index.js',
@@ -21,7 +21,7 @@ const PATHS = {
     'src/**/style.css',
     'src/**/strings.js',
   ],
-  dest: 'app/widgets/MyReactWidget',
+  dest: 'app/widgets/OfficeListWidget',
   dist: 'dist',
 };
 

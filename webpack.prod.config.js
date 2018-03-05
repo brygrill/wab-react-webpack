@@ -10,7 +10,7 @@ module.exports = {
     library: 'EBAWidget',
     libraryTarget: 'umd',
     filename: 'App.js',
-    path: path.resolve(__dirname, 'dist/MyReactWidget'),
+    path: path.resolve(__dirname, 'dist/OfficeListWidget'),
   },
   resolve: {
     extensions: ['.js', '.jsx'],
