@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Segment, List } from 'semantic-ui-react';
+import { Segment, List, Header } from 'semantic-ui-react';
 
-import Loading from './Loading';
-
-class Officelist extends Component {
+class OfficeList extends Component {
   state = {
-    loading: true,
     active: null,
-    offices: [],
   };
 
   componentDidMount() {
     this.initOfficeLocationsListener();
-    // query office feature service
   }
 
   initOfficesListener = () => {
@@ -26,14 +21,11 @@ class Officelist extends Component {
   };
 
   render() {
-    if (this.state.loading) {
-      return <Loading />;
-    }
-
     return (
       <Segment>
+        <Header as="h3">EBA Offices</Header>
         <List divided animated selection>
-          {this.state.offices.map((item) => {
+          {this.props.offices.map(item => {
             return (
               <List.Item key={item.id}>
                 <List.Header>{item.office}</List.Header>
@@ -47,8 +39,13 @@ class Officelist extends Component {
   }
 }
 
-Officelist.propTypes = {
+OfficeList.propTypes = {
   officesFeature: PropTypes.object.isRequired,
+  offices: PropTypes.array,
 };
 
-export default Officelist;
+OfficeList.defaultProps = {
+  offices: [],
+};
+
+export default OfficeList;

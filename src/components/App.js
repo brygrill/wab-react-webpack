@@ -10,7 +10,6 @@ const App = props => {
   return (
     <ErrorBoundary>
       <Entry
-        title="WAB Widget"
         wab={props.wab}
         esriJS={props.esriJS}
       />

@@ -1,31 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import MyChildComponent from './MyChildComponent';
+import Loading from './Loading';
+import OfficeList from './OfficeList';
 
 import loadLayers from '../utils/loadLayers';
+import queryOffices from '../utils/queryOffices';
 
-class MyComponent extends Component {
+class Entry extends Component {
   state = {
-    msg: 'WAB',
-    layers: null,
     loading: true,
     error: false,
+    layers: null,
+    offices: [],
   };
 
   componentDidMount() {
     this.loadLayers();
-
-    this.updateMsg();
   }
-
-  updateMsg = () => {
-    setInterval(() => {
-      const { msg } = this.state;
-      const newMsg = msg === 'HELLO' ? 'WAB' : 'HELLO';
-      this.setState({ msg: newMsg });
-    }, 3000);
-  };
 
   loadLayers = async () => {
     // Load Layers
@@ -36,7 +28,8 @@ class MyComponent extends Component {
         wab.map,
         wab.config.layerCollection,
       );
-      this.setState({ layers, loading: false });
+      const offices = await queryOffices(esriJS, wab.config.layerCollection[0], '*');
+      this.setState({ layers, offices, loading: false });
     } catch (error) {
       this.setState({ error, loading: false });
     }
@@ -44,27 +37,28 @@ class MyComponent extends Component {
 
   render() {
     if (this.state.loading) {
-      return <div>Loading...</div>;
+      return <Loading />;
     }
+
     return (
       <div className="my-react-widget-back">
-        <h1>{this.props.title}</h1>
-        <MyChildComponent msg={this.state.msg} />
+        <OfficeList
+          officesFeature={this.state.layers.offices.feature}
+          offices={this.state.offices}
+        />
       </div>
     );
   }
 }
 
-MyComponent.propTypes = {
-  title: PropTypes.string,
+Entry.propTypes = {
   wab: PropTypes.object,
   esriJS: PropTypes.object,
 };
 
-MyComponent.defaultProps = {
-  title: 'Hello',
+Entry.defaultProps = {
   wab: {},
   esriJS: {},
 };
 
-export default MyComponent;
+export default Entry;
