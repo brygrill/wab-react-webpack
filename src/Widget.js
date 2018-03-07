@@ -12,52 +12,63 @@ require({
 });
 
 // Widget
-define(
-  [
-    'dojo/_base/declare',
-    'jimu/BaseWidget',
-    'jimu/LayerInfos/LayerInfos',
-    'esri/layers/FeatureLayer',
-    'react',
-    'react-dom',
-    './App',
-  ],
-  (declare, BaseWidget, LayerInfos, FeatureLayer, React, ReactDOM, App) => {
-    return declare([BaseWidget], {
-      baseClass: 'office-list-widget',
-      // ------------------------ //
-      //          REACT
-      // ------------------------ //
-      renderWidget() {
-        const wab = {
-          map: this.map,
-          config: this.config,
-          id: this.id,
-        };
-        const esriJS = {
-          LayerInfos,
-          FeatureLayer,
-        };
-        const root = document.getElementById('office-list-widget-root');
-        ReactDOM.render(<App wab={wab} esriJS={esriJS} />, root);
-      },
-      // ------------------------ //
-      //      WIDGET LIFECYCLE
-      // ------------------------ //
-      startup() {
-        // test precommit
-        console.clear();
-        console.log('Start My React Widget');
-        this.renderWidget();
-      },
+define([
+  'dojo/_base/declare',
+  'jimu/BaseWidget',
+  'jimu/LayerInfos/LayerInfos',
+  'esri/layers/FeatureLayer',
+  'esri/tasks/query',
+  'esri/tasks/QueryTask',
+  'react',
+  'react-dom',
+  './App',
+], (
+  declare,
+  BaseWidget,
+  LayerInfos,
+  FeatureLayer,
+  Query,
+  QueryTask,
+  React,
+  ReactDOM,
+  App,
+) => {
+  return declare([BaseWidget], {
+    baseClass: 'office-list-widget',
+    // ------------------------ //
+    //          REACT
+    // ------------------------ //
+    renderWidget() {
+      const wab = {
+        map: this.map,
+        config: this.config,
+        id: this.id,
+      };
+      const esriJS = {
+        LayerInfos,
+        FeatureLayer,
+        Query,
+        QueryTask,
+      };
+      const root = document.getElementById('office-list-widget-root');
+      ReactDOM.render(<App wab={wab} esriJS={esriJS} />, root);
+    },
+    // ------------------------ //
+    //      WIDGET LIFECYCLE
+    // ------------------------ //
+    startup() {
+      // test precommit
+      console.clear();
+      console.log('Start My React Widget');
+      this.renderWidget();
+    },
 
-      onOpen() {
-        console.log('Open My React Widget');
-      },
+    onOpen() {
+      console.log('Open My React Widget');
+    },
 
-      onClose() {
-        console.log('Close My React Widget');
-      },
-    });
-  },
-);
+    onClose() {
+      console.log('Close My React Widget');
+    },
+  });
+});

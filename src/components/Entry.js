@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from './Loading';
+import ErrorMessage from './ErrorMessage';
 import OfficeList from './OfficeList';
 
 import loadLayers from '../utils/loadLayers';
@@ -28,7 +29,8 @@ class Entry extends Component {
         wab.map,
         wab.config.layerCollection,
       );
-      const offices = await queryOffices(esriJS, wab.config.layerCollection[0], '*');
+      const offices = await queryOffices(esriJS, wab.config.layerCollection[0]);
+      console.log(offices);
       this.setState({ layers, offices, loading: false });
     } catch (error) {
       this.setState({ error, loading: false });
@@ -38,6 +40,10 @@ class Entry extends Component {
   render() {
     if (this.state.loading) {
       return <Loading />;
+    }
+
+    if (this.state.error) {
+      return <ErrorMessage />;
     }
 
     return (

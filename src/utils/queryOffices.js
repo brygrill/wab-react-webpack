@@ -1,20 +1,17 @@
-import _ from 'lodash';
-
-const queryFS = (esriJS, service, searchVal) => {
+const queryFS = (esriJS, service) => {
   return new Promise((resolve, reject) => {
     try {
       const queryTask = new esriJS.QueryTask(service.url);
       const query = new esriJS.Query();
 
-      query.where = `ServiceNo like '${searchVal}%'`;
+      query.where = 'FID > 0';
       query.outFields = ['*'];
       query.returnGeometry = false;
 
       const cb = resp => {
-        const attrs = resp.features.map(item => ({ ServiceNo: item.attributes.ServiceNo }));
-        const unique = _.uniqBy(attrs, _.property('ServiceNo'));
-        const filtered = unique.slice(0, 15);
-        resolve(filtered);
+        // just return feature attributes
+        const attrs = resp.features.map(item => item.attributes);
+        resolve(attrs);
       };
 
       const err = error => {

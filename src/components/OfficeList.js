@@ -9,15 +9,19 @@ class OfficeList extends Component {
   };
 
   componentDidMount() {
-    this.initOfficeLocationsListener();
+    this.initOfficesListener();
   }
 
   initOfficesListener = () => {
     const { officesFeature } = this.props;
     officesFeature.on('click', evt => {
-      const office = evt.graphic.attributes.office;
+      const office = evt.graphic.attributes.FID;
       this.setState({ active: office });
     });
+  };
+
+  handleListItemClick = fid => {
+    console.log(fid);
   };
 
   render() {
@@ -27,9 +31,13 @@ class OfficeList extends Component {
         <List divided animated selection>
           {this.props.offices.map(item => {
             return (
-              <List.Item key={item.id}>
-                <List.Header>{item.office}</List.Header>
-                {item.location}
+              <List.Item
+                key={item.FID}
+                onClick={e => this.handleListItemClick(item.FID, e)}
+                active={this.state.active === item.FID}
+              >
+                <List.Header>{item.Office_Name}</List.Header>
+                {item.Address}
               </List.Item>
             );
           })}
