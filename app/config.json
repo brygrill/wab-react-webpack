@@ -48,7 +48,7 @@
         "placeholderIndex": 1,
         "id": "widgets_OfficeListWidget_Widget_1",
         "name": "OfficeListWidget",
-        "label": "Popup Widget",
+        "label": "OfficeListWidget",
         "version": "2.4",
         "closeable": true,
         "IsController": false,
