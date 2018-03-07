@@ -48,7 +48,7 @@
         "placeholderIndex": 1,
         "id": "widgets_MyReactWidget_Widget_1",
         "name": "MyReactWidget",
-        "label": "Popup Widget",
+        "label": "MyReactWidget",
         "version": "2.4",
         "closeable": true,
         "IsController": false,
