@@ -8,6 +8,7 @@ const options1 = {
     'gulpfile.js',
     'src/manifest.json',
     'src/config.json',
+    'app/config.json',
   ],
   from: /MyReactWidget/g,
   to: pjson.widgetName,
