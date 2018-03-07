@@ -46,13 +46,13 @@
           "relativeTo": "map"
         },
         "placeholderIndex": 1,
-        "id": "widgets_MyReactWidget_Widget_1",
-        "name": "MyReactWidget",
+        "id": "widgets_OfficeListWidget_Widget_1",
+        "name": "OfficeListWidget",
         "label": "Popup Widget",
         "version": "2.4",
         "closeable": true,
         "IsController": false,
-        "uri": "widgets/MyReactWidget/Widget",
+        "uri": "widgets/OfficeListWidget/Widget",
         "openAtStart": true
       }
     ],
