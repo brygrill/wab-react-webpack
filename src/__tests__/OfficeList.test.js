@@ -11,7 +11,7 @@ const offices = [
 // mocking onclick handler here...
 const officesFeature = {
   on() {
-    console.log('on');
+    return 'on';
   },
 };
 
