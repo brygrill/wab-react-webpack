@@ -11,7 +11,7 @@
   "license": "",
   "properties": {
     "inPanel": true,
-    "hasLocale": true,
+    "hasLocale": false,
     "hasStyle": true,
     "hasConfig": true,
     "hasUIFile": true,

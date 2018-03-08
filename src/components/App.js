@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import 'semantic-ui-css/semantic.css';
+
 import ErrorBoundary from './ErrorBoundary';
 import Entry from './Entry';
 
