@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<OfficeList /> shows list of offices 1`] = `
+<div
+  className="ui segment"
+>
+  <h3
+    className="ui header"
+  >
+    EBA Offices
+  </h3>
+  <div
+    className="ui animated divided selection list"
+    role="list"
+  >
+    <div
+      className="item"
+      data-value={undefined}
+      onClick={[Function]}
+      role="listitem"
+    >
+      <div
+        className="header"
+      >
+        One
+      </div>
+      123 Main St
+    </div>
+    <div
+      className="item"
+      data-value={undefined}
+      onClick={[Function]}
+      role="listitem"
+    >
+      <div
+        className="header"
+      >
+        Two
+      </div>
+      123 Broad St
+    </div>
+  </div>
+</div>
+`;

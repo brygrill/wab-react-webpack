@@ -30,7 +30,6 @@ class Entry extends Component {
         wab.config.layerCollection,
       );
       const offices = await queryOffices(esriJS, wab.config.layerCollection[0]);
-      console.log(offices);
       this.setState({ layers, offices, loading: false });
     } catch (error) {
       this.setState({ error, loading: false });

@@ -4,7 +4,7 @@ import toJson from 'enzyme-to-json';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import MyComponent from '../components/MyComponent';
+import MyComponent from '../components/Entry';
 
 configure({ adapter: new Adapter() });
 

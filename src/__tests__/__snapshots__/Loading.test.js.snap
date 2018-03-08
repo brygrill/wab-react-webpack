@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Loading /> shows spinning loader 1`] = `
+<div
+  className="ui active transition visible inverted dimmer"
+  onClick={[Function]}
+>
+  <div
+    className="content"
+  >
+    <div
+      className="center"
+    >
+      <div
+        className="ui small text loader"
+      >
+        Loading
+      </div>
+    </div>
+  </div>
+</div>
+`;
