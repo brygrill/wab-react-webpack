@@ -4,7 +4,7 @@ import { Dimmer, Loader } from 'semantic-ui-react';
 
 const Loading = props => {
   return (
-    <Dimmer active page inverted>
+    <Dimmer active inverted>
       <Loader size="small">{props.content}</Loader>
     </Dimmer>
   );
