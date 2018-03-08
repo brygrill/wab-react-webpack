@@ -6,12 +6,10 @@ const queryFS = (esriJS, service) => {
 
       query.where = 'FID > 0';
       query.outFields = ['*'];
-      query.returnGeometry = false;
+      query.returnGeometry = true;
 
       const cb = resp => {
-        // just return feature attributes
-        const attrs = resp.features.map(item => item.attributes);
-        resolve(attrs);
+        resolve(resp.features);
       };
 
       const err = error => {

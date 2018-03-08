@@ -18,6 +18,7 @@ class Entry extends Component {
 
   componentDidMount() {
     this.loadLayers();
+    this.props.wab.map.setLevel(8);
   }
 
   loadLayers = async () => {
@@ -48,6 +49,7 @@ class Entry extends Component {
     return (
       <div className="my-react-widget-back">
         <OfficeList
+          wab={this.props.wab}
           officesFeature={this.state.layers.offices.feature}
           offices={this.state.offices}
         />
