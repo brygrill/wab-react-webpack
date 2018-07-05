@@ -24,8 +24,8 @@
     "prop-types": "^15.6.1"
   },
   "peerDependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -55,8 +55,8 @@
     "jest": "^21.2.1",
     "lodash-webpack-plugin": "^0.11.4",
     "prettier": "^1.7.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
     "react-test-renderer": "^16.0.0",
     "replace-in-file": "^3.1.1",
     "style-loader": "^0.19.1",
