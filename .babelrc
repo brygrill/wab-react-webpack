@@ -1,23 +1,18 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "targets": {
           "browsers": ["last 2 versions", "ie >= 11"]
         }
       }
     ],
-    "react"
+    "@babel/react"
   ],
   "plugins": [
-    "lodash",
-    "transform-class-properties",
-    "transform-object-rest-spread"
-  ],
-  "env": {
-    "production": {
-      "plugins": ["transform-react-remove-prop-types"]
-    }
-  }
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-transform-regenerator"
+  ]
 }
