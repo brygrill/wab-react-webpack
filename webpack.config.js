@@ -1,11 +1,10 @@
 const path = require('path');
-const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ['@babel/polyfill', './src/index.js'],
   devtool: 'eval-source-map',
+  mode: 'development',
   output: {
     library: 'EBAWidget',
     libraryTarget: 'umd',
@@ -30,33 +29,19 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.NamedModulesPlugin(),
-    new LodashModuleReplacementPlugin(),
-    new Dotenv(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('development'),
-      },
-    }),
-  ],
-  externals: [
-    {
-      react: {
-        root: 'React',
-        commonjs2: 'react',
-        commonjs: 'react',
-        amd: 'react',
-      },
+  plugins: [new Dotenv()],
+  externals: {
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react',
     },
-    {
-      'react-dom': {
-        root: 'ReactDOM',
-        commonjs2: 'react-dom',
-        commonjs: 'react-dom',
-        amd: 'react-dom',
-      },
+    reactDOM: {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
     },
-  ],
+  },
 };
