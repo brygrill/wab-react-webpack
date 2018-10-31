@@ -52,7 +52,7 @@
     "gulp-babel": "^6.1.2",
     "jest": "^21.2.1",
     "lodash-webpack-plugin": "^0.11.4",
-    "prettier": "^1.7.0",
+    "prettier": "^1.14.3",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-test-renderer": "^16.0.0",
@@ -67,7 +67,7 @@
     "start": "gulp",
     "test": "jest",
     "test:watch": "jest --watch",
-    "format": "prettier --single-quote --trailing-comma all --write './src/**/*.js'",
+    "format": "prettier --config .prettierrc --write src/**/*.js",
     "webpack:dist": "webpack --config webpack.prod.config.js --progress --profile --colors",
     "deploy": "gulp deploy"
   }
