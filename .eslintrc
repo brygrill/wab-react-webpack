@@ -8,10 +8,7 @@
     "define": true
   },
   "parser": "babel-eslint",
-  "plugins": [
-    "react",
-    "class-property"
-  ],
+  "plugins": ["react", "class-property"],
   "settings": {
     "react": {
       "pragma": "React",
@@ -26,16 +23,25 @@
   },
   "rules": {
     "vars-on-top": "warn",
+    "prefer-destructuring": "warn",
     "prefer-template": "off",
     "no-underscore-dangle": "off",
     "linebreak-style": "off",
-    "import/no-amd": "off",
     "arrow-parens": "off",
     "import/no-dynamic-require": "off",
-    "arrow-body-style":"off",
+    "arrow-body-style": "off",
+    "babel/semi": "off",
+    "no-confusing-arrow": "off",
+    "consistent-return": "off",
     "react/jsx-filename-extension": "off",
     "react/prefer-stateless-function": "off",
     "react/forbid-prop-types": "off",
-    "import/no-extraneous-dependencies": "off"
+    "react/sort-comp": "off",
+    "react/jsx-no-target-blank": "off",
+    "react/no-unused-state": "off",
+    "react/destructuring-assignment": "off",
+    "react/no-access-state-in-setstate": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-wrap-multilines": "off"
   }
 }
