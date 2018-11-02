@@ -1,5 +1,5 @@
 {
-  "extends": "airbnb",
+  "extends": ["airbnb", "prettier"],
   "env": {
     "browser": true,
     "jest": true
@@ -22,6 +22,7 @@
     }
   },
   "rules": {
+    "import/no-amd": "off",
     "vars-on-top": "warn",
     "prefer-destructuring": "warn",
     "prefer-template": "off",

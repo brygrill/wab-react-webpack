@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import _ from 'lodash';
 
 // Empty object that will house Feature layer objects
