@@ -39,9 +39,44 @@
         "name": "HeaderController"
       },
       {
+        "uri": "widgets/ZoomSlider/Widget",
         "position": {
-          "left": 14,
-          "top": 12,
+          "top": 5,
+          "left": 7,
+          "relativeTo": "map"
+        },
+        "version": "2.8",
+        "id": "widgets_ZoomSlider_Widget_33",
+        "name": "ZoomSlider"
+      },
+      {
+        "uri": "widgets/HomeButton/Widget",
+        "position": {
+          "top": 75,
+          "left": 7,
+          "relativeTo": "map"
+        },
+        "version": "2.8",
+        "id": "widgets_HomeButton_Widget_29",
+        "name": "HomeButton"
+      },
+      {
+        "position": {
+          "top": 5,
+          "left": 45,
+          "relativeTo": "map"
+        },
+        "placeholderIndex": 1,
+        "id": "_25",
+        "name": "LayerList",
+        "version": "2.8",
+        "closeable": true,
+        "uri": "widgets/LayerList/Widget"
+      },
+      {
+        "position": {
+          "top": 5,
+          "left": 90,
           "width": 700,
           "relativeTo": "map"
         },
@@ -98,14 +133,11 @@
         "relativeTo": "map"
       }
     },
-    "widgets": [
-    ]
+    "widgets": []
   },
   "mobileLayout": {
     "widgetOnScreen": {
-      "widgets": [
-
-      ]
+      "widgets": []
     },
     "map": {
       "position": {
