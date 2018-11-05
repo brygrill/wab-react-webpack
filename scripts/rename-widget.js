@@ -1,8 +1,9 @@
 const pjson = require('../package.json');
-const replace = require('replace-in-file');
+const replace = require('replace-in-file'); // eslint-disable-line
 
 const options1 = {
   files: [
+    '.gitignore',
     'webpack.config.js',
     'webpack.prod.config.js',
     'gulpfile.js',
@@ -15,13 +16,15 @@ const options1 = {
 };
 
 const options2 = {
-  files: [
-    'src/Widget.html',
-    'src/Widget.js',
-  ],
+  files: ['src/Widget.html', 'src/Widget.js'],
   from: /my-react-widget/g,
-  to: pjson.widgetName.split(/(?=[A-Z])/).join('-').toLowerCase(),
+  to: pjson.widgetName
+    .split(/(?=[A-Z])/)
+    .join('-')
+    .toLowerCase(),
 };
+
+console.log(`Renaming widget to: ${pjson.widgetName}`);
 
 // Replace MyReactWidget
 replace(options1)
