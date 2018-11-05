@@ -1,6 +1,4 @@
 {
   "name": "MyReactWidget",
-  "layerCollection": [
-    { "name": "offices", "url": "https://services.arcgis.com/1nZgnYZACdwzrFHH/arcgis/rest/services/geographIT_Offices/FeatureServer/0" }
-  ]
+  "layerCollection": []
 }
