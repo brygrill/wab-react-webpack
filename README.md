@@ -151,12 +151,12 @@ define([
 ## Usage
 
 Fork or download this repo or download
-[the latest release](https://github.com/EBAEngineering/WAB-Widget-Template/releases/tag/v1.0).
+[the latest release](https://github.com/brygrill/wab-react-webpack/releases).
 
 ### Install Node and Yarn
 
-- [Node 8.9.0](https://nodejs.org/en/)
-- [Yarn 1.3.2](https://yarnpkg.com/lang/en/docs/install/)
+- [Node](https://nodejs.org/en/)
+- [Yarn](https://yarnpkg.com/lang/en/docs/install/)
 
 ### Install Dependencies
 
