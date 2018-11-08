@@ -6,7 +6,6 @@ import { WidgetProvider } from './Context';
 import MyComponent from './MyComponent';
 
 import 'semantic-ui-css/semantic.min.css';
-import '../css/App.css';
 
 const App = props => {
   return (

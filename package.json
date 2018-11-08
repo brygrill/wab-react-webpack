@@ -23,7 +23,8 @@
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.83.0"
+    "semantic-ui-react": "^0.83.0",
+    "styled-components": "^4.0.3"
   },
   "peerDependencies": {
     "react": "^16.6.0",

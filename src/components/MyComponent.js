@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Header } from 'semantic-ui-react';
+import styled from 'styled-components';
 
 import { withWidgetContext } from './Context';
 import MyChildComponent from './MyChildComponent';
 
 import loadLayers from '../utils/loadLayers';
+
+const Padding = styled.div`
+  padding: 0.25rem;
+`;
 
 class MyComponent extends Component {
   state = {
@@ -49,10 +55,10 @@ class MyComponent extends Component {
       return <div>Loading...</div>;
     }
     return (
-      <div className="my-react-widget-back">
-        <h1>{this.props.title}</h1>
+      <Padding>
+        <Header>{this.props.title}</Header>
         <MyChildComponent msg={this.state.msg} />
-      </div>
+      </Padding>
     );
   }
 }
