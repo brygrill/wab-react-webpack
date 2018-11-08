@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ErrorBoundary from './ErrorBoundary';
+import { WidgetProvider } from './Context';
 import MyComponent from './MyComponent';
 
 import 'semantic-ui-css/semantic.min.css';
@@ -10,7 +11,9 @@ import '../css/App.css';
 const App = props => {
   return (
     <ErrorBoundary>
-      <MyComponent title="WAB Widget" wab={props.wab} esriJS={props.esriJS} />
+      <WidgetProvider wab={props.wab} esriJS={props.esriJS}>
+        <MyComponent title="WAB Widget" />
+      </WidgetProvider>
     </ErrorBoundary>
   );
 };

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { withWidgetContext } from './Context';
 import MyChildComponent from './MyChildComponent';
 
 import loadLayers from '../utils/loadLayers';
@@ -30,6 +31,7 @@ class MyComponent extends Component {
   loadLayers = async () => {
     // Load Layers
     const { wab, esriJS } = this.props;
+    console.log(this.props);
     try {
       const layers = await loadLayers(
         esriJS,
@@ -67,4 +69,4 @@ MyComponent.defaultProps = {
   esriJS: {},
 };
 
-export default MyComponent;
+export default withWidgetContext()(MyComponent);
