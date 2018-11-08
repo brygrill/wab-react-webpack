@@ -5,7 +5,6 @@ const Context = React.createContext();
 export const WidgetContext = Context.Consumer;
 
 export const WidgetProvider = props => {
-  console.log('widget provider');
   return (
     <Context.Provider value={{ wab: props.wab, esriJS: props.esriJS }}>
       {props.children}
@@ -26,10 +25,8 @@ WidgetProvider.defaultProps = {
 };
 
 export const withWidgetContext = () => ReactComp => {
-  console.log(ReactComp);
   class WithContext extends React.Component {
     render() {
-      console.log('context HOC');
       return (
         <WidgetContext>
           {context => (
