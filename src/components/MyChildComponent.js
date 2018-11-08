@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Segment } from 'semantic-ui-react';
 
 const MyChildComponent = props => {
   return (
-    <div>
+    <Segment>
       <h3>{props.msg}</h3>
-    </div>
+    </Segment>
   );
 };
 

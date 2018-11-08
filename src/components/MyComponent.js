@@ -8,7 +8,7 @@ import MyChildComponent from './MyChildComponent';
 
 import loadLayers from '../utils/loadLayers';
 
-const Padding = styled.div`
+const AppStyle = styled.div`
   padding: 0.25rem;
 `;
 
@@ -37,7 +37,6 @@ class MyComponent extends Component {
   loadLayers = async () => {
     // Load Layers
     const { wab, esriJS } = this.props;
-    console.log(this.props);
     try {
       const layers = await loadLayers(
         esriJS,
@@ -55,10 +54,10 @@ class MyComponent extends Component {
       return <div>Loading...</div>;
     }
     return (
-      <Padding>
+      <AppStyle>
         <Header>{this.props.title}</Header>
         <MyChildComponent msg={this.state.msg} />
-      </Padding>
+      </AppStyle>
     );
   }
 }
