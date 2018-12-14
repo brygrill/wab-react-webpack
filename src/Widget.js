@@ -4,9 +4,9 @@
 require({
   paths: {
     react:
-      'https://cdnjs.cloudflare.com/ajax/libs/react/16.6.3/umd/react.production.min',
+      'https://cdnjs.cloudflare.com/ajax/libs/react/16.7.0-alpha.2/umd/react.production.min',
     'react-dom':
-      'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.6.3/umd/react-dom.production.min',
+      'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.7.0-alpha.2/umd/react-dom.production.min',
   },
 });
 
