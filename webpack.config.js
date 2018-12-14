@@ -1,5 +1,7 @@
 const path = require('path');
+const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
+const packageJson = require('./package.json');
 
 module.exports = {
   entry: ['@babel/polyfill', './src/index.js'],
@@ -40,7 +42,12 @@ module.exports = {
       },
     ],
   },
-  plugins: [new Dotenv()],
+  plugins: [
+    new Dotenv(),
+    new webpack.DefinePlugin({
+      'process.env.VERSION': JSON.stringify(packageJson.version),
+    }),
+  ],
   externals: {
     react: {
       root: 'React',

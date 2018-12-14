@@ -1,7 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const packageJson = require('./package.json');
 
 module.exports = {
   entry: ['@babel/polyfill', './src/index.js'],
@@ -43,9 +44,11 @@ module.exports = {
     ],
   },
   plugins: [
-    new LodashModuleReplacementPlugin(),
     new Dotenv(),
     new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.VERSION': JSON.stringify(packageJson.version),
+    }),
   ],
   externals: {
     react: {

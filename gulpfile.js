@@ -87,7 +87,7 @@ gulp.task('browserSync', () => {
 });
 
 // Copy widget folders to dist
-gulp.task('deploy', ['webpack-prod'], () => {
+gulp.task('deploy', ['webpack-prod', 'other-files'], () => {
   return gulp
     .src(path.join(PATHS.dest, '/**/*'))
     .pipe(gulp.dest(path.join(PATHS.dist, PATHS.name)));
