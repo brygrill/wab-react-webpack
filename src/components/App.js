@@ -5,8 +5,6 @@ import ErrorBoundary from './ErrorBoundary';
 import { WidgetProvider } from './Context';
 import MyComponent from './MyComponent';
 
-import 'semantic-ui-css/semantic.min.css';
-
 const App = props => {
   return (
     <ErrorBoundary>

@@ -1,6 +1,6 @@
 {
   "name": "wab-widget-template",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "",
   "main": "",
   "license": "MIT",
@@ -22,13 +22,12 @@
   "dependencies": {
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.83.0",
-    "styled-components": "^4.0.3"
+    "semantic-ui-react": "^0.84.0",
+    "styled-components": "^4.1.2"
   },
   "peerDependencies": {
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0"
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -59,10 +58,9 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^8.0.0",
     "jest": "^23.6.0",
-    "lodash-webpack-plugin": "^0.11.5",
-    "prettier": "^1.14.3",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
+    "prettier": "^1.15.3",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
     "react-test-renderer": "^16.6.0",
     "replace-in-file": "^3.4.2",
     "style-loader": "^0.23.1",
