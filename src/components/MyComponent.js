@@ -6,38 +6,16 @@ import styled from 'styled-components';
 import { WidgetContext } from './Context';
 import MyChildComponent from './MyChildComponent';
 
-import loadLayers from '../utils/loadLayers';
-
 const AppStyle = styled.div`
   padding: 0.25rem;
 `;
 
 const MyComponent = ({ title }) => {
-  // context will include wab and esriJS
   const context = useContext(WidgetContext);
+  console.log('Widget Context:', context);
 
   // set state
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [msg, setMsg] = useState('WAB');
-  const [layers, setLayers] = useState(null);
-
-  // load layers
-  const loadMapLyrs = async () => {
-    const { wab, esriJS } = context;
-    try {
-      const lyrs = await loadLayers(
-        esriJS,
-        wab.map,
-        wab.config.layerCollection,
-      );
-      setLayers(lyrs);
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      setError(err);
-    }
-  };
 
   // set message
   // TODO: need to adjust, this only sees initial msg since there is no this.state.msg
@@ -50,15 +28,14 @@ const MyComponent = ({ title }) => {
 
   // lifecycle
   useEffect(() => {
-    loadMapLyrs();
-    updateMsg();
+    // updateMsg();
   }, []);
 
-  if (loading) {
+  if (context.loading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (context.error) {
     return <div>Error...</div>;
   }
 
