@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Context = React.createContext();
-export const WidgetContext = Context.Consumer;
+export const WidgetContext = React.createContext();
 
-export const WidgetProvider = props => {
+export const WidgetProvider = ({ wab, esriJS, children }) => {
   return (
-    <Context.Provider value={{ wab: props.wab, esriJS: props.esriJS }}>
-      {props.children}
-    </Context.Provider>
+    <WidgetContext.Provider value={{ wab, esriJS }}>
+      {children}
+    </WidgetContext.Provider>
   );
 };
 
@@ -22,19 +21,4 @@ WidgetProvider.defaultProps = {
   wab: {},
   esriJS: {},
   children: null,
-};
-
-export const withWidgetContext = () => ReactComp => {
-  class WithContext extends React.Component {
-    render() {
-      return (
-        <WidgetContext>
-          {context => (
-            <ReactComp {...context} {...this.props} {...this.state} />
-          )}
-        </WidgetContext>
-      );
-    }
-  }
-  return WithContext;
 };

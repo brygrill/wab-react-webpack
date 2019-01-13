@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 
-import { withWidgetContext } from './Context';
+import { WidgetContext } from './Context';
 import MyChildComponent from './MyChildComponent';
 
 import loadLayers from '../utils/loadLayers';
@@ -12,55 +12,66 @@ const AppStyle = styled.div`
   padding: 0.25rem;
 `;
 
-class MyComponent extends Component {
-  state = {
-    msg: 'WAB',
-    layers: null,
-    loading: true,
-    error: false,
-  };
+const MyComponent = props => {
+  const mycontext = useContext(WidgetContext);
+  console.log(mycontext);
+  return (
+    <AppStyle>
+      <Header>{'Title'}</Header>
+      <MyChildComponent msg={'msg'} />
+    </AppStyle>
+  );
+};
 
-  componentDidMount() {
-    this.loadLayers();
+// class MyComponent extends Component {
+//   state = {
+//     msg: 'WAB',
+//     layers: null,
+//     loading: true,
+//     error: false,
+//   };
 
-    this.updateMsg();
-  }
+//   componentDidMount() {
+//     this.loadLayers();
 
-  updateMsg = () => {
-    setInterval(() => {
-      const { msg } = this.state;
-      const newMsg = msg === 'HELLO' ? 'WAB' : 'HELLO';
-      this.setState({ msg: newMsg });
-    }, 3000);
-  };
+//     this.updateMsg();
+//   }
 
-  loadLayers = async () => {
-    // Load Layers
-    const { wab, esriJS } = this.props;
-    try {
-      const layers = await loadLayers(
-        esriJS,
-        wab.map,
-        wab.config.layerCollection,
-      );
-      this.setState({ layers, loading: false });
-    } catch (error) {
-      this.setState({ error, loading: false });
-    }
-  };
+//   updateMsg = () => {
+//     setInterval(() => {
+//       const { msg } = this.state;
+//       const newMsg = msg === 'HELLO' ? 'WAB' : 'HELLO';
+//       this.setState({ msg: newMsg });
+//     }, 3000);
+//   };
 
-  render() {
-    if (this.state.loading) {
-      return <div>Loading...</div>;
-    }
-    return (
-      <AppStyle>
-        <Header>{this.props.title}</Header>
-        <MyChildComponent msg={this.state.msg} />
-      </AppStyle>
-    );
-  }
-}
+//   loadLayers = async () => {
+//     // Load Layers
+//     const { wab, esriJS } = this.props;
+//     try {
+//       const layers = await loadLayers(
+//         esriJS,
+//         wab.map,
+//         wab.config.layerCollection,
+//       );
+//       this.setState({ layers, loading: false });
+//     } catch (error) {
+//       this.setState({ error, loading: false });
+//     }
+//   };
+
+//   render() {
+//     if (this.state.loading) {
+//       return <div>Loading...</div>;
+//     }
+//     return (
+//       <AppStyle>
+//         <Header>{this.props.title}</Header>
+//         <MyChildComponent msg={this.state.msg} />
+//       </AppStyle>
+//     );
+//   }
+// }
 
 MyComponent.propTypes = {
   title: PropTypes.string,
@@ -74,4 +85,4 @@ MyComponent.defaultProps = {
   esriJS: {},
 };
 
-export default withWidgetContext()(MyComponent);
+export default MyComponent;
