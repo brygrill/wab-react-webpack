@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Header } from 'semantic-ui-react';
@@ -18,17 +19,15 @@ const MyComponent = ({ title }) => {
   const [msg, setMsg] = useState('WAB');
 
   // set message
-  // TODO: need to adjust, this only sees initial msg since there is no this.state.msg
   const updateMsg = () => {
-    setInterval(() => {
-      const newMsg = msg === 'HELLO' ? 'WAB' : 'HELLO';
-      setMsg(newMsg);
-    }, 3000);
+    setTimeout(() => {
+      setMsg('HELLO');
+    }, 5000);
   };
 
   // lifecycle
   useEffect(() => {
-    // updateMsg();
+    updateMsg();
   }, []);
 
   if (context.loading) {
