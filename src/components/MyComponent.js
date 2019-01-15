@@ -11,6 +11,11 @@ const AppStyle = styled.div`
   padding: 0.25rem;
 `;
 
+const Version = styled.div`
+  font-size: 0.7rem;
+  color: #999999ab;
+`;
+
 const MyComponent = ({ title }) => {
   const context = useContext(WidgetContext);
   console.log('Widget Context:', context);
@@ -21,7 +26,7 @@ const MyComponent = ({ title }) => {
   // set message
   const updateMsg = () => {
     setTimeout(() => {
-      setMsg('HELLO');
+      setMsg('WAB React Widget Template');
     }, 5000);
   };
 
@@ -42,6 +47,7 @@ const MyComponent = ({ title }) => {
     <AppStyle>
       <Header>{title}</Header>
       <MyChildComponent msg={msg} />
+      <Version>Version: {context.version}</Version>
     </AppStyle>
   );
 };

@@ -32,7 +32,16 @@ export const WidgetProvider = ({ wab, esriJS, children }) => {
   }, []);
 
   return (
-    <WidgetContext.Provider value={{ wab, esriJS, loading, error, layers }}>
+    <WidgetContext.Provider
+      value={{
+        wab,
+        esriJS,
+        loading,
+        error,
+        layers,
+        version: process.env.VERSION || null,
+      }}
+    >
       {children}
     </WidgetContext.Provider>
   );
