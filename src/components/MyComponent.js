@@ -22,17 +22,33 @@ const MyComponent = ({ title }) => {
 
   // set state
   const [msg, setMsg] = useState('WAB');
+  const [open, setOpen] = useState(true);
 
   // set message
-  const updateMsg = () => {
+  const updateMsg = newMsg => {
     setTimeout(() => {
-      setMsg('WAB React Widget Template');
+      setMsg(newMsg);
     }, 5000);
+  };
+
+  // handle widget open and close
+  const handleOpen = () => {
+    console.log('Open widget');
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    console.log('Close widget');
+    setOpen(false);
   };
 
   // lifecycle
   useEffect(() => {
-    updateMsg();
+    // init open/close handlers
+    context.onClose(handleClose);
+    context.onOpen(handleOpen);
+    // set msg
+    updateMsg('WAB React Widget Template');
   }, []);
 
   if (context.loading) {
@@ -46,7 +62,7 @@ const MyComponent = ({ title }) => {
   return (
     <AppStyle>
       <Header>{title}</Header>
-      <MyChildComponent msg={msg} />
+      <MyChildComponent msg={msg} open={open} />
       <Version>Version: {context.version}</Version>
     </AppStyle>
   );

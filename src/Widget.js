@@ -13,19 +13,30 @@ require({
 // Widget
 define([
   'dojo/_base/declare',
+  'dojo/aspect',
   'jimu/BaseWidget',
   'jimu/LayerInfos/LayerInfos',
   'esri/layers/FeatureLayer',
   'react',
   'react-dom',
   './App',
-], (declare, BaseWidget, LayerInfos, FeatureLayer, React, ReactDOM, App) => {
+], (
+  declare,
+  aspect,
+  BaseWidget,
+  LayerInfos,
+  FeatureLayer,
+  React,
+  ReactDOM,
+  App,
+) => {
   return declare([BaseWidget], {
     baseClass: 'my-react-widget',
     // ------------------------ //
     //          REACT
     // ------------------------ //
     renderWidget() {
+      // props
       const wab = {
         map: this.map,
         config: this.config,
@@ -35,24 +46,25 @@ define([
         LayerInfos,
         FeatureLayer,
       };
+      // open/close handlers
+      const onOpen = func => {
+        aspect.after(this, 'onOpen', func, true);
+      };
+      const onClose = func => {
+        aspect.after(this, 'onClose', func, true);
+      };
       const root = document.getElementById('my-react-widget-root');
-      ReactDOM.render(<App wab={wab} esriJS={esriJS} />, root);
+      ReactDOM.render(
+        <App wab={wab} esriJS={esriJS} onOpen={onOpen} onClose={onClose} />,
+        root,
+      );
     },
     // ------------------------ //
     //      WIDGET LIFECYCLE
     // ------------------------ //
     startup() {
       console.clear();
-      console.log('Start My React Widget');
       this.renderWidget();
-    },
-
-    onOpen() {
-      console.log('Open My React Widget');
-    },
-
-    onClose() {
-      console.log('Close My React Widget');
     },
   });
 });

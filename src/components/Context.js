@@ -5,7 +5,7 @@ import loadLayers from '../utils/loadLayers';
 
 export const WidgetContext = React.createContext();
 
-export const WidgetProvider = ({ wab, esriJS, children }) => {
+export const WidgetProvider = ({ wab, esriJS, onOpen, onClose, children }) => {
   // set state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -36,6 +36,8 @@ export const WidgetProvider = ({ wab, esriJS, children }) => {
       value={{
         wab,
         esriJS,
+        onOpen,
+        onClose,
         loading,
         error,
         layers,
@@ -50,6 +52,8 @@ export const WidgetProvider = ({ wab, esriJS, children }) => {
 WidgetProvider.propTypes = {
   wab: PropTypes.object,
   esriJS: PropTypes.object,
+  onOpen: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   children: PropTypes.node,
 };
 
