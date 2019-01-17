@@ -5,8 +5,6 @@ import 'jest-dom/extend-expect';
 
 import MyComponent from '../components/MyComponent';
 
-jest.mock('./MyComponent');
-
 afterEach(cleanup);
 
 describe('<MyComponent />', () => {

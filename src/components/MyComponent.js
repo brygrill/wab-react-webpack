@@ -16,8 +16,14 @@ const Version = styled.div`
   color: #999999ab;
 `;
 
+// TODO: figure out a better way to handle this
+const defaultContext = {
+  onOpen() {},
+  onClose() {},
+};
+
 const MyComponent = ({ title }) => {
-  const context = useContext(WidgetContext);
+  const context = useContext(WidgetContext) || defaultContext;
   // context object will contain:
   /*
     {
