@@ -58,6 +58,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^8.0.0",
     "jest": "^23.6.0",
+    "jest-dom": "^3.0.0",
     "prettier": "^1.15.3",
     "react": "^16.8.0-alpha.0",
     "react-dom": "^16.8.0-alpha.0",
