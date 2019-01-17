@@ -8,7 +8,6 @@ const collection = {};
 
 // Get layers from the Map
 const getLayerInfo = (LayerInfos, map) => {
-  console.info('Fetching Map Layers');
   // Get all the layers in the map
   return LayerInfos.getInstance(map, map.itemInfo).then(layerInfosObject => {
     return layerInfosObject.getLayerInfoArray();

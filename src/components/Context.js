@@ -23,7 +23,7 @@ export const WidgetProvider = ({ wab, esriJS, onOpen, onClose, children }) => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      setError(err);
+      setError(true);
     }
   };
 

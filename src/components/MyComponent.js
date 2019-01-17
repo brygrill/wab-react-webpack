@@ -18,7 +18,20 @@ const Version = styled.div`
 
 const MyComponent = ({ title }) => {
   const context = useContext(WidgetContext);
-  console.log('Widget Context:', context);
+  // context object will contain:
+  /*
+    {
+      wab,
+      esriJS,
+      onOpen,
+      onClose,
+      loading,
+      error,
+      layers,
+      version
+    }
+  */
+  // console.log('Widget Context:', context);
 
   // set state
   const [msg, setMsg] = useState('WAB');
@@ -45,8 +58,8 @@ const MyComponent = ({ title }) => {
   // lifecycle
   useEffect(() => {
     // init open/close handlers
-    context.onClose(handleClose);
     context.onOpen(handleOpen);
+    context.onClose(handleClose);
     // set msg
     updateMsg('WAB React Widget Template');
   }, []);
