@@ -14,7 +14,8 @@ jobs:
           command: mkdir -p workspace
       - run:
           name: 'Copy app'
-          command: cp -a /. workspace/app/
+          # command: cp -a /. workspace/app/
+          command ls -a
 
       - persist_to_workspace:
           root: workspace
