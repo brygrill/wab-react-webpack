@@ -42,7 +42,7 @@ Fork this repo or download
 - [Usage](docs/USAGE.md)
 - [Setup](docs/SETUP.md)
 - [How it works](docs/HOW_IT_WORKS.md)
-- [Esri JS API](docs/ESRI_JS_API.md)
+- [Using the Esri JS API](docs/ESRI_JS_API.md)
 
 ## License
 
