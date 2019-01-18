@@ -41,7 +41,7 @@ const MyComponent = ({ title }) => {
   const updateMsg = newMsg => {
     setTimeout(() => {
       setMsg(newMsg);
-    }, 5000);
+    }, 1000);
   };
 
   // handle widget open and close
