@@ -1,46 +1,37 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import renderer from 'react-test-renderer';
-import toJson from 'enzyme-to-json';
-import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { render, cleanup } from 'react-testing-library';
+import { StateMock } from '@react-mock/state';
+import 'jest-dom/extend-expect';
 
 import ErrorBoundary from '../components/ErrorBoundary';
 
-configure({ adapter: new Adapter() });
+afterEach(cleanup);
 
+// https://react-testing-examples.com/jest-rtl/local-state/
 describe('<ErrorBoundary />', () => {
-  it('renders without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(
-      <ErrorBoundary>
-        <div>App</div>
-      </ErrorBoundary>,
-      div,
-    );
-  });
-
-  it('should display children without error', () => {
-    const tree = renderer
-      .create(
+  it('renders the app without error', () => {
+    const { container, getByText } = render(
+      <StateMock state={{ error: false }}>
         <ErrorBoundary>
           <div>App</div>
-        </ErrorBoundary>,
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+        </ErrorBoundary>
+      </StateMock>,
+    );
+
+    expect(getByText('App')).toBeInTheDocument();
+    expect(container.firstChild).toMatchSnapshot();
   });
 
-  it('should display error message when there is error', () => {
-    const component = shallow(
-      <ErrorBoundary>
-        <div>App</div>
-      </ErrorBoundary>,
+  it('renders err message when there is error', () => {
+    const { container, getByText } = render(
+      <StateMock state={{ error: true }}>
+        <ErrorBoundary>
+          <div>App</div>
+        </ErrorBoundary>
+      </StateMock>,
     );
-    component.setState({
-      error: true,
-    });
 
-    expect(toJson(component)).toMatchSnapshot();
+    expect(getByText('Sorry — something has gone wrong.')).toBeInTheDocument();
+    expect(container.firstChild).toMatchSnapshot();
   });
 });

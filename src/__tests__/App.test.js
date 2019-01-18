@@ -20,6 +20,7 @@ const mock = {
 
 afterEach(cleanup);
 
+// https://testing-library.com/docs/react-testing-library/example-intro
 describe('<App />', () => {
   it('renders the widget', async () => {
     // render component

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<MyComponent /> renders without crashing 1`] = `
+exports[`<MyComponent /> renders main component without error 1`] = `
 <div
   class="sc-bdVaJa ldkUXY"
 >
