@@ -2,7 +2,9 @@
 
 A template for building Esri Web AppBuilder widgets with React and modern JS.
 
-## Usage
+> #### As of v1.2, components have been migrated to [Hooks](https://reactjs.org/docs/hooks-intro.html).
+
+## Getting Started
 
 Fork this repo or download
 [the latest release](https://github.com/brygrill/wab-react-webpack/releases).
@@ -115,6 +117,8 @@ const newGraphic = (attr, geom, symbol) => {
 
 ## Styles
 
+The widget is styled with [Semantic UI React](https://react.semantic-ui.com/).
+
 Styles can be added using CSS-in-JS via
 [styled-components](https://www.styled-components.com/):
 
@@ -153,6 +157,15 @@ import './version.css';
 
 return <div className="widget-version">Version: {context.version}</div>;
 ```
+
+## Testing
+
+Jest and react-testing-library are available for running tests. There are sample
+tests in `src/__tests__`. Run tests with `yarn test`. Watch files and run tests
+on change with `yarn test:watch`.
+
+See the [Jest docs](https://facebook.github.io/jest/) or
+[react-testing-library docs](react-testing-library) for more info.
 
 ## Env Variables
 
@@ -234,15 +247,6 @@ config (`app/config.json`). Update the `portalUrl`, `itemId`, and `mapOptions`.
   "portalUrl": "http://geoit.maps.arcgis.com/"
 },
 ```
-
-## Testing
-
-Jest and react-testing-library are available for running tests. There are sample
-tests in `src/__tests__`. Run tests with `yarn test`. Watch files and run tests
-on change with `yarn test:watch`.
-
-See the [Jest docs](https://facebook.github.io/jest/) or
-[react-testing-library docs](react-testing-library) for more info.
 
 ## Docs
 
