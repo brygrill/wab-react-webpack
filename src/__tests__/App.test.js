@@ -37,13 +37,13 @@ describe('<App />', () => {
     expect(getByText('Loading...')).toBeInTheDocument();
     expect(container.firstChild).toMatchSnapshot();
 
-    // test after loading complete
+    // wait for useEffect
     await wait(() =>
       expect(queryByText(/Loading\.\.\./i)).not.toBeInTheDocument(),
     );
 
     // this will be error bc we cant access the JS api from the test
-    // but can see state move from loading
+    // but can test post useEffect
     expect(getByText('Error...')).toBeInTheDocument();
   });
 });
