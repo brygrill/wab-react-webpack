@@ -25,13 +25,15 @@ jobs:
     steps:
       # - attach_workspace:
       #     at: workspace
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: 'Yarn install'
+          name: yarn
           command: yarn install
-      - persist_to_workspace:
-          root: /home/circleci/repo/workspace
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - node_modules
+            - ./node_modules
   lint:
     <<: *defaults
     steps:
