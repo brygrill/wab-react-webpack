@@ -1,32 +1,16 @@
-defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: circleci/node:8.12
-
 version: 2
 jobs:
-  checkout_code:
-    <<: *defaults
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:8.12
     steps:
       - checkout
-      # - run:
-      #     name: 'Make working directory'
-      #     command: mkdir -p workspace
-      # - run:
-      #     name: 'Copy app'
-      #     # command: cp -a /. workspace/app/
-      #     command: ls -a
-      # - persist_to_workspace:
-      #     root: workspace
-      #     paths:
-      #       - app
-  install_deps:
-    <<: *defaults
-    steps:
-      # - attach_workspace:
-      #     at: workspace
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
+      - list:
+          - name: list
+          - command: ls -a
       - run:
           name: yarn
           command: yarn install
@@ -34,48 +18,90 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-  lint:
-    <<: *defaults
-    steps:
-      # - attach_workspace:
-      #     at: workspace
       - run:
-          name: 'Run ESLint'
+          name: lint
           command: yarn lint
-  # test:
-  #   <<: *defaults
-  #   steps:
-  #     - attach_workspace:
-  #         at: workspace
-  #     - run:
-  #         name: 'Run unit tests'
-  #         command: cd workspace/app && yarn test:ci
-  # build:
-  #   <<: *defaults
-  #   steps:
-  #     - attach_workspace:
-  #         at: workspace
-  #     - run:
-  #         name: 'Build app'
-  #         command: cd workspace/app && yarn deploy
-  #     - persist_to_workspace:
-  #         root: workspace
-  #         paths:
-  #           - app/build
-workflows:
-  version: 2
-  test_lint_build:
-    jobs:
-      - checkout_code
-      - install_deps:
-          requires:
-            - checkout_code
-      - lint:
-          requires:
-            - install_deps
-      # - test:
-      #     requires:
-      #       - install_deps
-      # - build:
-      #     requires:
-      #       - install_deps
+      - list2:
+          - name: list2
+          - command: ls -a
+# defaults: &defaults
+#   working_directory: ~/repo
+#   docker:
+#     - image: circleci/node:8.12
+
+# version: 2
+# jobs:
+#   checkout_code:
+#     <<: *defaults
+#     steps:
+#       - checkout
+#       # - run:
+#       #     name: 'Make working directory'
+#       #     command: mkdir -p workspace
+#       # - run:
+#       #     name: 'Copy app'
+#       #     # command: cp -a /. workspace/app/
+#       #     command: ls -a
+#       # - persist_to_workspace:
+#       #     root: workspace
+#       #     paths:
+#       #       - app
+#   install_deps:
+#     <<: *defaults
+#     steps:
+#       # - attach_workspace:
+#       #     at: workspace
+#       - restore_cache:
+#           key: dependency-cache-{{ checksum "package.json" }}
+#       - run:
+#           name: yarn
+#           command: yarn install
+#       - save_cache:
+#           key: dependency-cache-{{ checksum "package.json" }}
+#           paths:
+#             - ./node_modules
+#   lint:
+#     <<: *defaults
+#     steps:
+#       # - attach_workspace:
+#       #     at: workspace
+#       - run:
+#           name: 'Run ESLint'
+#           command: yarn lint
+#   # test:
+#   #   <<: *defaults
+#   #   steps:
+#   #     - attach_workspace:
+#   #         at: workspace
+#   #     - run:
+#   #         name: 'Run unit tests'
+#   #         command: cd workspace/app && yarn test:ci
+#   # build:
+#   #   <<: *defaults
+#   #   steps:
+#   #     - attach_workspace:
+#   #         at: workspace
+#   #     - run:
+#   #         name: 'Build app'
+#   #         command: cd workspace/app && yarn deploy
+#   #     - persist_to_workspace:
+#   #         root: workspace
+#   #         paths:
+#   #           - app/build
+# workflows:
+#   version: 2
+#   test_lint_build:
+#     jobs:
+#       - checkout_code
+#       - install_deps:
+#           requires:
+#             - checkout_code
+#       - lint:
+#           requires:
+#             - install_deps
+#       # - test:
+#       #     requires:
+#       #       - install_deps
+#       # - build:
+#       #     requires:
+#       #       - install_deps
