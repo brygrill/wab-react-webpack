@@ -1,4 +1,4 @@
-# :globe: Web AppBuilder + React Template
+# :globe_with_meridians: Web AppBuilder + React Template
 
 A template for building custom WAB widgets with React and modern JS.
 
