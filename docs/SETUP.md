@@ -1,4 +1,4 @@
-## How It Works
+# SETUP
 
 Develop your widget as a React app with ES6 modules:
 
@@ -63,31 +63,28 @@ and set React as an
 module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
   devtool: 'eval-source-map',
+  mode: 'development',
   output: {
-    library: 'MyReactWidget',
+    library: 'EBAWidget',
     libraryTarget: 'umd',
     filename: 'App.js',
     path: path.resolve(__dirname, 'app/widgets/MyReactWidget'),
   },
   // ...
-  externals: [
-    {
-      react: {
-        root: 'React',
-        commonjs2: 'react',
-        commonjs: 'react',
-        amd: 'react',
-      },
+  externals: {
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react',
     },
-    {
-      'react-dom': {
-        root: 'ReactDOM',
-        commonjs2: 'react-dom',
-        commonjs: 'react-dom',
-        amd: 'react-dom',
-      },
+    reactDOM: {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
     },
-  ],
+  },
 };
 ```
 

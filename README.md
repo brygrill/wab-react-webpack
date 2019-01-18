@@ -25,6 +25,7 @@ Fork this repo or download
 - `yarn test`: run Jest
 - `yarn test:watch`: run Just in watch mode
 - `yarn format`: run prettier (prettier also run before each commit)
+- `yarn lint`: lint files with ESLint
 - `yarn deploy`: copy custom widget folders to `dist`, ready to be added to
   client apps.
 
@@ -37,7 +38,26 @@ Fork this repo or download
 
 ## Hooks
 
+All components besides `ErrorBoundary.js` have been migrated to
+[Hooks](https://reactjs.org/docs/hooks-intro.html). Keep in mind that hooks are
+not in the latest production version of React yet. Class components can still be
+used and will work the same as they always have.
+
 ## Context
+
+The props passed into `Widget.js` are made available to the rest of the app
+through the [Context API](https://reactjs.org/docs/context.html). Access them
+directly by importing `WidgetContext` and `useContext`:
+
+```javascript
+// see MyComponent.js for full example
+import { WidgetContext } from './Context';
+
+const MyComponent = () => {
+  const context = useContext(WidgetContext);
+  ...
+}
+```
 
 ## NPM
 
@@ -217,7 +237,7 @@ config (`app/config.json`). Update the `portalUrl`, `itemId`, and `mapOptions`.
 
 ## Testing
 
-Jest and react-testing-library are vailable for running tests. There are sample
+Jest and react-testing-library are available for running tests. There are sample
 tests in `src/__tests__`. Run tests with `yarn test`. Watch files and run tests
 on change with `yarn test:watch`.
 
@@ -228,4 +248,6 @@ See the [Jest docs](https://facebook.github.io/jest/) or
 
 See the docs folder for implementation details:
 
-- [Concept](docs/CONCEPT.md)
+- [Setup](docs/SETUP.md)
+- [How it works](docs/HOW_IT_WORKS.md)
+- [Esri JS API](docs/ESRI_JS_API.md)
