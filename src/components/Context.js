@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 
 import loadLayers from '../utils/loadLayers';
 
-export const WidgetContext = React.createContext();
+const defaultContext = {
+  onOpen() {},
+  onClose() {},
+};
+
+export const WidgetContext = React.createContext(defaultContext);
 
 export const WidgetProvider = ({ wab, esriJS, onOpen, onClose, children }) => {
   // set state
