@@ -1,8 +1,8 @@
-# WAB React + Webpack Template
+# :globe: Web AppBuilder + React Template
 
-A template for building Esri Web AppBuilder widgets with React and modern JS.
+A template for building custom WAB widgets with React and modern JS.
 
-> ### Heads Up: as of v1.2, components have been migrated to [Hooks](https://reactjs.org/docs/hooks-intro.html).
+> ### Heads Up! As of v1.2, components have been migrated to [Hooks](https://reactjs.org/docs/hooks-intro.html).
 
 ## How It Works
 
