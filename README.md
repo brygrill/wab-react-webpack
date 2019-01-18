@@ -2,7 +2,7 @@
 
 A template for building Esri Web AppBuilder widgets with React and modern JS.
 
-> #### As of v1.2, components have been migrated to [Hooks](https://reactjs.org/docs/hooks-intro.html).
+> ### Heads Up: as of v1.2, components have been migrated to [Hooks](https://reactjs.org/docs/hooks-intro.html).
 
 ## Getting Started
 
@@ -31,21 +31,21 @@ Fork this repo or download
 - `yarn deploy`: copy custom widget folders to `dist`, ready to be added to
   client apps.
 
-## Setup
+## Usage
 
 - `src`: React widget. Webpack watches JS files. Gulp watches everything else.
 - `app`: Esri WAB application shell. Strictly for developing.
 - `app/widgets/MyReactWidget`: Actual widget that can run in browser,
   output/destination from `src`.
 
-## Hooks
+### Hooks
 
 All components besides `ErrorBoundary.js` have been migrated to
 [Hooks](https://reactjs.org/docs/hooks-intro.html). Keep in mind that hooks are
 not in the latest production version of React yet. Class components can still be
 used and will work the same as they always have.
 
-## Context
+### Context
 
 The props passed into `Widget.js` are made available to the rest of the app
 through the [Context API](https://reactjs.org/docs/context.html). Access them
@@ -61,7 +61,7 @@ const MyComponent = () => {
 }
 ```
 
-## NPM
+### NPM
 
 Any package can be installed from NPM:
 
@@ -73,7 +73,7 @@ $ yarn install moment
 $ yarn install @babel/my-babel-plugin --dev
 ```
 
-## JS API
+### JS API
 
 Import Esri JS API classes into `Widget.js` via AMD:
 
@@ -115,7 +115,7 @@ const newGraphic = (attr, geom, symbol) => {
 };
 ```
 
-## Styles
+### Styles
 
 The widget is styled with [Semantic UI React](https://react.semantic-ui.com/).
 
@@ -158,7 +158,7 @@ import './version.css';
 return <div className="widget-version">Version: {context.version}</div>;
 ```
 
-## Testing
+### Testing
 
 Jest and react-testing-library are available for running tests. There are sample
 tests in `src/__tests__`. Run tests with `yarn test`. Watch files and run tests
@@ -167,7 +167,7 @@ on change with `yarn test:watch`.
 See the [Jest docs](https://facebook.github.io/jest/) or
 [react-testing-library docs](react-testing-library) for more info.
 
-## Env Variables
+### Env Variables
 
 Webpack will set `NODE_ENV` to `development` during dev and `production` for a
 production build. It will also load variables from an `.env` file.
@@ -193,7 +193,7 @@ Use:
 const token = process.env.TOKEN;
 ```
 
-## Update Widget Name
+### Update Widget Name
 
 Throughout the app, the widget is referred to as `MyReactWidget`. To change
 this, update in the following files:
@@ -216,7 +216,7 @@ $ yarn rename
 This will update the widget name in the above files. This will only work the
 first time, when renaming from `MyReactWidget`.
 
-## Customize Basemap
+### Customize Basemap
 
 The basemap and bounding box can be configured in this section of the web app'ss
 config (`app/config.json`). Update the `portalUrl`, `itemId`, and `mapOptions`.
@@ -248,10 +248,14 @@ config (`app/config.json`). Update the `portalUrl`, `itemId`, and `mapOptions`.
 },
 ```
 
-## Docs
+### Docs
 
 See the docs folder for implementation details:
 
 - [Setup](docs/SETUP.md)
 - [How it works](docs/HOW_IT_WORKS.md)
 - [Esri JS API](docs/ESRI_JS_API.md)
+
+### License
+
+Licensed under the MIT License. See [License](LICENSE) for more info.
