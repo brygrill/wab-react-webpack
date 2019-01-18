@@ -4,19 +4,7 @@ import 'jest-dom/extend-expect';
 
 import App from '../components/App';
 
-const mock = {
-  wab: {
-    map: null,
-    id: 0,
-    config: {
-      layerCollection: [],
-    },
-  },
-  esriJS: {
-    LayerInfos: jest.fn,
-    FeatureLayer: jest.fn,
-  },
-};
+import mock from './__mock__/propsMock';
 
 afterEach(cleanup);
 

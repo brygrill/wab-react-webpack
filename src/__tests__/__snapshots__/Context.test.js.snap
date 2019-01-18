@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<WidgetProvider /> renders the widget 1`] = `
+<div>
+  children
+</div>
+`;
