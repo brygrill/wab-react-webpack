@@ -1,6 +1,6 @@
 # WAB React + Webpack Template
 
-A template for building Esri Web AppBuilder widgets with React and ES6.
+A template for building Esri Web AppBuilder widgets with React and modern JS.
 
 ## Usage
 
@@ -35,15 +35,104 @@ Fork this repo or download
 - `app/widgets/MyReactWidget`: Actual widget that can run in browser,
   output/destination from `src`.
 
+## Hooks
+
+## Context
+
 ## NPM
 
-Any package can be installed from NPM:  
-`yarn install moment`  
-This package will be bundled with webpack.
+Any package can be installed from NPM:
+
+```shell
+# This package will be bundled with webpack
+$ yarn install moment
+
+# This package will be available in development
+$ yarn install @babel/my-babel-plugin --dev
+```
 
 ## JS API
 
+Import Esri JS API classes into `Widget.js` via AMD:
+
+```javascript
+define([
+  ...
+  'jimu/LayerInfos/LayerInfos',
+  'esri/layers/FeatureLayer',
+  'esri/graphic'
+  ...
+], (
+  ...
+  LayerInfos,
+  FeatureLayer,
+  Graphic
+  ...
+)
+```
+
+Add them to the `esriJS` object:
+
+```javascript
+const esriJS = {
+  LayerInfos,
+  FeatureLayer,
+  Graphic,
+};
+```
+
+Access `Graphic` from the `esriJS` prop:
+
+```javascript
+const newGraphic = (attr, geom, symbol) => {
+  const graphic = new props.esriJS.Graphic();
+  graphic.setAttributes(attr);
+  graphic.setGeometry(geom);
+  graphic.setSymbol(symbol);
+  return graphic;
+};
+```
+
 ## Styles
+
+Styles can be added using CSS-in-JS via
+[styled-components](https://www.styled-components.com/):
+
+```javascript
+// css prop:
+return (
+  <div css="font-size: 0.7rem; color: #999999ab;">
+    Version: {context.version}
+  </div>
+);
+
+// or component:
+import styled from 'styled-components';
+const Version = styled.div`
+  font-size: 0.7rem;
+  color: #999999ab;
+`;
+
+return <Version>Version: {context.version}</Version>;
+```
+
+Traditional CSS can be added to `/css/style.css` which is loaded by WAB. Or CSS
+can be imported into a component and processed by webpack:
+
+```css
+/* version.css */
+widget-version {
+  font-size: 0.7rem;
+  color: #999999ab;
+}
+```
+
+```javascript
+// Version.js
+import './version.css';
+
+return <div className="widget-version">Version: {context.version}</div>;
+```
 
 ## Env Variables
 
@@ -55,7 +144,7 @@ Create file:
 ```shell
 # this file is gitignored
 # from root
-touch .env
+$ touch .env
 ```
 
 Add variables:
@@ -128,9 +217,15 @@ config (`app/config.json`). Update the `portalUrl`, `itemId`, and `mapOptions`.
 
 ## Testing
 
-Jest is available for test. There are sample tests in `src/__tests__`. Run tests
-with `yarn test`. Watch files and run tests on change with `yarn test:watch`.
+Jest and react-testing-library are vailable for running tests. There are sample
+tests in `src/__tests__`. Run tests with `yarn test`. Watch files and run tests
+on change with `yarn test:watch`.
 
-See the [Jest docs](https://facebook.github.io/jest/) for more info.
+See the [Jest docs](https://facebook.github.io/jest/) or
+[react-testing-library docs](react-testing-library) for more info.
 
 ## Docs
+
+See the docs folder for implementation details:
+
+- [Concept](docs/CONCEPT.md)
