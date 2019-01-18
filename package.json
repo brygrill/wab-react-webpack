@@ -75,6 +75,7 @@
     "start": "gulp",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:ci": "CI=true jest",
     "format": "prettier --config .prettierrc --write src/**/*.js",
     "lint": "eslint --quiet src",
     "webpack:dist": "webpack --config webpack.prod.config.js --progress --profile --colors",
