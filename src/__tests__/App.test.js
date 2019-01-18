@@ -1,16 +1,37 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import renderer from 'react-test-renderer';
+import { render, wait, cleanup } from 'react-testing-library';
+import 'jest-dom/extend-expect';
+
 import App from '../components/App';
 
-describe('<App />', () => {
-  it('renders without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<App />, div);
-  });
+import mock from './__mock__/propsMock';
 
-  it('displays entry to widget', () => {
-    const tree = renderer.create(<App />).toJSON();
-    expect(tree).toMatchSnapshot();
+afterEach(cleanup);
+
+// https://testing-library.com/docs/react-testing-library/example-intro
+describe('<App />', () => {
+  it('renders the widget', async () => {
+    // render component
+    const { container, getByText, queryByText } = render(
+      <App
+        wab={mock.wab}
+        esriJS={mock.esriJS}
+        onOpen={jest.fn}
+        onClose={jest.fn}
+      />,
+    );
+
+    // test inital render
+    expect(getByText('Loading...')).toBeInTheDocument();
+    expect(container.firstChild).toMatchSnapshot();
+
+    // wait for useEffect
+    await wait(() =>
+      expect(queryByText(/Loading\.\.\./i)).not.toBeInTheDocument(),
+    );
+
+    // this will be error bc we cant access the JS api from the test
+    // but can test post useEffect
+    expect(getByText('Error...')).toBeInTheDocument();
   });
 });

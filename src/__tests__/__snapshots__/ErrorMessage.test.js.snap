@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ErrorMessage /> renders as expected 1`] = `
+<div>
+  <p>
+    Sorry — something has gone wrong.
+  </p>
+</div>
+`;

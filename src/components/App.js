@@ -8,7 +8,12 @@ import MyComponent from './MyComponent';
 const App = props => {
   return (
     <ErrorBoundary>
-      <WidgetProvider wab={props.wab} esriJS={props.esriJS}>
+      <WidgetProvider
+        wab={props.wab}
+        esriJS={props.esriJS}
+        onOpen={props.onOpen}
+        onClose={props.onClose}
+      >
         <MyComponent title="WAB Widget" />
       </WidgetProvider>
     </ErrorBoundary>
@@ -18,6 +23,8 @@ const App = props => {
 App.propTypes = {
   wab: PropTypes.object,
   esriJS: PropTypes.object,
+  onOpen: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 App.defaultProps = {

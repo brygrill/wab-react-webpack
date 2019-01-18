@@ -1,13 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<MyComponent /> initially shows loader 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
-`;
-
-exports[`<MyComponent /> shows children after load 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
+exports[`<MyComponent /> renders main component without error 1`] = `
+<div
+  class="sc-bdVaJa jBIjIO"
+>
+  <div
+    class="ui header"
+  >
+    Hello
+  </div>
+  <div
+    class="ui segment"
+  >
+    <h3>
+      WAB
+    </h3>
+    <h5>
+      Widget Open
+    </h5>
+  </div>
+  <div
+    class="sc-bwzfXH fFwXog"
+  >
+    Version: 
+  </div>
+</div>
 `;

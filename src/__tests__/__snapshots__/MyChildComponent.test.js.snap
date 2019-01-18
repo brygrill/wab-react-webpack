@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MyChildComponent /> renders as expected 1`] = `
+<div
+  class="ui segment"
+>
+  <h3>
+    Hello World
+  </h3>
+  <h5>
+    Widget Open
+  </h5>
+</div>
+`;
+
+exports[`<MyChildComponent /> renders with props as expected 1`] = `
+<div
+  class="ui segment"
+>
+  <h3>
+    Test
+  </h3>
+</div>
+`;
