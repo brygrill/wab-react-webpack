@@ -2,7 +2,7 @@
 
 exports[`<MyComponent /> renders main component without error 1`] = `
 <div
-  class="sc-bdVaJa ldkUXY"
+  class="sc-bdVaJa jBIjIO"
 >
   <div
     class="ui header"
@@ -20,7 +20,7 @@ exports[`<MyComponent /> renders main component without error 1`] = `
     </h5>
   </div>
   <div
-    class="sc-bwzfXH gXWnte"
+    class="sc-bwzfXH fFwXog"
   >
     Version: 
   </div>
