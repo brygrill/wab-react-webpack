@@ -149,7 +149,6 @@
         "version": "2.11",
         "IsController": false,
         "uri": "widgets/MyReactWidget/Widget",
-        "config": "configs/MyReactWidget/config_widgets_MyReactWidget_Widget_36.json",
         "index": 5,
         "id": "widgets_MyReactWidget_Widget_36",
         "openAtStart": true
