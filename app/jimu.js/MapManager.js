@@ -485,7 +485,11 @@ define([
                 this._applyAppState(stateData, this.map);
               }));
               appStatePopup.startup();
-              appStatePopup.show();
+              /* CUSTOM MAP STATE START */
+              console.log('applying App State via custom override');
+              this._applyAppState(stateData, this.map);
+              // appStatePopup.show();
+              /* CUSTOM MAP STATE END */
             }
           }));
         }
