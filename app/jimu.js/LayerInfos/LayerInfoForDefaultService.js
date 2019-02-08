@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,26 +19,27 @@ define([
   'dojo/_base/array',
   'dojo/_base/lang',
   'dojo/Deferred',
+  'dojo/topic',
   'dojo/dom-construct',
   './LayerInfoForDefault',
-  'esri/layers/FeatureLayer',
-  'esri/layers/RasterLayer',
-  'esri/layers/StreamLayer',
-  'esri/layers/ArcGISImageServiceLayer',
-  'esri/layers/ArcGISImageServiceVectorLayer'
-], function(declare, array, lang, Deferred, domConstruct,
-LayerInfoForDefault, FeatureLayer, RasterLayer, StreamLayer, ArcGISImageServiceLayer,
-ArcGISImageServiceVectorLayer) {
+  './LayerObjectFacory'
+], function(declare, array, lang, Deferred, topic, domConstruct, LayerInfoForDefault, LayerObjectFacory) {
   return declare(LayerInfoForDefault, {
     _legendsNode: null,
-    _layerObjectLoadingIndicator: null,
+    //_layerObjectLoadingIndicator: null,
+    _layerObjectFacory: null,
 
     constructor: function() {
+      /*
       // init _layerObjectLoadingIndicator
       this._layerObjectLoadingIndicator = {
         loadingFlag: false,
         loadedDef: new Deferred()
       };
+      */
+
+      // init _layerObjectFacory
+      this._layerObjectFacory = new LayerObjectFacory(this);
     },
 
     _resetLayerObjectVisiblity: function() {
@@ -168,10 +169,78 @@ ArcGISImageServiceVectorLayer) {
       return this.originOperLayer.mapService.layerInfo._getSublayerShowLegendOfWebmap(subId);
     },
 
+
+    /***************************************************
+     * methods for control service definition
+     ***************************************************/
+    // async method, return a deferred.
+    _getServiceDefinition: function() {
+      var mapServiceSubId = this.originOperLayer.mapService.mapServiceSubId;
+      return this.originOperLayer.mapService.layerInfo._getSubserviceDefinition(mapServiceSubId);
+    },
+
+    /***************************************************
+     * methods for control service definition
+     ***************************************************/
+
+    _getLayerObject: function(url) {
+      var def = new Deferred();
+      var layerObjectDef;
+      if(url) {
+        layerObjectDef = this._layerObjectFacory.getLayerObjectWithUrl(url);
+      } else {
+        layerObjectDef = this._layerObjectFacory.getLayerObject();
+      }
+
+      layerObjectDef.then(lang.hitch(this, function(layerObject) {
+        if(this.layerObject.empty && layerObject) {
+          this.layerObject = layerObject;
+        }
+        def.resolve(layerObject);
+      }));
+      return def;
+    },
+
     //--------------public interface---------------------------
 
+
+    getLayerObject: function() {
+      return this._getLayerObject();
+    },
+
+    getLayerObjectTryUsingFeatureService: function() {
+      var featureServiceUrl;
+      if(this.isItemLayer()) {
+        return this.getItemInfo().then(lang.hitch(this, function(itemInfo) {
+          if(itemInfo && /*itemInfo.isHostedLayer() &&*/ itemInfo.getItemData() &&
+             itemInfo.getItemData().layers) {
+            array.some(itemInfo.getItemData().layers, function(layer) {
+              if(layer.id === this.subId) {
+                featureServiceUrl = layer.layerUrl;
+                return true;
+              }
+            }, this);
+          }
+
+          if(featureServiceUrl) {
+            return this._getLayerObject(featureServiceUrl);
+          } else {
+            return this._getLayerObject();
+          }
+        }));
+      } else {
+        return this.getLayerObject();
+      }
+    },
+
+    /*
     getLayerObject: function() {
       var def = new Deferred();
+      // if this.layerInfo is groupLayerInfo
+      if(this.getSubLayers().length > 0) {
+        return this._getGroupLayerObject();
+      }
+
       var loadHandle, loadErrorHandle;
       this.getLayerType().then(lang.hitch(this, function(layerType) {
         if(this.layerObject.empty) {
@@ -213,7 +282,7 @@ ArcGISImageServiceVectorLayer) {
                 loadHandle.remove();
               }
             }));
-            loadErrorHandle = this.layerObject.on('error', lang.hitch(this, function(/*err*/) {
+            loadErrorHandle = this.layerObject.on('error', lang.hitch(this, function() {
               def.resolve(null);
               this._layerObjectLoadingIndicator.loadedDef.resolve(null);
               if(loadErrorHandle.remove) {
@@ -234,6 +303,32 @@ ArcGISImageServiceVectorLayer) {
       }));
       return def;
     },
+
+    _getGroupLayerObject: function() {
+      var def = new Deferred();
+      if(this.layerObject.empty) {
+        // *** will improve.
+        esriRequest({
+          url: this.layerObject.url,
+          handleAs: 'json',
+          callbackParamName: 'callback',
+          timeout: 100000,
+          content: {f: 'json'}
+        }).then(lang.hitch(this, function(res){
+          var url = this.layerObject.url;
+          this.layerObject = res;
+          this.layerObject.url = url;
+          this.layerObject.id = this.id;
+          def.resolve(this.layerObject);
+        }), function(err) {
+          def.reject(err);
+        });
+      } else {
+        def.resolve(this.layerObject);
+      }
+      return def;
+    },
+    */
 
     // now it is used for Attribute.
     getPopupInfo: function() {
@@ -290,7 +385,7 @@ ArcGISImageServiceVectorLayer) {
       return filter;
     },
 
-    setFilter: function(layerDefinitionExpression) {
+    setFilter: function(layerDefinitionExpression, objectPassWithFilterChangeEvent) {
       // summary:
       //   set layer definition expression to layerObject.
       // paramtter
@@ -310,7 +405,10 @@ ArcGISImageServiceVectorLayer) {
         } else {
           layerDefinitions = [];
         }
-
+        var parameterObject = lang.mixin({}, objectPassWithFilterChangeEvent);
+        lang.setObject('_wabProperties.objectPassWithFilterChangeEvent',
+                       parameterObject,
+                       mapService.layerInfo.layerObject);
         layerDefinitions[mapService.subId] = layerDefinitionExpression;
         mapService.layerInfo.layerObject.setLayerDefinitions(layerDefinitions);
       }
@@ -318,17 +416,20 @@ ArcGISImageServiceVectorLayer) {
 
     getLayerType: function() {
       var def = new Deferred();
-      var mapService = this.originOperLayer.mapService;
-      mapService.layerInfo._getSublayerDefinition(mapService.subId)
-      .then(lang.hitch(this, function(layerIdent) {
-        if (layerIdent) {
-          def.resolve(layerIdent.type.replace(/\ /g, ''));
-        } else {
+      // if this.layerInfo is groupLayerInfo
+      if(this.getSubLayers().length > 0) {
+        def.resolve("GroupLayer");
+      } else {
+        this._getServiceDefinition().then(lang.hitch(this, function(serviceDefinition) {
+          if (serviceDefinition) {
+            def.resolve(serviceDefinition.type.replace(/\ /g, ''));
+          } else {
+            def.resolve(null);
+          }
+        }), function() {
           def.resolve(null);
-        }
-      }), function() {
-        def.resolve(null);
-      });
+        });
+      }
 
       return def;
     },
@@ -353,10 +454,8 @@ ArcGISImageServiceVectorLayer) {
         if (this._getLayerTypesOfSupportTable().indexOf(layerType) >= 0) {
           resultValue.isSupportedLayer = true;
         }
-        var mapService = this.originOperLayer.mapService;
-        mapService.layerInfo._getSublayerDefinition(mapService.subId)
-        .then(lang.hitch(this, function(layerIdent){
-          if(layerIdent && layerIdent.capabilities.indexOf("Data") >= 0) {
+        this._getServiceDefinition().then(lang.hitch(this, function(serviceDefinition){
+          if(serviceDefinition && serviceDefinition.capabilities.indexOf("Data") >= 0) {
             resultValue.isSupportQuery = true;
           }
           def.resolve(resultValue);
@@ -464,6 +563,22 @@ ArcGISImageServiceVectorLayer) {
       }
 
       return scaleRange;
+    },
+
+    setScaleRange: function(minScale, maxScale) {
+      var mapService = this.originOperLayer.mapService;
+      var jsapiLayerInfo = mapService.layerInfo._getJsapiLayerInfoById(mapService.subId);
+      if(mapService.layerInfo.layerObject &&
+         mapService.layerInfo.layerObject.supportsDynamicLayers &&
+         mapService.layerInfo.layerObject.setDynamicLayerInfos &&
+         jsapiLayerInfo &&
+         (jsapiLayerInfo.minScale !== minScale || jsapiLayerInfo.maxScale !== maxScale)) {
+
+        jsapiLayerInfo.minScale = minScale;
+        jsapiLayerInfo.maxScale = maxScale;
+        mapService.layerInfo.layerObject.setDynamicLayerInfos(mapService.layerInfo._jsapiLayerInfos);
+        topic.publish('layerInfos/layerInfo/scaleRangeChanged', [this]);
+      }
     },
 
     /****************

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,12 +27,13 @@ define([
   './shared/AppVersionManager',
   './ConfigLoader',
   './tokenUtils',
-  './dijit/LoadingIndicator',
+  './dijit/AGOLLoading',
+  './portalUtils',
   'esri/config',
   'esri/tasks/GeometryService'
 ],
 function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetManager,
-  AppVersionManager, ConfigLoader, tokenUtils, LoadingIndicator, esriConfig, GeometryService) {
+  AppVersionManager, ConfigLoader, tokenUtils, AGOLLoading, portalUtils, esriConfig, GeometryService) {
   var instance = null, clazz;
 
   clazz = declare(null, {
@@ -79,12 +80,21 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
 
       topic.subscribe('builder/widgetChanged', lang.hitch(this, this._onWidgetChanged));
       topic.subscribe('builder/groupChanged', lang.hitch(this, this._onGroupChanged));
+
+      topic.subscribe('builder/layoutDefinitionChanged', lang.hitch(this, this._onLayoutDefinitionChanged));
+      topic.subscribe('builder/onScreenGroupsChanged', lang.hitch(this, this._onOnScreenGroupsChanged));
+
       topic.subscribe('builder/widgetPoolChanged', lang.hitch(this, this._onWidgetPoolChanged));
       topic.subscribe('builder/openAtStartChange', lang.hitch(this, this._onOpenAtStartChanged));
+      topic.subscribe('builder/onScreenOrderChanged', lang.hitch(this, this._onScreenOrderChanged));
 
+      topic.subscribe('builder/mapContentModified', lang.hitch(this, this._onMapContentModified));
       topic.subscribe('builder/mapChanged', lang.hitch(this, this._onMapChanged));
       topic.subscribe('builder/mapOptionsChanged', lang.hitch(this, this._onMapOptionsChanged));
+      topic.subscribe('builder/mapRefreshIntervalChanged', lang.hitch(this, this._onMapRefreshIntervalChanged));
       topic.subscribe('builder/appAttributeChanged', lang.hitch(this, this._onAppAttributeChanged));
+
+      topic.subscribe('builder/dataSourceChanged', lang.hitch(this, this._onDataSourceChanged));
 
       //actionTriggered event is proccessed by layout manager.
       // topic.subscribe('builder/actionTriggered', lang.hitch(this, this._onConfigChanged));
@@ -107,6 +117,9 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
 
       topic.subscribe('builder/appProxyForUrlChanged', lang.hitch(this,
         this._onAppProxyForUrlChanged));
+
+      topic.subscribe('builder/sharedThemeChanged', lang.hitch(this,
+        this._onSharedThemeChanged));
     },
 
     loadConfig: function(){
@@ -116,15 +129,15 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         return;
       }
 
-      var loading = new LoadingIndicator();
+      var loading = new AGOLLoading();
       loading.placeAt(window.jimuConfig.layoutId);
       return this.configLoader.loadConfig().then(lang.hitch(this, function(appConfig){
         this.portalSelf = this.configLoader.portalSelf;
         this.appConfig = this._addDefaultValues(appConfig);
 
-        window.appInfo.isRunInMobile = jimuUtils.inMobileSize();
-
         console.timeEnd('Load Config');
+
+        window.appInfo.isRunInMobile = jimuUtils.inMobileSize();
 
         var _ac = this.getAppConfig();
         loading.destroy();
@@ -142,8 +155,10 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
     _showErrorMessage: function(msg){
       html.create('div', {
         'class': 'app-error',
-        innerHTML: msg
+        innerHTML: jimuUtils.sanitizeHTML(msg)
       }, document.body);
+      /*globals jimuConfig*/
+      html.setStyle(jimuConfig.loadingId, 'display', 'none');
     },
 
     getAppConfig: function () {
@@ -200,10 +215,67 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       return jimuUtils.mixinAppConfigPosition(appConfig, appConfig.mobileLayout);
     },
 
+    _updateDataSourceForWidget: function(newJson){
+      this._deleteDataSourcesFromWidget(newJson);
+      this._addDataSourcesForWidget(newJson);
+    },
+
+    _deleteDataSourcesFromWidget: function(widgetJson){
+      //remove all data sources of this widget
+      for(var p in this.appConfig.dataSource.dataSources){
+        if(p.startWith('widget~' + widgetJson.id + '~')){
+          delete this.appConfig.dataSource.dataSources[p];
+        }
+      }
+    },
+
+    _addDataSourcesForWidget: function(widgetJson){
+      array.forEach(widgetJson.provideDataSources, function(ds){
+        var dsId = 'widget~' + widgetJson.id + '~' + ds.id;
+        ds.id = dsId;
+        this.appConfig.dataSource.dataSources[dsId] = ds;
+      }, this);
+
+      delete widgetJson.provideDataSources;
+    },
+
+    _addIdForWidgets: function (widgetJsons){
+      var maxId = 0, i;
+
+      this.getAppConfig().visitElement(function(e){
+        if(!e.id){
+          return;
+        }
+        //fix element id
+        e.id = e.id.replace(/\//g, '_');
+
+        var li = e.id.lastIndexOf('_');
+        if(li > -1){
+          i = e.id.substr(li + 1);
+          maxId = Math.max(maxId, i);
+        }
+      });
+
+      array.forEach(widgetJsons, function(e){
+        if(!e.id){
+          maxId ++;
+          if(e.itemId){
+            e.id = e.itemId + '_' + maxId;
+          }else if(e.uri){
+            e.id = e.uri.replace(/\//g, '_') + '_' + maxId;
+          }else{
+            e.id = ''  + '_' + maxId;
+          }
+        }
+      });
+    },
+
     _onWidgetChanged: function(_newJson){
       // transfer obj to another iframe may cause problems on IE8
       var newJson = jimuUtils.reCreateObject(_newJson);
       var oldJson = jimuUtils.getConfigElementById(this.appConfig, _newJson.id);
+
+      this._updateDataSourceForWidget(newJson);
 
       //for placeholder, add off panel
       if(newJson.inPanel === false && !oldJson.uri){
@@ -226,6 +298,9 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       // transfer obj to another iframe may cause problems on IE8
       var newJson = jimuUtils.reCreateObject(_newJson);
       var oldJson = jimuUtils.getConfigElementById(this.appConfig, _newJson.id);
+
+      this._handleDataSourceForWidgets(oldJson, newJson);
+
       //for now, we can add/update property only
       for(var p in newJson){
         oldJson[p] = newJson[p];
@@ -233,12 +308,51 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
 
       this.configLoader.addNeedValues(this.appConfig);
       this._addDefaultValues(this.appConfig);
+
       topic.publish('appConfigChanged', this.getAppConfig(), 'groupChange', newJson);
+    },
+
+    /**
+     * this function can handle widget array (group or pool) changes
+     * @param  {[type]} oldJson [description]
+     * @param  {[type]} newJson [description]
+     * @return {[type]}         [description]
+     */
+    _handleDataSourceForWidgets: function(oldJson, newJson){
+      var newAddedWidgets = array.filter(newJson.widgets, function(nw){
+        if(!nw.id){
+          return true;
+        }else{
+          return array.filter(oldJson.widgets, function(ow){return nw.id === ow.id;}).length === 0;
+        }
+      }, this);
+      this._addIdForWidgets(newAddedWidgets);
+      array.forEach(newAddedWidgets, function(w){
+        this._addDataSourcesForWidget(w);
+      }, this);
+
+      var removedWidgets = array.filter(oldJson.widgets, function(ow){
+        return array.filter(newJson.widgets, function(nw){return nw.id === ow.id;}).length === 0;
+      }, this);
+      array.forEach(removedWidgets, function(w){
+        this._deleteDataSourcesFromWidget(w);
+      }, this);
+
+      array.forEach(newJson.widgets, function(nw){
+        array.forEach(oldJson.widgets, function(ow){
+          if(nw.id === ow.id && nw.provideDataSources){
+            this._updateDataSourceForWidget(nw);
+          }
+        }, this);
+      }, this);
     },
 
     _onWidgetPoolChanged: function(_newJson){
       // transfer obj to another iframe may cause problems on IE8
       var newJson = jimuUtils.reCreateObject(_newJson);
+      var oldJson = this.appConfig.widgetPool;
+
+      this._handleDataSourceForWidgetsSection(oldJson, newJson);
 
       var controllerWidgets = this.widgetManager.getControllerWidgets();
       if(controllerWidgets.length === 1){
@@ -270,9 +384,6 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
             this.appConfig.widgetPool.groups.concat(newJson.groups);
         }
 
-        //add this line because we need id below
-        this.configLoader.addNeedValues(this.appConfig);
-
         //update controller setting
         controllerJson.controlledWidgets = array.map(newJson.widgets, function(widgetJson){
           return widgetJson.id;
@@ -287,6 +398,20 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         this._addDefaultValues(this.appConfig);
         topic.publish('appConfigChanged', this.getAppConfig(), 'widgetPoolChange', newJson);
       }));
+    },
+
+    _handleDataSourceForWidgetsSection: function(oldJson, newJson){
+      var newWidgets = newJson.widgets;
+      array.forEach(newJson.groups, function(g){
+        newWidgets = newWidgets.concat(g.widgets);
+      }, this);
+
+      var oldWidgets = oldJson.widgets;
+      array.forEach(oldJson.groups, function(g){
+        oldWidgets = oldWidgets.concat(g.widgets);
+      }, this);
+
+      this._handleDataSourceForWidgets({widgets: oldWidgets}, {widgets: newWidgets});
     },
 
     _removeWidgetOrGroupFromPoolById: function(appConfig, id){
@@ -346,6 +471,26 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       topic.publish('appConfigChanged', this.getAppConfig(), 'openAtStartChange', newJson);
     },
 
+    _onScreenOrderChanged: function(_newJson) {
+      var onscreenWidgets = jimuUtils.reCreateObject(_newJson);
+      var appConfig = this.appConfig;
+
+      // non-controller and removeable OnScreen Widgets
+      array.forEach(appConfig.widgetOnScreen.widgets, function(widget){
+        if (!widget.isController && (widget.inPanel === false && widget.closeable === true ||
+            widget.inPanel === true || !widget.uri)) {
+          array.some(onscreenWidgets, function(item) {
+            if (widget.id === item.id) {
+              widget.position = item.position;
+              return true;
+            }
+          });
+        }
+      }, this);
+
+      topic.publish('appConfigChanged', this.getAppConfig(), 'onScreenOrderChange', onscreenWidgets);
+    },
+
     _onAppAttributeChanged: function(_newJson){
       // transfer obj to another iframe may cause problems on IE8
       var newJson = jimuUtils.reCreateObject(_newJson);
@@ -357,6 +502,13 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       this.configLoader.addNeedValues(this.appConfig);
       this._addDefaultValues(this.appConfig);
       topic.publish('appConfigChanged', this.getAppConfig(), 'attributeChange', newJson);
+    },
+
+    _onDataSourceChanged: function(_dataSource){
+      var newDataSource = jimuUtils.reCreateObject(_dataSource);
+      this.appConfig.dataSource = newDataSource;
+
+      topic.publish('appConfigChanged', this.getAppConfig(), 'dataSourceChange', _dataSource);
     },
 
     _onLoadingPageChanged: function(_newJson){
@@ -408,14 +560,28 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       } else {
         // Update proxy items
         array.forEach(newJson.proxyItems, lang.hitch(this, function(item) {
-          array.some(this.appConfig.map.appProxy.proxyItems, function(configItem) {
+          var exists = array.some(this.appConfig.map.appProxy.proxyItems, function(configItem) {
             if (configItem.sourceUrl === item.sourceUrl) {
               configItem.useProxy = item.useProxy;
               configItem.proxyUrl = item.proxyUrl || '';
               configItem.proxyId = item.proxyId || '';
+              if (!isNaN(item.hitsPerInterval)) {
+                configItem.hitsPerInterval = item.hitsPerInterval;
+              }
+              if (!isNaN(item.intervalSeconds)) {
+                configItem.intervalSeconds = item.intervalSeconds;
+              }
               return true;
             }
           });
+          // web map may have added new premium layers in map viewer,
+          // To avoid changing appConfig, they will not be added until they are
+          // configured to use app proxy
+          if (!exists && item.useProxy && item.proxyUrl) {
+            var proxyItems = this.appConfig.map.appProxy.proxyItems || [];
+            proxyItems.push(item);
+            this.appConfig.map.appProxy.proxyItems = proxyItems;
+          }
         }));
       }
 
@@ -451,6 +617,11 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       topic.publish('appConfigChanged', this.getAppConfig(), 'templateConfigChange', newJson);
     },
 
+    _onMapContentModified: function() {
+      // Doesn't change appConfig
+      topic.publish('mapContentModified');
+    },
+
     _onMapChanged: function(_newJson){
       // transfer obj to another iframe may cause problems on IE8
       var newJson = jimuUtils.reCreateObject(_newJson);
@@ -460,7 +631,13 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         jimuUtils.deleteMapOptions(this.appConfig.map.mapOptions);
       }
 
+      this.appConfig.map.mapRefreshInterval = {
+        useWebMapRefreshInterval: true
+      };
+
       lang.mixin(this.appConfig.map, newJson);
+
+      this._deleteDataSourcesFromMap();
 
       this.configLoader.addNeedValues(this.appConfig);
 
@@ -469,6 +646,14 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         this._addDefaultValues(this.appConfig);
         topic.publish('appConfigChanged', this.getAppConfig(), 'mapChange', newJson);
       }));
+    },
+
+    _deleteDataSourcesFromMap: function(){
+      array.forEach(Object.keys(this.appConfig.dataSource.dataSources), function(dsId){
+        if(dsId.startWith('map')){
+          delete this.appConfig.dataSource.dataSources[dsId];
+        }
+      }, this);
     },
 
     _onMapOptionsChanged: function(_newJson){
@@ -481,9 +666,24 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       topic.publish('appConfigChanged', this.getAppConfig(), 'mapOptionsChange', newJson);
     },
 
+    _onMapRefreshIntervalChanged: function(_newJson){
+      // transfer obj to another iframe may cause problems on IE8
+      var newJson = jimuUtils.reCreateObject(_newJson);
+      if(!this.appConfig.map.mapRefreshInterval){
+        this.appConfig.map.mapRefreshInterval = {};
+      }
+      lang.mixin(this.appConfig.map.mapRefreshInterval, newJson);
+      if(this.appConfig.map.mapRefreshInterval.useWebMapRefreshInterval){
+        delete this.appConfig.map.mapRefreshInterval.minutes;
+      }
+      topic.publish('appConfigChanged', this.getAppConfig(), 'mapRefreshIntervalChange', newJson);
+    },
+
     _onThemeChanged: function(theme){
       this._getAppConfigFromTheme(theme).then(lang.hitch(this, function(config){
+        var oldOnScreen = lang.clone(this.appConfig.widgetOnScreen);
         this.appConfig = config;
+        this._handleDataSourceForWidgetsSection(oldOnScreen, {});
         topic.publish('appConfigChanged', this.getAppConfig(), 'themeChange', theme.getName());
       }));
     },
@@ -497,8 +697,10 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       //    * Use object, key is widget uri, or ph_<index>(placeholder), or g_<index>(group)
 
       this.appConfig = jimuUtils.mixinAppConfigPosition(this.appConfig, layout.layoutConfig);
+      this.appConfig.layoutDefinition = layout.layoutConfig.layoutDefinition;
 
-      this._addDefaultPanelAndPosition(this.appConfig);
+      this.configLoader.addNeedValues(this.appConfig);
+      this._addDefaultValues(this.appConfig);
       topic.publish('appConfigChanged', this.getAppConfig(), 'layoutChange', layout.name);
     },
 
@@ -510,8 +712,97 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         };
       } else {
         delete this.appConfig.theme.customStyles;
+        delete this.appConfig.titleColor;
+        this.appConfig.theme.sharedTheme = {
+          isPortalSupport: this.appConfig.theme.sharedTheme.isPortalSupport,
+          useHeader: false,
+          useLogo: false
+        };
       }
       topic.publish('appConfigChanged', this.getAppConfig(), 'styleChange', style.name);
+    },
+
+    _onOnScreenGroupsChanged: function(_data){
+      var newData = jimuUtils.reCreateObject(_data);
+      this.appConfig.widgetOnScreen.groups = newData.groups;
+
+      topic.publish('appConfigChanged', this.getAppConfig(), 'onScreenGroupsChange', newData.groups);
+    },
+
+    _onLayoutDefinitionChanged: function(_data){
+      var newData = jimuUtils.reCreateObject(_data);
+      var oldDefinition = this.appConfig.layoutDefinition;
+      if(jimuUtils.isEqual(oldDefinition, newData.layoutDefinition)){
+        return;
+      }
+      this.appConfig.layoutDefinition = newData.layoutDefinition;
+
+      var newGroupIds = newData.groupIds;
+      this.appConfig.widgetOnScreen.groups =
+        jimuUtils.handleGridLayoutOnScreenGroupChange(this.appConfig.widgetOnScreen.groups, newGroupIds);
+
+      this.configLoader.addNeedValues(this.appConfig);
+      this._addDefaultValues(this.appConfig);
+      topic.publish('appConfigChanged', this.getAppConfig(), 'layoutDefinitionChange', newData.layoutDefinition);
+    },
+
+    _onSharedThemeChanged: function(_sharedTheme){
+      var oldSharedTheme = this.appConfig.theme.sharedTheme;
+      var newSharedTheme = jimuUtils.reCreateObject(_sharedTheme);
+
+      //whenever shared theme change, the styleChange event will be published and handled in _onStyleChanged.
+      if(newSharedTheme.useHeader && !oldSharedTheme.useHeader){
+        if(this.portalSelf.portalProperties && this.portalSelf.portalProperties.sharedTheme){
+          this.appConfig.theme.customStyles = {
+            mainBackgroundColor: this.portalSelf.portalProperties.sharedTheme.header.background
+          };
+          this.appConfig.titleColor = this.portalSelf.portalProperties.sharedTheme.header.text;
+
+          this._onAppAttributeChanged({
+            titleColor: this.appConfig.titleColor
+          });
+        }else{
+          console.error('Portal does not support sharedTheme.');
+        }
+      }
+
+      if(!newSharedTheme.useHeader && oldSharedTheme.useHeader){
+        //in this case, mainBackgroundColor will be handled by style change event, so it's not handled here.
+
+        delete this.appConfig.titleColor;
+
+        this._onAppAttributeChanged({
+          titleColor: this.appConfig.titleColor
+        });
+      }
+
+      if(newSharedTheme.useLogo && !oldSharedTheme.useLogo){
+        if(this.portalSelf.portalProperties && this.portalSelf.portalProperties.sharedTheme){
+          if(this.portalSelf.portalProperties.sharedTheme.logo.small){
+            this.appConfig.logo = this.portalSelf.portalProperties.sharedTheme.logo.small;
+          }else{
+            this.appConfig.logo = 'images/app-logo.png';
+          }
+
+          this.appConfig.logoLink = this.portalSelf.portalProperties.sharedTheme.logo.link;
+
+          this._onAppAttributeChanged({
+            logo: this.appConfig.logo,
+            logoLink: this.appConfig.logoLink
+          });
+        }else{
+          console.error('Portal does not support sharedTheme.');
+        }
+      }
+
+      if(!newSharedTheme.useLogo && oldSharedTheme.useLogo){
+        this._onAppAttributeChanged({
+          logo: this.appConfig.logo
+        });
+      }
+
+      lang.mixin(oldSharedTheme, newSharedTheme);
+      topic.publish('appConfigChanged', this.getAppConfig(), 'sharedThemeChange', newSharedTheme);
     },
 
     _onSyncExtent: function(map){
@@ -587,6 +878,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
           config.map.position = layoutConfig.map.position;
         }
         config.mobileLayout = layoutConfig.mobileLayout;
+        config.layoutDefinition = layoutConfig.layoutDefinition;
 
         //put all styles into the style array, and the current style is the first element
         styles = this._genStyles(array.map(theme.getStyles(), function(style){
@@ -597,6 +889,29 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
           styles: styles,
           version: theme.getVersion()
         };
+
+        if (this.portalSelf.portalProperties && this.portalSelf.portalProperties.sharedTheme) {
+          config.theme.sharedTheme = {
+            "useHeader": true,
+            "useLogo": true,
+            isPortalSupport: true
+          };
+          config.theme.customStyles = {
+            mainBackgroundColor: this.portalSelf.portalProperties.sharedTheme.header.background
+          };
+        } else {
+          config.theme.sharedTheme = {
+            "useHeader": false,
+            "useLogo": false,
+            isPortalSupport: false
+          };
+          config.theme.customStyles = {
+            mainBackgroundColor: ''
+          };
+        }
+
+        config.titleColor = currentConfig.titleColor;
+        config.logoLink = currentConfig.logoLink;
       }
 
       this.configLoader.addNeedValues(config);
@@ -697,10 +1012,16 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
           //remove the options that are relative to map's display when map is changed.
           jimuUtils.deleteMapOptions(c.map.mapOptions);
           this.appConfig = c;
+          this._deleteDataSourcesFromMap();
           topic.publish('appConfigChanged', this.getAppConfig(), 'resetConfig', c);
         }else{
           this.appConfig = c;
-          topic.publish("appConfigLoaded", this.getAppConfig());
+
+          var portal = portalUtils.getPortal(c.portalUrl);
+          portal.loadSelfInfo().then(lang.hitch(this, function(portalSelf){
+            this.portalSelf = portalSelf;
+            topic.publish("appConfigLoaded", this.getAppConfig());
+          }));
         }
       }));
     },
@@ -714,6 +1035,8 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       this._addDefaultStyle(config);
       this._addDefaultMap(config);
       this._addDefaultVisible(config);
+      this._addDefaultDataSource(config);
+      this._addDefaultSharedTheme(config);
 
       //preload widgets
       if(typeof config.widgetOnScreen === 'undefined'){
@@ -734,6 +1057,23 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         this._addIndexForWidgetPool(config);
       }
       return config;
+    },
+
+    _addDefaultDataSource: function(config){
+      if(!config.dataSource){
+        config.dataSource = {
+          dataSources: {},
+          settings: {}
+        };
+      }else{
+        if(!config.dataSource.dataSources){
+          config.dataSource.dataSources = {};
+        }
+
+        if(!config.dataSource.settings){
+          config.dataSource.settings = {};
+        }
+      }
     },
 
     _addDefaultPortalUrl: function(config){
@@ -797,6 +1137,22 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
           e.visible = true;
         }
       });
+    },
+
+    _addDefaultSharedTheme: function(config){
+      if(!config.theme.sharedTheme){
+        config.theme.sharedTheme = {
+          useHeader: false,
+          useLogo: false
+        };
+      }else{
+        if(typeof config.theme.sharedTheme.useHeader === 'undefined'){
+          config.theme.sharedTheme.useHeader = false;
+        }
+        if(typeof config.theme.sharedTheme.useLogo === 'undefined'){
+          config.theme.sharedTheme.useLogo = false;
+        }
+      }
     },
 
     _addDefaultPanelAndPosition: function(config){
@@ -949,7 +1305,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
           e.gid = e.id;
           if(e.widgets.length === 1){
             if(!e.label){
-              e.label = e.widgets[0].label? e.widgets[0].label: 'Group';
+              e.label = e.widgets[0].label? e.widgets[0].label: window.apiNls.common.groupLabel;
             }
             if(!e.icon){
               if(e.widgets[0].uri){
@@ -960,7 +1316,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
             }
           }else{
             e.icon = e.icon? e.icon: 'jimu.js/images/group_icon.png';
-            e.label = e.label? e.label: 'Group_' + info.index;
+            e.label = e.label? e.label: (window.apiNls.common.groupLabel + ' ' + info.index);
           }
         }else{
           e.gid = info.groupId;
@@ -1077,6 +1433,10 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       }
 
       delete e.manifest;
+
+      if(e.itemId){
+        delete e.uri;//uri will be get from item url
+      }
     });
     delete newConfig.rawAppConfig;
     //the _ssl property is added by esriRequest
@@ -1092,6 +1452,8 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
     delete newConfig.agolConfig;
     delete newConfig._itemData;
     delete newConfig.oldWabVersion;
+
+    delete newConfig.titleColor;
 
     return newConfig;
   }

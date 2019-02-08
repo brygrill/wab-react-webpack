@@ -19,9 +19,10 @@ define([
     'dojo/_base/lang',
     'jimu/BaseWidget',
     'dojo/_base/html',
+    'dojo/keys',
     'dojo/on'
   ],
-  function(declare, lang, BaseWidget, html, on) {
+  function(declare, lang, BaseWidget, html, keys, on) {
     var clazz = declare([BaseWidget], {
       name: 'ZoomSlider',
 
@@ -38,12 +39,16 @@ define([
 
       moveTopOnActive: false,
 
+      postMixInProperties:function(){
+        this.jimuCommonNls = window.jimuNls.common;
+      },
+
       postCreate: function(){
         this.inherited(arguments);
+        html.setAttr(this.domNode, 'aria-label', this.nls._widgetLabel);
+
         this.own(on(this.map, 'zoom-end', lang.hitch(this, this._zoomHandler)));
         this._zoomHandler();
-        this.btnZoomIn.title = window.jimuNls.common.zoomIn;
-        this.btnZoomOut.title = window.jimuNls.common.zoomOut;
       },
 
       setPosition: function(position){
@@ -78,6 +83,18 @@ define([
 
       _onBtnZoomOutClicked: function(){
         this.map._extentUtil({ numLevels: -1});
+      },
+
+      _onBtnZoomInKeyDown: function(e){
+        if(e.keyCode === keys.ENTER){
+          this._onBtnZoomInClicked();
+        }
+      },
+
+      _onBtnZoomOutKeyDown: function(e){
+        if(e.keyCode === keys.ENTER){
+          this._onBtnZoomOutClicked();
+        }
       },
 
       _setOrientation: function(isVertical){

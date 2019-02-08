@@ -19,6 +19,7 @@ define([
   'dojo/_base/array',
   'dojo/_base/html',
   'dojo/on',
+  "dojo/has",
   'dojo/query',
   'dojo/Deferred',
   "dijit/_WidgetBase",
@@ -29,13 +30,15 @@ define([
   'esri/dijit/Popup',
   'esri/dijit/PopupMobile',
   'esri/graphicsUtils',
+  'esri/dijit/PopupTemplate',
   'jimu/utils',
   'jimu/ConfigManager',
   'jimu/dijit/DropdownMenu',
   'jimu/LayerInfos/LayerInfos'
-  ], function(declare, lang, array, html, on, query, Deferred, _WidgetBase, _TemplatedMixin,
-  UndoManager, OperationBase, RelationshipQuery, Popup, PopupMobile, graphicsUtils, jimuUtils,
-  ConfigManager, DropdownMenu, jimuLayerInfos) {
+  ], function(declare, lang, array, html, on, has, query, Deferred, _WidgetBase, _TemplatedMixin,
+  UndoManager, OperationBase, RelationshipQuery, Popup, PopupMobile, graphicsUtils, PopupTemplate,
+  jimuUtils, ConfigManager, DropdownMenu, jimuLayerInfos) {
+    /*jshint unused: false*/
     var clazz = declare([_WidgetBase, _TemplatedMixin], {
       baseClass: "related-records-popup-projector",
       templateString: "<div>" +
@@ -58,7 +61,10 @@ define([
       postCreate: function() {
         this.undoManager = new UndoManager();
         this.layerInfosObj = jimuLayerInfos.getInstanceSync();
-        this.originalJimuLayerInfo = this.layerInfosObj.getLayerInfoById(this.originalFeature.getLayer().id);
+        /* jscs:disable */
+        var originalFeatureLayerId =  lang.getObject("_wabProperties.referToFeatureLayerId", false, this.originalFeature) ||
+                                      this.originalFeature.getLayer().id;
+        this.originalJimuLayerInfo = this.layerInfosObj.getLayerInfoById(originalFeatureLayerId);
         this._temporaryData = {
           eventHandles: [],
           dijits: []
@@ -145,6 +151,12 @@ define([
       },
 
       _getRelatedRecordsByRelatedQuery: function(operationData) {
+        return operationData.oriJimuLayerInfo.getRelatedRecords(operationData.feature,
+                                                                operationData.destJimuLayerInfo);
+      },
+
+      /*
+      _getRelatedRecordsByRelatedQuery: function(operationData) {
         var def = new Deferred();
         var relatedQuery = new RelationshipQuery();
         var queryRelationship = this._getOriRelationshipByDestLayer(operationData);
@@ -156,6 +168,7 @@ define([
         var objectId =
           operationData.feature.attributes[operationData.oriJimuLayerInfo.layerObject.objectIdField];
         relatedQuery.objectIds = [objectId];
+        relatedQuery.definitionExpression = operationData.destJimuLayerInfo.getFilter();
 
         operationData.oriJimuLayerInfo.layerObject.queryRelatedFeatures(
           relatedQuery,
@@ -173,6 +186,7 @@ define([
 
         return def;
       },
+      */
 
       _ignoreCaseToGetFieldObject: function(layerObject, fieldKey) {
         var result = null;
@@ -196,10 +210,37 @@ define([
         });
       },
 
+      // _getDisplayTitleOfRelatedRecord: function(relatedLayerInfo, relatedRecord, displayFieldName) {
+      //   var displayTitle;
+      //   var displayFieldObject =
+      //       this._ignoreCaseToGetFieldObject(relatedLayerInfo.layerObject, displayFieldName);
+
+      //   var popupInfoTemplate = relatedLayerInfo.getInfoTemplate();
+      //   if(displayFieldName === "popupTitle" && popupInfoTemplate) {
+      //     if(typeof popupInfoTemplate.title === "function") {
+      //       displayTitle = popupInfoTemplate.title(relatedRecord);
+      //     } else {
+      //       displayTitle = popupInfoTemplate.title;
+      //     }
+      //   } else {
+      //     displayTitle = displayFieldObject && relatedRecord.attributes[displayFieldName];
+      //   }
+
+      //   if(displayTitle) {
+      //     if(displayFieldObject &&
+      //        displayFieldObject.type &&
+      //        displayFieldObject.type === "esriFieldTypeDate") {
+      //       displayTitle = this.getLocaleDateTime(displayTitle);
+      //     }
+      //   } else {
+      //     displayTitle = "";
+      //   }
+
+      //   return displayTitle;
+      // },
+
       _getDisplayTitleOfRelatedRecord: function(relatedLayerInfo, relatedRecord, displayFieldName) {
         var displayTitle;
-        var displayFieldObject =
-            this._ignoreCaseToGetFieldObject(relatedLayerInfo.layerObject, displayFieldName);
 
         var popupInfoTemplate = relatedLayerInfo.getInfoTemplate();
         if(displayFieldName === "popupTitle" && popupInfoTemplate) {
@@ -209,20 +250,31 @@ define([
             displayTitle = popupInfoTemplate.title;
           }
         } else {
-          displayTitle = displayFieldObject && relatedRecord.attributes[displayFieldName];
+          displayTitle = this._getDisplayTitleFromPopup(relatedLayerInfo, relatedRecord, displayFieldName);
         }
 
-        if(displayTitle) {
-          if(displayFieldObject &&
-             displayFieldObject.type &&
-             displayFieldObject.type === "esriFieldTypeDate") {
-            displayTitle = this.getLocaleDateTime(displayTitle);
-          }
+        return displayTitle ? displayTitle : "";
+      },
+
+      _getDisplayTitleFromPopup: function(relatedLayerInfo, relatedRecord, displayFieldName) {
+        var displayTitle;
+        var popupTemplate = this._getPopupTemplateWithOnlyDisplayField(relatedLayerInfo, displayFieldName);
+        if(popupTemplate) {
+          //temporary set infoTemplate to relatedRecord.
+          relatedRecord.setInfoTemplate(popupTemplate);
+          displayTitle = this.popupUIController.getDisplayTitle(relatedRecord);
+          // clear infoTemplate for relatedRecord;
+          relatedRecord.setInfoTemplate(null);
         } else {
-          displayTitle = "";
+          displayTitle = relatedRecord.attributes[displayFieldName];
         }
-
         return displayTitle;
+      },
+
+      _getPopupTemplateWithOnlyDisplayField: function(relatedLayerInfo, displayFieldName) {
+        var popupInfo = relatedLayerInfo._getCustomPopupInfo(relatedLayerInfo.layerObject, [displayFieldName]);
+        var popupTemplate = new PopupTemplate(popupInfo);
+        return popupTemplate;
       },
 
       _canShowRelatedData: function(oriJimuLayerInfo) {
@@ -499,7 +551,21 @@ define([
           });
         }
 
-        array.forEach(relatedLayer.fields, function(field){
+        var fields = [];
+        if(popupInfo && popupInfo.fieldInfos) {
+          array.forEach(popupInfo.fieldInfos, function(fieldInfo) {
+            var field = {};
+            if(fieldInfo.visible) {
+              field.name = fieldInfo.fieldName;
+              field.alias = fieldInfo.label;
+              fields.push(field);
+            }
+          });
+        } else {
+          fields = relatedLayer.fields;
+        }
+
+        array.forEach(fields, function(field){
           if(field.name.toLowerCase() !== "globalid" &&
             field.name.toLowerCase() !== "shape"){
             items.push({
@@ -578,20 +644,31 @@ define([
         this.rrPopupProjector = rrPopupProjector;
         this.popup = rrPopupProjector.popup;
         this.initTempPopup();
+        this._initTempPopupForDisplayTitle();
         this._initZoomToBtn();
+        this._setScrollable();
       },
 
       initTempPopup: function() {
         this._tempPopup = new Popup({/*titleInBody: false*/}, html.create('div'));
       },
 
+      _initTempPopupForDisplayTitle: function() {
+        this._tempPopupForDisplayTitle = new Popup({/*titleInBody: false*/}, html.create('div'));
+        this._tempPopupForDisplayTitle.show();
+      },
+
       destroy: function() {
         this._tempPopup.destroy();
+        this._tempPopupForDisplayTitle.destroy();
         if(this._zoomToBtnClickHandle && this._zoomToBtnClickHandle.remove) {
           this._zoomToBtnClickHandle.remove();
         }
         if(this._zoomToBtnANode) {
           html.destroy(this._zoomToBtnANode);
+        }
+        if(this.toucemoveScrollHandle && this.toucemoveScrollHandle.remove) {
+          this.toucemoveScrollHandle.remove();
         }
       },
 
@@ -613,6 +690,7 @@ define([
           // projectorParentNode.removeChild(this.rrPopupProjector.domNode);
           this.setContent(esriViewPopupDomNode);
           html.place(this.rrPopupProjector.domNode, esriViewPopupDomNode, "after");
+          this._unsetScrollable();
         }
       },
 
@@ -622,6 +700,52 @@ define([
           projectorParentNode.removeChild(this.rrPopupProjector.domNode);
         }
         this.popup.setContent(content);
+        this._unsetScrollable();
+      },
+
+      _setScrollable: function() {
+        var contentPane = query(".contentPane", this.popup.domNode)[0];
+        if (has("esri-touch") && contentPane) {
+          this.toucemoveScrollHandle = on(contentPane, "touchmove", lang.hitch(this, function (evt) {
+            evt.preventDefault();
+            var esriViewPopupDomNode = query(".esriViewPopup", this.popup.domNode)[0];
+            if(!esriViewPopupDomNode) {
+              return;
+            }
+            var child = contentPane.firstChild;
+            if (child instanceof Text) {
+              child = contentPane.childNodes[1];
+            }
+
+            if(this.rrPopupProjector.domNode) {
+              html.setStyle(this.rrPopupProjector.contentBox, {
+                "-webkit-transition-property": "-webkit-transform",
+                "-webkit-transform": "translate(" + child._currentX + "px, " + child._currentY + "px)"
+              });
+            }
+          }));
+        }
+      },
+
+      _unsetScrollable: function() {
+        html.setStyle(this.rrPopupProjector.contentBox, {
+          "-webkit-transition-property": "none",
+          "-webkit-transform": "none"
+        });
+
+        html.setStyle(this.rrPopupProjector.domNode, {
+          "-webkit-transition-property": "none",
+          "-webkit-transform": "none"
+        });
+      },
+
+
+      getDisplayTitle: function(feature) {
+        var displayTitle;
+        this._tempPopupForDisplayTitle.setFeatures([feature]);
+        var attrValueTdDomNode = query("td.attrValue", this._tempPopupForDisplayTitle.domNode)[0];
+        displayTitle = attrValueTdDomNode && attrValueTdDomNode.innerHTML;
+        return displayTitle;
       },
 
       _getRefDomNode: function() {

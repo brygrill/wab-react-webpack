@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -94,30 +94,31 @@ define([
       return ret;
     };
 
-    // su.getMarkerActionContent = function(json,map){
-    //   var xyContent = su.getXyContent(json);
-    //   var url = su.getShareUrl(map, json, xyContent);
-    //   var shareUrlContent = su.getShareUrlContent(url);
-    //   return  xyContent + shareUrlContent;
-    // },
     su.getShareUrlContent = function (url) {
       var content = "<div class='marker-feature-action-popup'>" +
         "<div class='item'>" +
         "<span class='sub-title jimu-float-leading'>" + window.jimuNls.common.url + "</span>" +
-        "<input type='text' class='jimu-float-leading' readonly='readonly' value=" + url + "/>" +
+        "<input type='text' class='jimu-float-leading' readonly='readonly' value=" + url + "></input>" +
         "</div>" +
         "</div>";
       return content;
     };
 
-    su.getShareUrl = function (map, geometry, content, isIncludeShareUrl) {
+    su.getShareUrl = function (map, geometry, isIncludeShareUrl) {
       var baseUrl = su.getBaseHrefUrl(window.portalUrl);
       var markerUrl = "";
+
+      var longitude, latitude, x, y, wkid;
       if (geometry) {
-        if (geometry.x && geometry.y && geometry.spatialReference && geometry.spatialReference.wkid) {
-          markerUrl = geometry.x + "," + geometry.y + "," + geometry.spatialReference.wkid;
-        } else if (geometry.longitude && geometry.latitude) {
+        if (geometry.longitude && geometry.latitude) {
+          longitude = geometry.longitude;
+          latitude = geometry.latitude;
           markerUrl = geometry.longitude + "," + geometry.latitude + ",";
+        } else if (geometry.x && geometry.y && geometry.spatialReference && geometry.spatialReference.wkid) {
+          x = geometry.x;
+          y = geometry.y;
+          wkid = geometry.spatialReference.wkid;
+          markerUrl = geometry.x + "," + geometry.y + "," + geometry.spatialReference.wkid;
         }
       }
 
@@ -130,7 +131,11 @@ define([
       //resultUrl += encodeURIComponent("");//title
       resultUrl = su.addQueryParamToUrl(resultUrl, "markertemplate", encodeURIComponent(JSON.stringify({
         title: geometry.title,
-        content: content,
+        x: x,
+        y: y,
+        wkid: wkid,
+        longitude: longitude,
+        latitude: latitude,
         isIncludeShareUrl: isIncludeShareUrl
       })));
       var level = map.getLevel();
@@ -153,20 +158,20 @@ define([
         content +=
           "<div class='item clearFix'>" +
           "<span class='sub-title'>" + window.jimuNls.common.longitude + "</span>" +
-          "<span class='val'>" + parseFloat(geometry.longitude).toFixed(decimal) + "</span>" +
+          "<span class='val'>" + jimuUtils.localizeNumber(parseFloat(geometry.longitude).toFixed(decimal)) + "</span>" +
           "</div>" +
           "<div class='item clearFix'>" +
           "<span class='sub-title'>" + window.jimuNls.common.latitude + "</span>" +
-          "<span class='val'>" + parseFloat(geometry.latitude).toFixed(decimal) + "</span>" +
+          "<span class='val'>" + jimuUtils.localizeNumber(parseFloat(geometry.latitude).toFixed(decimal)) + "</span>" +
           "</div>";
       } else if (geometry.x && geometry.y) {
         content += "<div class='item clearFix'>" +
           "<span class='sub-title'>x</span>" +
-          "<span class='val'>" + parseFloat(geometry.x).toFixed(decimal) + "</span>" +
+          "<span class='val'>" + jimuUtils.localizeNumber(parseFloat(geometry.x).toFixed(decimal)) + "</span>" +
           "</div>" +
           "<div class='item'>" +
           "<span class='sub-title'>y</span>" +
-          "<span class='val'>" + parseFloat(geometry.y).toFixed(decimal) + "</span>" +
+          "<span class='val'>" + jimuUtils.localizeNumber(parseFloat(geometry.y).toFixed(decimal)) + "</span>" +
           "</div>";
       }
       content += "</div>";
@@ -596,5 +601,15 @@ define([
       return def;
     };
 
+    su.disableWebMapPopup = function (map) {
+      if (map && map.setInfoWindowOnClick) {
+        map.setInfoWindowOnClick(false);
+      }
+    };
+    su.enableWebMapPopup = function (map) {
+      if (map && map.setInfoWindowOnClick) {
+        map.setInfoWindowOnClick(true);
+      }
+    };
     return su;
   });

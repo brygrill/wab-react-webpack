@@ -1,0 +1,202 @@
+/*******************************************************************************************************************
+      jimu-theme.css defines appearance of common components and jimu/dijits, it doesn't define layout.
+      User can override this css style to meet new appearance.
+********************************************************************************************************************/
+/* css for jimu-main- */
+.jimu-main-background {
+  background-color: #8b572a;
+}
+.jimu-border-panel {
+  border: 1px solid #181818;
+}
+.icon-item-background0 {
+  background-color: #00adee;
+}
+.icon-item-background1 {
+  background-color: #00a54e;
+}
+.icon-item-background2 {
+  background-color: #ea671f;
+}
+.icon-item-background3 {
+  background-color: #967857;
+}
+.icon-item-background4 {
+  background-color: #717173;
+}
+.icon-item-background5 {
+  background-color: #70cad2;
+}
+.jimu-main-font {
+  font-family: Verdana, Arial, sans-serif;
+/*font-size: 63%;*/
+}
+/* css for jimu-title and jimu-subtitle */
+.jimu-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #f1f1f1;
+}
+.jimu-subtitle {
+  font-size: 12px;
+  font-weight: normal;
+  color: #ddd;
+}
+/* css for jimu-footer */
+.jimu-footer {
+  font-size: 10px;
+  color: #fff;
+  font-weight: normal;
+}
+/* css for jimu-link */
+.jimu-link {
+  font-size: 14px;
+  font-weight: normal;
+}
+.jimu-link:link,
+.jimu-link:visited {
+  text-decoration: none;
+  color: #95a2a9;
+  color: rgba(255,255,255,0.7);
+}
+.jimu-link:hover {
+  text-decoration: none;
+  color: #fff;
+}
+.jimu-link:active {
+  text-decoration: none;
+  color: #ececec;
+  color: rgba(255,255,255,0.9);
+}
+/* css for jimu-widget- */
+.jimu-widget {
+  font-size: 12px;
+  font-weight: normal;
+  color: #333;
+  /*padding: 10px;*/
+}
+.jimu-widget-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+/*.jimu-widget-normal{
+  font-size: 12px;
+  font-weight: normal;
+  color: #838383;
+}*/
+.jimu-widget-note {
+  font-size: 12px;
+  font-weight: normal;
+  color: #a4a4a4;
+}
+.jimu-widget-placeholder {
+  background-color: #000;
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  border: 1px dashed #a0acbf;
+}
+.jimu-widget-placeholder:hover {
+  opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+}
+.jimu-widget-placeholder .inner {
+  background-color: #000;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+}
+.jimu-widget-tooltip {
+  background-color: #fff;
+  background-color: rgba(255,255,255,0.8);
+  font-size: 12px;
+  font-weight: normal;
+  color: #838383;
+}
+.jimu-widget-offpanel-background {
+  background-color: #fff;
+  border: 0;
+}
+.jimu-widget-onscreen-icon {
+  background-color: rgba(0,0,0,0.6);
+  border: 0 none;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+}
+.jimu-widget-onscreen-icon:hover {
+  background-color: #000;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.jimu-widget-onscreen-icon.jimu-state-selected {
+  background-color: #000;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.is-mobile .jimu-widget-placeholder {
+  width: 30px !important;
+  height: 30px !important;
+}
+.is-mobile .jimu-widget-placeholder .inner {
+  width: 16px;
+  height: 16px;
+  margin: 6px;
+  line-height: 16px;
+}
+.is-mobile .jimu-widget-onscreen-icon {
+  width: 30px !important;
+  height: 30px !important;
+}
+.is-mobile .jimu-widget-onscreen-icon img {
+  width: 14px;
+  height: 14px;
+  margin: 8px;
+}
+/* css for jimu-panel- */
+.jimu-on-screen-widget-panel,
+.jimu-panel {
+  background-color: #fff;
+  border: 0 none;
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-transition: box-shadow ease-in-out 0.1s;
+  -moz-transition: box-shadow ease-in-out 0.1s;
+  -o-transition: box-shadow ease-in-out 0.1s;
+  -ms-transition: box-shadow ease-in-out 0.1s;
+  transition: box-shadow ease-in-out 0.1s;
+  z-index: 0;
+}
+.jimu-on-screen-widget-panel:hover,
+.jimu-panel:hover,
+.jimu-on-screen-widget-panel.dojoMoveItem,
+.jimu-panel.dojoMoveItem {
+  -webkit-box-shadow: 0 12px 8px -4px rgba(0,0,0,0.3), 0 15px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 8px -4px rgba(0,0,0,0.3), 0 15px 20px rgba(0,0,0,0.2);
+}
+.jimu-on-screen-widget-panel .jimu-panel-title,
+.jimu-panel .jimu-panel-title {
+  font-size: 14px;
+  font-weight: normal;
+  color: #6d6e70;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.jimu-on-screen-widget-panel >.jimu-panel-title {
+  background-color: #f1f1f1;
+}
+.jimu-on-screen-widget-panel >.jimu-panel-title >.title-label {
+  font-size: 14px;
+}

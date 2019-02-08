@@ -1,0 +1,238 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "launchpad-icons";
+  src:url("fonts/launchpad-icons.eot");
+  src:url("fonts/launchpad-icons.eot?#iefix") format("embedded-opentype"),
+    url("fonts/launchpad-icons.woff") format("woff"),
+    url("fonts/launchpad-icons.ttf") format("truetype"),
+    url("fonts/launchpad-icons.svg#launchpad-icons") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="launchpad-icon-"]:before,
+[class*=" launchpad-icon-"]:before {
+  font-family: "launchpad-icons" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.launchpad-icon-plus:before {
+  content: "a";
+}
+.launchpad-icon-minus:before {
+  content: "b";
+}
+.launchpad-icon-search:before {
+  content: "c";
+}
+.launchpad-icon-arrow-up:before {
+  content: "d";
+}
+.launchpad-icon-arrow-right:before {
+  content: "e";
+}
+.launchpad-icon-arrow-left:before {
+  content: "f";
+}
+.launchpad-icon-arrow-down:before {
+  content: "g";
+}
+.launchpad-icon-home:before {
+  content: "h";
+}
+.launchpad-icon-locate:before {
+  content: "i";
+}
+.launchpad-icon-clear:before {
+  content: "j";
+}
+.launchpad-icon-check:before {
+  content: "k";
+}
+.launchpad-icon-double-arrow-up:before {
+  content: "l";
+}
+.launchpad-icon-double-arrow-down:before {
+  content: "m";
+}
+.launchpad-icon-arrow-drop-down:before {
+  content: "n";
+}
+.launchpad-icon-refresh:before {
+  content: "o";
+}
+.launchpad-icon-arrow-drop-up:before {
+  content: "p";
+}
+.launchpad-icon-arrow-drop-left:before {
+  content: "q";
+}
+.launchpad-icon-arrow-drop-right:before {
+  content: "r";
+}
+.launchpad-icon-previous:before {
+  content: "s";
+}
+.launchpad-icon-next:before {
+  content: "t";
+}
+.launchpad-icon-play:before {
+  content: "u";
+}
+.launchpad-icon-pause:before {
+  content: "v";
+}
+.launchpad-icon-error:before {
+  content: "w";
+}
+.launchpad-icon-calendar:before {
+  content: "x";
+}
+.launchpad-icon-folder-open:before {
+  content: "y";
+}
+.launchpad-icon-folder-closed:before {
+  content: "z";
+}
+.launchpad-icon-add-circle:before {
+  content: "A";
+}
+.launchpad-icon-apps:before {
+  content: "B";
+}
+.launchpad-icon-map-pin:before {
+  content: "C";
+}
+.launchpad-icon-three-dots:before {
+  content: "D";
+}
+.launchpad-icon-visibility-on:before {
+  content: "E";
+}
+.launchpad-icon-visibility-off:before {
+  content: "F";
+}
+.launchpad-icon-swipe-horizontal:before {
+  content: "G";
+}
+.launchpad-icon-swipe-vertical:before {
+  content: "H";
+}
+.launchpad-icon-link:before {
+  content: "I";
+}
+.launchpad-icon-slide:before {
+  content: "J";
+}
+.launchpad-icon-time:before {
+  content: "K";
+}
+.launchpad-icon-grid:before {
+  content: "L";
+}
+.launchpad-icon-fullscreen:before {
+  content: "M";
+}
+.launchpad-icon-fullscreen-exit:before {
+  content: "N";
+}
+.launchpad-icon-print:before {
+  content: "O";
+}
+.launchpad-icon-point:before {
+  content: "P";
+}
+.launchpad-icon-line:before {
+  content: "Q";
+}
+.launchpad-icon-polyline:before {
+  content: "R";
+}
+.launchpad-icon-polyline-freehand:before {
+  content: "S";
+}
+.launchpad-icon-triangle:before {
+  content: "T";
+}
+.launchpad-icon-rectangle-fill:before {
+  content: "U";
+}
+.launchpad-icon-circle-fill:before {
+  content: "V";
+}
+.launchpad-icon-ellipse-fill:before {
+  content: "W";
+}
+.launchpad-icon-polygon-fill:before {
+  content: "X";
+}
+.launchpad-icon-polygon-freehand-fill:before {
+  content: "Y";
+}
+.launchpad-icon-text:before {
+  content: "Z";
+}
+.launchpad-icon-cursor:before {
+  content: "0";
+}
+.launchpad-icon-selection-add:before {
+  content: "1";
+}
+.launchpad-icon-selection-subtract:before {
+  content: "2";
+}
+.launchpad-icon-trash:before {
+  content: "3";
+}
+.launchpad-icon-cut:before {
+  content: "5";
+}
+.launchpad-icon-union:before {
+  content: "6";
+}
+.launchpad-icon-reshape:before {
+  content: "7";
+}
+.launchpad-icon-undo:before {
+  content: "8";
+}
+.launchpad-icon-redo:before {
+  content: "9";
+}
+.launchpad-icon-edit:before {
+  content: "4";
+}
+.launchpad-icon-pin:before {
+  content: "!";
+}
+.launchpad-icon-measurement:before {
+  content: "\"";
+}
+.launchpad-icon-measurement-area:before {
+  content: "#";
+}
+.esriPopup .titlePane {
+  background-color: #3b8fc4;
+}

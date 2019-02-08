@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ define([
       this._getMarkerLayer();
       return this._isSupportType(featureSet) && featureSet.features.length > 0 &&
           featureSet.features[0] && featureSet.features[0].geometry &&
-          false === this._isFeatureInMarkerFeatureActionLayer(featureSet, this._markerLayer);
+          false === this._isFeatureInMarkerFeatureActionLayer(featureSet/*, this._markerLayer*/);
     },
 
     onExecute: function (featureSet, layer) {
@@ -80,8 +80,14 @@ define([
       if (geometry.type === "point") {
         centerPoint = geometry;
       } else if (geometry.type === "polygon" || geometry.type === "polyline" || geometry.type === "multipoint") {
-        var extent = geometry.getExtent();
-        centerPoint = extent.getCenter();
+        if(this.map.infoWindow && this.map.infoWindow.isShowing){
+          //click form infoWindow in map
+          centerPoint = this.map.infoWindow.location;
+        } else {
+          //click form widget like select
+          var extent = geometry.getExtent();
+          centerPoint = extent.getCenter();
+        }
       }
 
       if (centerPoint.getLongitude() && centerPoint.getLatitude()) {
@@ -101,7 +107,7 @@ define([
       };
 
       var xyContent = shareUtils.getXyContent(json);
-      var url = shareUtils.getShareUrl(this.map, json, xyContent, true);
+      var url = shareUtils.getShareUrl(this.map, json, true);
       var shareUrlContent = shareUtils.getShareUrlContent(url);
       //html content
       var content = xyContent + shareUrlContent;
@@ -132,7 +138,7 @@ define([
       }
     },
 
-    _isFeatureInMarkerFeatureActionLayer: function (featureSet, markerLayer) {
+    _isFeatureInMarkerFeatureActionLayer: function (featureSet/*, markerLayer*/) {
       //feature in "marker-action-layer"
       if (featureSet.features[0] &&
         featureSet.features[0]._graphicsLayer && featureSet.features[0]._graphicsLayer.id) {
@@ -140,7 +146,7 @@ define([
           return true;
         }
       }
-
+      /*allow multiple markers
       //in other layer
       for (var i = 0, len = featureSet.features.length; i < len; i++) {
         var feature = featureSet.features[i];
@@ -155,12 +161,17 @@ define([
             }
           }
         }
-      }
+      }*/
 
       return false;
     },
     _isSupportType: function(featureSet) {
       if (featureSet && featureSet.geometryType) {
+        //do not support multiple geometrys
+        if (featureSet.features && featureSet.features.length && featureSet.features.length > 1) {
+          return false;
+        }
+
         var type = featureSet.geometryType;
         return (type === "point" || type === "polygon" || type === "polyline" || type === "multipoint");
       } else {

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,9 +21,10 @@ define([
   'dojo/_base/html',
   'dojo/dom-class',
   'dojo/on',
-  'dojo/Evented'
+  'dojo/Evented',
+  "dojo/keys"
 ],
-function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
+function(declare, _WidgetBase, lang, html, domClass, on, Evented, keys) {
 
   return declare([_WidgetBase, Evented], {
     'baseClass': 'jimu-checkbox',
@@ -32,10 +33,11 @@ function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
     checked: false,
     status: true,
     label: "",
+    title: "", //it's used for screen reader when no label'
 
     postCreate: function(){
       this.checkNode = html.create('div', {
-        'class': 'checkbox jimu-float-leading'
+        'class': 'checkbox jimu-float-leading jimu-icon jimu-icon-checkbox'
       }, this.domNode);
       this.labelNode = html.create('div', {
         'class': 'label jimu-float-leading',
@@ -43,9 +45,11 @@ function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
       }, this.domNode);
       if(this.checked){
         html.addClass(this.checkNode, 'checked');
+        html.addClass(this.checkNode, 'jimu-icon-checked');
       }
       if(!this.status){
         html.addClass(this.domNode, 'jimu-state-disabled');
+        html.addClass(this.checkNode, 'jimu-state-disabled');
       }
 
       this.own(
@@ -70,11 +74,14 @@ function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
         }))
       );
       this._udpateLabelClass();
+
+      this._initSection508();
     },
 
     setLabel: function(label){
       this.label = label;
       this.labelNode.innerHTML = this.label;
+      this.labelNode.title = this.label;
       this._udpateLabelClass();
     },
 
@@ -86,6 +93,37 @@ function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
           html.addClass(this.labelNode, 'not-visible');
         }
       }
+    },
+
+
+    _initSection508: function () {
+      html.setAttr(this.domNode, 'tabindex', '0');
+      if(this.label === ''){
+        html.setAttr(this.domNode, 'title', this.title);//read content's string
+      }
+      html.setAttr(this.domNode, 'role', 'checkbox');
+      this._changeAriaCheckedAttr();
+      //css class
+      this.own(on(this.domNode, 'focus', lang.hitch(this, function () {
+        html.addClass(this.checkNode, "dijitCheckBoxFocused");
+      })));
+      this.own(on(this.domNode, 'blur', lang.hitch(this, function () {
+        html.removeClass(this.checkNode, "dijitCheckBoxFocused");
+      })));
+      //use keydown instead of keypress event, for#14747
+      this.own(on(this.domNode, 'keydown', lang.hitch(this, function (evt) {
+        var charOrCode = evt.charCode || evt.keyCode;
+        if (html.hasClass(this.checkNode, "dijitCheckBoxFocused") &&
+          (keys.SPACE === charOrCode || keys.ENTER === charOrCode)) {
+          if (this.status) {
+            if (this.checked) {
+              this.uncheck();
+            } else {
+              this.check();
+            }
+          }
+        }
+      })));
     },
 
     setValue: function(value){
@@ -112,8 +150,10 @@ function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
 
       if(this.status){
         domClass.remove(this.domNode, 'jimu-state-disabled');
+        html.removeClass(this.checkNode, 'jimu-state-disabled');
       }else{
         domClass.add(this.domNode, 'jimu-state-disabled');
+        html.addClass(this.checkNode, 'jimu-state-disabled');
       }
 
       if(isStatusChanged){
@@ -125,13 +165,16 @@ function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
       return this.status;
     },
 
-    check: function(){
+    check: function(notEvent){
       if(!this.status){
         return;
       }
       this.checked = true;
-      html.addClass(this.checkNode, 'checked');
-      this.onStateChange();
+      html.addClass(this.checkNode, 'checked jimu-icon-checked');
+      html.removeClass(this.checkNode, 'checked jimu-icon-checkbox');
+      if(!notEvent){
+        this.onStateChange();
+      }
     },
 
     uncheck: function(notEvent){
@@ -140,6 +183,9 @@ function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
       }
       this.checked = false;
       html.removeClass(this.checkNode, 'checked');
+      html.removeClass(this.checkNode, 'jimu-icon-checked');
+      html.addClass(this.checkNode, 'jimu-icon-checkbox');
+
       if(!notEvent){
         this.onStateChange();
       }
@@ -150,6 +196,18 @@ function(declare, _WidgetBase, lang, html, domClass, on, Evented) {
         this.onChange(this.checked);
       }
       this.emit('change', this.checked);
+      this._changeAriaCheckedAttr();
+    },
+
+    _changeAriaCheckedAttr: function(){
+      var ariaChecked = this.checked ? 'true' : 'false';
+      html.setAttr(this.domNode, 'aria-checked', ariaChecked);
+    },
+
+    focus: function () {
+      if (this.checkNode && this.checkNode.focus) {
+        this.checkNode.focus();
+      }
     }
   });
 });

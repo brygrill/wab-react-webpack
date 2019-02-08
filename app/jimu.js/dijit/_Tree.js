@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,13 +25,14 @@ define(['dojo/_base/declare',
   'dojo/query',
   'dojo/aspect',
   'dojo/on',
+  'dojo/keys',
   'dojo/Evented',
   'dijit/registry',
   'dijit/Tree',
   'jimu/utils'
 ],
 function(declare, _WidgetBase, _TemplatedMixin, tnTemplate, lang, html, array,
-  dojoEvent, query, aspect, on, Evented, registry, DojoTree, jimuUtils) {
+  dojoEvent, query, aspect, on, keys, Evented, registry, DojoTree, jimuUtils) {
   /*jshint unused: false*/
   var JimuTreeNode = declare([DojoTree._TreeNode, Evented], {
     templateString: tnTemplate,
@@ -59,6 +60,17 @@ function(declare, _WidgetBase, _TemplatedMixin, tnTemplate, lang, html, array,
       html.place(this.checkNode, this.contentNode, 'first');
 
       this.own(on(this.checkNode, 'click', lang.hitch(this, this._onClick)));
+      // this.own(on(this.checkNode, 'keydown', lang.hitch(this, function(evt){
+      //   if(evt.keyCode === keys.ENTER || evt.keyCode === keys.SPACE){
+      //     this._onClick(evt);
+      //   }
+      // })));
+      this.own(on(this.rowNode, 'keydown', lang.hitch(this, function(checkNode, evt){
+        evt.target = checkNode;
+        if(evt.keyCode === keys.ENTER || evt.keyCode === keys.SPACE){
+          this._onClick(evt);
+        }
+      },this.checkNode)));
 
       if(this.isLeaf){
         if(this.groupId){
@@ -177,6 +189,9 @@ function(declare, _WidgetBase, _TemplatedMixin, tnTemplate, lang, html, array,
       //http://stackoverflow.com/questions/12261723/
       //how-to-disable-multiple-selection-of-nodes-in-dijit-tree
       this.dndController.singular = true;
+
+      //make tree dijit focusable
+      html.setAttr(this.domNode, 'tabindex', 0);
     },
 
     removeItem: function(id){

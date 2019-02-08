@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
 
-define(['dojo/_base/declare',
+define([
+  'dojo/_base/declare',
   'dojo/_base/lang',
   'dojo/_base/array',
   'dojo/_base/html',
@@ -30,14 +31,14 @@ function(declare, lang, array, html, on, Evented, query,
   _WidgetBase, _TemplatedMixin, template, ViewStack){
   return declare([_WidgetBase, _TemplatedMixin, Evented], {
     templateString: template,
-    selected:'',
-    tabs:null,
-    average:false,
-
     'baseClass':'jimu-tab3',
     declaredClass: 'jimu.dijit.TabContainer3',
-
     _currentIndex: -1,
+
+    //options:
+    selected: '',
+    tabs: null,//[{title,content}]
+    average: true,
 
     //public methods:
     //selectTab
@@ -154,8 +155,8 @@ function(declare, lang, array, html, on, Evented, query,
       }, this);
       if(this.average){
         this.controlTable.style.tableLayout = 'fixed';
-      }
-      else{
+        html.addClass(this.domNode, 'average');
+      }else{
         var strTabItemTd = '<td nowrap class="tab-item-td" style="border-bottom:1px solid #ccc;">' +
         '<div class="tab-item-div"></div></td>';
         var tabItemTd = html.toDom(strTabItemTd);
@@ -172,6 +173,7 @@ function(declare, lang, array, html, on, Evented, query,
       var strTabItemTd = '<td nowrap class="tab-item-td"><div class="tab-item-div"></div></td>';
       var tabItemTd = html.toDom(strTabItemTd);
       tabItemTd.label = tabConfig.title || '';
+      tabItemTd.title = tabConfig.title;
       html.place(tabItemTd, this.tabTr);
       var tabItemDiv = query('.tab-item-div', tabItemTd)[0];
       tabItemDiv.innerHTML = tabItemTd.label;

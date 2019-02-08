@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,312 +18,420 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/array',
+    'dojo/promise/all',
     'dojo/Deferred',
+    'jimu/utils',
+    'jimu/ServiceDefinitionManager',
     'esri/tasks/query',
     'esri/tasks/QueryTask',
-    'jimu/utils',
-    'jimu/dijit/Message'
+    'esri/tasks/FeatureSet'
   ],
-  function(declare, lang, array, Deferred, EsriQuery, QueryTask, jimuUtils, Message) {
+  function(declare, lang, array, all, Deferred, jimuUtils, ServiceDefinitionManager, EsriQuery, QueryTask,
+    FeatureSet) {
 
-    function getCleanCurrentAttrsTemplate(){
-      var template = {
-        url: "",
-        layerInfo: null,//layerDefinition
-        limit: 10 * 1000,
-        spatialReference: null,
-        queryType: -1,
-        objectIdField: "",
-        query: {
-          maxRecordCount: 1000,
-          where: '',
-          geometry: null,
-          relationship: EsriQuery.SPATIAL_REL_INTERSECTS,
-          outFields: ["*"],
-          nextIndex: 0,
-          allCount: 0,
-          objectIds: [], //optional
-          features: []
-        }
-      };
-      return template;
-    }
+    var clazz = declare(null, {
+      //1 means service support orderby and pagination
+      //2 means service support query by objectIds
+      //3 means service can only do one query
+      queryType: 0,
+      nextPageIndex: 1,
+      pageSizeOption: null,//original pageSize passed into constructor
+      layerDefinition: null,
+      layerDefinitionDef: null,
+      type1CountDef: null,//for type 1
+      type2ObjectIdsDef: null,//for type 2
+      type3QueryDef: null,//for type3
+      sdf: null,
 
-    var SingleTaskClass = declare(null, {
-      currentAttrs: null,
+      //options:
+      url: null,//required, service url
+      query: null,//required, esri/tasks/query
+      pageSize: 1000,//optional, feature count per page
 
       //public methods:
-      //getFeatures
+      //getFeatureCount
+      //getPageCount
+      //getAllFeatures
+      //queryNextPage
+      //getCurrentPageIndex
+      //queryByPage
 
-      //options: {url,layerInfo,limit,spatialReference,where,geometry,relationship,outFields}
+      /*
+      options.url: required, the service url
+
+      options.query: required, esri/tasks/query instance, will honor following properties of query:
+      where, geometry, outFields, returnGeometry, outSpatialReference, spatialRelationship
+      If the service url supports supportsOrderBy and supportsPagination, options.query will suport orderByFields.
+
+      options.pageSize: optional, the feature count per page, the default value is service's maxRecordCount
+      If pageSize > maxRecordCount, pageSize will be reset to maxRecordCount.
+      */
       constructor: function(options){
-        this.currentAttrs = getCleanCurrentAttrsTemplate();
-        this.currentAttrs.url = options.url;
-        this.currentAttrs.layerInfo = options.layerInfo;
-        this.currentAttrs.spatialReference = options.spatialReference;
-        this.currentAttrs.query.where = options.where || "1=1";
-        this.currentAttrs.query.geometry = options.geometry;
-        this.currentAttrs.query.maxRecordCount = options.layerInfo.maxRecordCount || 1000;
-        this.currentAttrs.queryType = this._getQueryType(options.layerInfo);
-        this.currentAttrs.objectIdField = jimuUtils.getObjectIdField(options.layerInfo);
-        if(options.relationship){
-          this.currentAttrs.query.relationship = options.relationship;
+        this.sdf = ServiceDefinitionManager.getInstance();
+        this.url = options.url;
+        this.query = options.query;
+        this.pageSizeOption = options.pageSize;
+        if(!this.query.outFields || this.query.outFields.length === 0){
+          this.query.outFields = ["*"];
         }
-        if(options.outFields){
-          this.currentAttrs.query.outFields = options.outFields;
-        }
-        if(options.limit > 0 || options.limit > this.currentAttrs.query.maxRecordCount){
-          this.currentAttrs.limit = options.limit;
-        }
-      },
-
-      //return a deferred object which resolves {status,count,features}
-      //if status > 0, means we get all features
-      //if status < 0, means count is big, so we can't get features
-      getFeatures: function(){
-        var def = new Deferred();
-        var where = this.currentAttrs.query.where;
-        var geometry = this.currentAttrs.query.geometry;
-        var relationship = this.currentAttrs.query.relationship;
-        if(this.currentAttrs.queryType === 2){
-          //support objectIds
-          def = this._getAllFeatures_SupportObjectIds(where, geometry, relationship);
+        // this.orderByFields = options.orderByFields;
+        if(options.pageSize > 0){
+          this.pageSize = options.pageSize;
         }else{
-          //don't support objectIds
-          def = this._getAllFeatures_NotSupportObjectIds(where, geometry, relationship);
+          this.pageSize = 1000;
         }
-        return def;
+        this.getFeatureCount();
       },
 
-      _getQueryType: function(layerDefinition){
-        var queryType = -1;
-
-        /*if (this._isServiceSupportsOrderBy(layerDefinition) &&
-          this._isServiceSupportsPagination(layerDefinition)) {
-          queryType = 1;
-        }*/
-
-        if (this._isSupportObjectIds(layerDefinition)) {
-          queryType = 2;
-        } else {
-          queryType = 3;
-        }
-        return queryType;
-      },
-
-      /*_isServiceSupportsOrderBy: function(layerInfo){
-        var isSupport = false;
-        if(layerInfo.advancedQueryCapabilities){
-          if(layerInfo.advancedQueryCapabilities.supportsOrderBy){
-            isSupport = true;
-          }
-        }
-        return isSupport;
-      },
-
-      _isServiceSupportsPagination: function(layerInfo){
-        var isSupport = false;
-        if(layerInfo.advancedQueryCapabilities){
-          if(layerInfo.advancedQueryCapabilities.supportsPagination){
-            isSupport = true;
-          }
-        }
-        return isSupport;
-      },*/
-
-      _isSupportObjectIds: function(layerInfo){
-        //http://resources.arcgis.com/en/help/arcgis-rest-api/#/Layer_Table/02r3000000zr000000/
-        //currentVersion is added from 10.0 SP1
-        //typeIdField is added from 10.0
-        var currentVersion = 0;
-        if(layerInfo.currentVersion){
-          currentVersion = parseFloat(layerInfo.currentVersion);
-        }
-        return currentVersion >= 10.0 || layerInfo.hasOwnProperty('typeIdField');
-      },
-
-      /*--------------------query support objectIds------------------------*/
-      //resolve {status,count,features}
-      _getAllFeatures_SupportObjectIds: function(where, geometry, relationship){
-        return this._queryIds(where, geometry, relationship).then(lang.hitch(this, function(objectIds){
-          //objectIds maybe null
-
-          var hasResults = objectIds && objectIds.length > 0;
-
-          if(!hasResults){
-            this.currentAttrs.query.allCount = 0;
-
-            return {
-              status: 1,
-              count: 0,
-              features: []
-            };
-          }
-
-          var allCount = objectIds.length;
-          this.currentAttrs.query.allCount = allCount;
-          this.currentAttrs.query.objectIds = objectIds;
-          this.currentAttrs.query.nextIndex = 0;//reset nextIndex
-          var maxRecordCount = this.currentAttrs.query.maxRecordCount;
-          /*if(allCount > this.currentAttrs.limit){
-            return {
-              status: -1,
-              count: allCount,
-              features: []
-            };
+      //return a deferred which resolves feature count
+      getFeatureCount: function(){
+        return this._getQueryType().then(lang.hitch(this, function(queryType){
+          if(queryType === 1){
+            return this._getCountForQueryType1();
+          }else if(queryType === 2){
+            return this._getCountForQueryType2();
           }else{
-            return this._onResultsScroll_SupportObjectIds();
-          }*/
+            return this._getCountForQueryType3();
+          }
+        }));
+      },
 
-          if(allCount > maxRecordCount){
-            return this._isContinue().then(lang.hitch(this, function(isContinue){
-              if(isContinue){
-                return this._onResultsScroll_SupportObjectIds();
-              }else{
-                return {
-                  status: -1,
-                  count: allCount,
-                  features: []
-                };
+      //return a deferred which resolves page count number
+      getPageCount: function(){
+        return this.getFeatureCount().then(lang.hitch(this, function(feautreCount){
+          if(feautreCount === 0){
+            return 0;
+          }
+          return Math.ceil(feautreCount / this.pageSize);
+        }));
+      },
+
+      //return a deferred which resolves FeatureSet object
+      //always resovles a FeatureSet object, featureSet.features maybe an empty array
+      getAllFeatures: function(){
+        return this.getPageCount().then(lang.hitch(this, function(pageCount){
+          if(pageCount > 0){
+            var defs = [];
+            for(var pageIndex = 1; pageIndex <= pageCount; pageIndex++){
+              defs.push(this.queryByPage(pageIndex));
+            }
+            return all(defs).then(lang.hitch(this, function(results){
+              var features = [];
+              for(var i = 0; i < results.length; i++){
+                if(results[i].features && results[i].features.length > 0){
+                  features = features.concat(results[i].features);
+                }
               }
+              //set order for features
+              features = this._setOrderByFieldValue(features);
+
+              var featureSet = results[0];
+              featureSet.features = features;
+              return featureSet;
             }));
           }else{
-            return this._onResultsScroll_SupportObjectIds();
+            // return this._getEmptyFeatureSet();
+            this._getEmptyFeatureSet().then(lang.hitch(this, function(emptyFeatureSet) {
+              return emptyFeatureSet;
+            }));
           }
-
         }));
       },
 
-      _isContinue: function(){
+      //set order, for type equals 2 or 3.
+      _setOrderByFieldValue: function(features){
+        if(this.queryType === 2 || this.queryType === 3){
+          var fieldName = this.query.outFields;
+          features.sort(function(item1, item2){
+            var value1 = item1.attributes[fieldName];
+            var value2 = item2.attributes[fieldName];
+            if(typeof value1 === 'string' && typeof value2 === 'string'){
+              return value1.localeCompare(value2);
+            }else{ //not works for strings if locale isn't en
+              if(value1 < value2){
+                return -1;
+              }else if(value1 === value2){
+                return 0;
+              }else{
+                return 1;
+              }
+            }
+          });
+        }
+        return features;
+      },
+
+      _getEmptyFeatureSet: function(){
         var def = new Deferred();
-        var queryFeaturesNls = window.jimuNls.queryFeatures;
-        var message = new Message({
-          message: queryFeaturesNls.tooManyFeaturesTip + " " + queryFeaturesNls.askForContinue,
-          buttons: [{
-            label: window.jimuNls.common.continue1,
-            onClick: lang.hitch(this, function(){
-              def.resolve(true);
-              message.close();
-            })
-          }, {
-            label: window.jimuNls.common.cancel,
-            onClick: lang.hitch(this, function(){
-              def.resolve(false);
-              message.close();
-            })
-          }]
-        });
+        if(!(this.layerDefinition && this.layerDefinition.geometryType)){
+          this._getLayerDefinition().then(lang.hitch(this, function(){
+            def.resolve(this._getEmptyFeatureSetHandler());
+          }));
+        }else{
+          def.resolve(this._getEmptyFeatureSetHandler());
+        }
         return def;
       },
 
-      //resolve {status,count,features}
-      _onResultsScroll_SupportObjectIds: function(){
-        var resultDef = new Deferred();
-        var allObjectIds = this.currentAttrs.query.objectIds;
-        var allCount = this.currentAttrs.query.allCount;
-        var nextIndex = this.currentAttrs.query.nextIndex;
-        var maxRecordCount = this.currentAttrs.query.maxRecordCount;
-        var relationship = this.currentAttrs.query.relationship;
+      _getEmptyFeatureSetHandler: function(){
+        var featureSet = new FeatureSet();
+        featureSet.features = [];
+        featureSet.geometryType = this.layerDefinition.geometryType;
+        featureSet.fields = [];
+        var allFields = lang.clone(this.layerDefinition.fields);
 
-        if(nextIndex >= allCount){
-          resultDef.resolve({
-            status: 1,
-            count: allCount,
-            features: this.currentAttrs.query.features
-          });
-          return resultDef;
+        if (this.query.outFields.indexOf('*') >= 0) {
+          featureSet.fields = allFields;
+        } else {
+          featureSet.fields = array.filter(allFields, lang.hitch(this, function(fieldInfo) {
+            return this.query.outFields.indexOf(fieldInfo.name) >= 0;
+          }));
         }
+        return featureSet;
+      },
 
-        var countLeft = allObjectIds.length - nextIndex;
-        var queryNum = Math.min(countLeft, maxRecordCount);
-        var partialIds = allObjectIds.slice(nextIndex, nextIndex + queryNum);
-        if(partialIds.length === 0){
-          resultDef.resolve({
-            status: 1,
-            count: allCount,
-            features: this.currentAttrs.query.features
-          });
-          return resultDef;
+      //return current page index, page index starts from 1, not zero
+      getCurrentPageIndex: function(){
+        return this.nextPageIndex;
+      },
+
+      //return a deferred which resolves FeatureSet
+      //if resolves null, means no features
+      queryNextPage: function(){
+        var pageIndex = this.nextPageIndex;
+        this.nextPageIndex++;
+        return this.queryByPage(pageIndex);
+      },
+
+      //return a deferred which resolves FeatureSet by pageIndex
+      //pageIndex is 1-based, not 0-based
+      //use queryByPage(this.getCurrentPageIndex()) to query current page
+      //queryByPage doesn't change current page index, queryNextPage does
+      queryByPage: function(pageIndex){
+        var def = null;
+        //need layerDefinition from _getLayerDefinition() from _getQueryType() from getFeatureCount() from constructor
+        // var emptyFeatureSet = this._getEmptyFeatureSet();
+        if(pageIndex <= 0){
+          def = new Deferred();
+          this._getEmptyFeatureSet().then(lang.hitch(this, function(emptyFeatureSet) {
+            def.resolve(emptyFeatureSet);
+          }));
+        }else{
+          def = this.getPageCount().then(lang.hitch(this, function(pageCount) {
+            if (pageIndex > pageCount) {
+              // return emptyFeatureSet;
+              this._getEmptyFeatureSet().then(lang.hitch(this, function(emptyFeatureSet) {
+                return emptyFeatureSet;
+              }));
+            }
+            if (this.queryType === 1) {
+              return this._queryPageForType1(pageIndex);
+            } else if (this.queryType === 2) {
+              return this._queryPageForType2(pageIndex);
+            } else {
+              return this._queryPageForType3(pageIndex);
+            }
+          }));
         }
+        return def;
+      },
 
-        //do query by objectIds
-        return this._queryByObjectIds(partialIds, true, relationship).then(lang.hitch(this, function(response){
-          var features = response.features;
-          this.currentAttrs.query.nextIndex += features.length;
-          this.currentAttrs.query.features = this.currentAttrs.query.features.concat(features);
-          return this._onResultsScroll_SupportObjectIds();
+      _getQueryType: function(){
+        var def = new Deferred();
+        if(this.queryType > 0){
+          def.resolve(this.queryType);
+        }else{
+          return this._getLayerDefinition().then(lang.hitch(this, function(layerDefinition){
+            this.queryType = clazz.getQueryType(layerDefinition);
+            return this.queryType;
+          }));
+        }
+        return def;
+      },
+
+      //-1 means rejected or canceled
+      //0 means def is null
+      //1 means pending
+      //2 means resolved
+      _getDefStatus: function(def){
+        if(def){
+          if(def.isFulfilled()){
+            if(def.isResolved()){
+              return 2;
+            }else{
+              return -1;
+            }
+          }else{
+            return 1;
+          }
+        }else{
+          return 0;
+        }
+      },
+
+      _getLayerDefinition: function(){
+        if(this._getDefStatus(this.layerDefinitionDef) <= 0){
+          this.layerDefinitionDef = this.sdf.getServiceDefinition(this.url)
+          .then(lang.hitch(this, function(layerDefinition){
+            this.layerDefinition = layerDefinition;
+            var maxRecordCount = layerDefinition.maxRecordCount;
+            if(maxRecordCount > 0){
+              var a = this.pageSizeOption > 0;
+              if(!a || this.pageSize > layerDefinition.maxRecordCount){
+                this.pageSize = maxRecordCount;
+              }
+            }
+            return this.layerDefinition;
+          }));
+        }
+        return this.layerDefinitionDef;
+      },
+
+      _getCountForQueryType1: function(){
+        if(this._getDefStatus(this.type1CountDef) <= 0){
+          this.type1CountDef = this._queryCount();
+        }
+        return this.type1CountDef;
+      },
+
+      _getCountForQueryType2: function(){
+        return this._getObjectIdsForQueryType2().then(lang.hitch(this, function(objectIds){
+          return objectIds.length;
         }));
       },
 
-      /*--------------------query doesn't support objectIds-------------------------*/
-      //resolve {status, count, features}
-      _getAllFeatures_NotSupportObjectIds: function(where, geometry, relationship){
-        return this._doQuery_NotSupportObjectIds(where, geometry, relationship).then(lang.hitch(this, function(fs){
-          return {
-            status: 1,
-            count: fs.length,
-            features: fs
-          };
+      _getObjectIdsForQueryType2: function(){
+        if(this._getDefStatus(this.type2ObjectIdsDef) <= 0){
+          this.type2ObjectIdsDef = this._queryIds();
+        }
+        return this.type2ObjectIdsDef;
+      },
+
+      _getCountForQueryType3: function(){
+        return this._doQueryForQueryType3().then(lang.hitch(this, function(response){
+          var features = response.features || [];
+          return features.length;
         }));
       },
 
-      //resolve features
-      _doQuery_NotSupportObjectIds: function(where, geometry, relationship){
-        var resultDef = new Deferred();
-        this._query(where, geometry, true, relationship).then(lang.hitch(this, function(response){
-          var features = response.features;
-          this.currentAttrs.query.allCount = features.length;
-          resultDef.resolve(features);
-        }), lang.hitch(this, function(err){
-          console.error(err);
-          resultDef.reject(err);
-        }));
-
-        return resultDef;
+      _doQueryForQueryType3: function(){
+        if(this._getDefStatus(this.type3QueryDef) <= 0){
+          this.type3QueryDef = this._query();
+        }
+        return this.type3QueryDef;
       },
 
-      /*----------------------------query-------------------------------*/
-      _getOutputFields: function(){
-        var result = ["*"];
+      _queryPageForType1: function(pageIndex){
+        //pageIndex is 1-based
+        var resultOffset = (pageIndex - 1) * this.pageSize;
+        return this._queryWithPaginationAndOrder(resultOffset);
+      },
+
+      _queryPageForType2: function(pageIndex){
+        //pageIndex is 1-based
+        return this._getObjectIdsForQueryType2().then(lang.hitch(this, function(allObjectIds){
+          var start = (pageIndex - 1) * this.pageSize;
+          var end = start + this.pageSize;
+          var objectIds = allObjectIds.slice(start, end);
+          return this._queryByObjectIds(objectIds);
+        }));
+      },
+
+      _queryPageForType3: function(pageIndex){
+        //pageIndex is 1-based
+        return this._doQueryForQueryType3().then(lang.hitch(this, function(response){
+          var result = lang.mixin({}, response);
+          result.features = [];
+          var allFeatures = response.features || [];
+          var start = (pageIndex - 1) * this.pageSize;
+          var end = start + this.pageSize;
+          result.features = allFeatures.slice(start, end);
+          return result;
+        }));
+      },
+
+      _tryLocaleNumber: function(value){
+        var result = jimuUtils.localizeNumber(value);
+        if(result === null || result === undefined){
+          result = value;
+        }
         return result;
       },
 
-      _query: function(where, geometry, returnGeometry, relationship){
-        var queryParams = new EsriQuery();
-        queryParams.where = where;
-        if(geometry){
-          queryParams.geometry = geometry;
+      _tryLocaleDate: function(date){
+        var result = jimuUtils.localizeDate(date);
+        if(!result){
+          result = date.toLocaleDateString();
         }
-        queryParams.outSpatialReference = this.currentAttrs.spatialReference;
-        queryParams.returnGeometry = !!returnGeometry;
-        queryParams.spatialRelationship = relationship;
-        queryParams.outFields = this._getOutputFields();
-        var queryTask = new QueryTask(this.currentAttrs.url);
+        return result;
+      },
+
+      _getLayerIndexByLayerUrl: function(layerUrl){
+        var lastIndex = layerUrl.lastIndexOf("/");
+        var a = layerUrl.slice(lastIndex + 1, layerUrl.length);
+        return parseInt(a, 10);
+      },
+
+      _getServiceUrlByLayerUrl: function(layerUrl){
+        var lastIndex = layerUrl.lastIndexOf("/");
+        var serviceUrl = layerUrl.slice(0, lastIndex);
+        return serviceUrl;
+      },
+
+      _isImageServiceLayer: function(url) {
+        return (url.indexOf('/ImageServer') > -1);
+      },
+
+      _isTable: function(layerDefinition){
+        return layerDefinition.type === "Table";
+      },
+
+      _getObjectIdField: function(){
+        return this.layerDefinition.objectIdField;
+      },
+
+      /*----------------------------query-------------------------------*/
+
+      _query: function(/* optional */ where){
+        var queryParams = new EsriQuery();
+        queryParams.where = where || this.query.where;
+        queryParams.geometry = this.query.geometry;
+        queryParams.outSpatialReference = this.query.outSpatialReference;
+        queryParams.returnGeometry = this.query.returnGeometry;
+        queryParams.spatialRelationship = this.query.spatialRelationship;
+        queryParams.outFields = this.query.outFields;
+        queryParams.returnDistinctValues = this.query.returnDistinctValues; //for distinct values
+        var queryTask = new QueryTask(this.url);
         return queryTask.execute(queryParams);
       },
 
-      _queryIds: function(where, geometry, relationship){
+      _queryIds: function(){
         var queryParams = new EsriQuery();
-        queryParams.where = where;
-        if(geometry){
-          queryParams.geometry = geometry;
-        }
+        queryParams.where = this.query.where;
+        queryParams.geometry = this.query.geometry;
         queryParams.returnGeometry = false;
-        queryParams.spatialRelationship = relationship;
-        queryParams.outSpatialReference = this.currentAttrs.spatialReference;
-        var queryTask = new QueryTask(this.currentAttrs.url);
-        return queryTask.executeForIds(queryParams);
+        queryParams.spatialRelationship = this.query.spatialRelationship;
+        queryParams.outSpatialReference = this.query.outSpatialReference;
+        var queryTask = new QueryTask(this.url);
+        return queryTask.executeForIds(queryParams).then(lang.hitch(this, function(objectIds){
+          //objectIds maybe null
+          if(!objectIds){
+            objectIds = [];
+          }
+          return objectIds;
+        }));
       },
 
-      _queryByObjectIds: function(objectIds, returnGeometry, relationship){
+      _queryByObjectIds: function(objectIds){
         var def = new Deferred();
         var queryParams = new EsriQuery();
-        queryParams.returnGeometry = !!returnGeometry;
-        queryParams.outSpatialReference = this.currentAttrs.spatialReference;
-        queryParams.outFields = this._getOutputFields();
+        queryParams.returnGeometry = this.query.returnGeometry;
+        queryParams.outSpatialReference = this.query.outSpatialReference;
+        queryParams.spatialRelationship = this.query.spatialRelationship;
+        queryParams.outFields = this.query.outFields;
         queryParams.objectIds = objectIds;
-        queryParams.spatialRelationship = relationship;
-        var queryTask = new QueryTask(this.currentAttrs.url);
+
+        var queryTask = new QueryTask(this.url);
         queryTask.execute(queryParams).then(lang.hitch(this, function(response){
           def.resolve(response);
         }), lang.hitch(this, function(err){
@@ -334,7 +442,7 @@ define([
             //joined layer doesn't support query by objectIds direcly, so if the layer is joined,
             //it will go into errorCallback of queryTask.
             //the alternative is using where to re-query.
-            var objectIdField = this.currentAttrs.objectIdField;
+            var objectIdField = this._getObjectIdField();
             var where = "";
             var count = objectIds.length;
             array.forEach(objectIds, lang.hitch(this, function(objectId, i){
@@ -343,7 +451,7 @@ define([
                 where += " OR ";
               }
             }));
-            this._query(where, null, returnGeometry, relationship).then(lang.hitch(this, function(response){
+            this._query(where).then(lang.hitch(this, function(response){
               def.resolve(response);
             }), lang.hitch(this, function(err){
               def.reject(err);
@@ -353,11 +461,107 @@ define([
           }
         }));
         return def;
+      },
+
+      _queryCount: function(){
+        var queryParams = new EsriQuery();
+        queryParams.where = this.query.where;
+        queryParams.geometry = this.query.geometry;
+        queryParams.outSpatialReference = this.query.outSpatialReference;
+        queryParams.spatialRelationship = this.query.spatialRelationship;
+        queryParams.returnGeometry = false;
+        var queryTask = new QueryTask(this.url);
+        return queryTask.executeForCount(queryParams);
+      },
+
+      _queryWithPaginationAndOrder: function(resultOffset){
+        var queryParams = new EsriQuery();
+        queryParams.where = this.query.where;
+        queryParams.geometry = this.query.geometry;
+        queryParams.outSpatialReference = this.query.outSpatialReference;
+        queryParams.returnGeometry = this.query.returnGeometry;
+        queryParams.spatialRelationship = this.query.spatialRelationship;
+        queryParams.outFields = this.query.outFields;
+        queryParams.returnDistinctValues = this.query.returnDistinctValues; //for distinct values
+        //set pagination info
+        queryParams.start = resultOffset;
+        queryParams.num = this.pageSize;
+
+        //set sorting info
+        var orderByFields = this.query.orderByFields;
+
+        if(orderByFields && orderByFields.length > 0){
+          queryParams.orderByFields = orderByFields;
+
+          //make sure orderFieldNames exist in outFields, otherwise the query will fail
+          var orderFieldNames = array.map(orderByFields, lang.hitch(this, function(orderByField){
+            var splits = orderByField.split(' ');
+            return splits[0];
+          }));
+
+          array.forEach(orderFieldNames, lang.hitch(this, function(orderFieldName){
+            if(queryParams.outFields.indexOf(orderFieldName) < 0){
+              queryParams.outFields.push(orderFieldName);
+            }
+          }));
+        }
+
+        var queryTask = new QueryTask(this.url);
+        return queryTask.execute(queryParams);
       }
 
     });
 
-    SingleTaskClass.getCleanCurrentAttrsTemplate = getCleanCurrentAttrsTemplate;
+    clazz._isServiceSupportsOrderBy = function(layerInfo) {
+      var isSupport = false;
+      if (layerInfo.advancedQueryCapabilities) {
+        if (layerInfo.advancedQueryCapabilities.supportsOrderBy) {
+          isSupport = true;
+        }
+      }
+      return isSupport;
+    };
 
-    return SingleTaskClass;
+    clazz._isServiceSupportsPagination = function(layerInfo) {
+      var isSupport = false;
+      if (layerInfo.advancedQueryCapabilities) {
+        if (layerInfo.advancedQueryCapabilities.supportsPagination) {
+          isSupport = true;
+        }
+      }
+      return isSupport;
+    };
+
+    clazz._isSupportObjectIds = function(layerInfo) {
+      //http://resources.arcgis.com/en/help/arcgis-rest-api/#/Layer_Table/02r3000000zr000000/
+      //currentVersion is added from 10.0 SP1
+      //typeIdField is added from 10.0
+      var currentVersion = 0;
+
+      var _layerDef = layerInfo.currentVersion ? layerInfo :
+        layerInfo.toJson().layerDefinition;
+
+      if (_layerDef.currentVersion) {
+        currentVersion = parseFloat(_layerDef.currentVersion);
+      }
+      return currentVersion >= 10.0 || _layerDef.hasOwnProperty('typeIdField');
+    };
+
+    //1 means service support orderby and pagination
+    //2 means service support query by objectIds
+    //3 means service can only do one query
+    clazz.getQueryType = function(layerDefinition) {
+      var queryType = -1;
+      if (clazz._isServiceSupportsOrderBy(layerDefinition) && clazz._isServiceSupportsPagination(layerDefinition)) {
+        queryType = 1;
+      } else if (clazz._isSupportObjectIds(layerDefinition)) {
+        queryType = 2;
+      } else {
+        queryType = 3;
+      }
+      return queryType;
+    };
+
+    return clazz;
+
   });

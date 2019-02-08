@@ -24,6 +24,7 @@ define([
     'dojo/_base/html',
     'dojo/dom-construct',
     'dojo/topic',
+    'dojo/keys',
     'dojo/on'
   ],
   function(
@@ -36,6 +37,7 @@ define([
     html,
     domConstruct,
     topic,
+    keys,
     on) {
     var clazz = declare([BaseWidget], {
 
@@ -45,6 +47,7 @@ define([
       moveTopOnActive: false,
 
       postCreate: function() {
+        html.setAttr(this.domNode, 'aria-label', window.apiNls.widgets.homeButton.home.title);
         this.own(topic.subscribe("appConfigChanged", lang.hitch(this, this.onAppConfigChanged)));
       },
 
@@ -77,6 +80,7 @@ define([
       createHomeDijit: function(options) {
         this.homeDijit = new HomeButton(options, domConstruct.create("div"));
         this.own(on(this.homeDijit, 'home', lang.hitch(this, 'onHome')));
+        this.own(on(this.domNode, 'keydown', lang.hitch(this, this.onHomeKeyDown)));
         html.place(this.homeDijit.domNode, this.domNode);
         this.homeDijit.startup();
       },
@@ -91,6 +95,12 @@ define([
 
       onExtentChange: function() {
         html.removeClass(this.domNode, 'inHome');
+      },
+
+      onHomeKeyDown: function(evt){
+        if(evt.keyCode === keys.ENTER){
+          this.homeDijit.home();//trigger home event
+        }
       },
 
       onHome: function(evt) {

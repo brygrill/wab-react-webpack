@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -91,9 +91,9 @@ function (declare, lang, array, html, baseFx, Deferred, all, on, topic, when,
 
           utils.setVerticalCenter(panel.domNode);
           this.openPanel(panel);
-          this.panels.push(panel);
 
-          on(panel.domNode, 'click', lang.hitch(this, this._onPanelClick, panel));
+          // on(panel.domNode, 'click', lang.hitch(this, this._onPanelClick, panel));
+          panel.domNode.addEventListener('click', lang.hitch(this, this._onPanelClick, panel), {capture: true});
 
           def.resolve(panel);
         }));
@@ -138,6 +138,12 @@ function (declare, lang, array, html, baseFx, Deferred, all, on, topic, when,
           def.reject();
           return def;
         }
+      }else{
+        if(!this.panels.some(function(p){
+          return p.id === panel.id;
+        })){
+          this.panels.push(panel);
+        }
       }
 
       if(!panel.started){
@@ -150,6 +156,7 @@ function (declare, lang, array, html, baseFx, Deferred, all, on, topic, when,
       }
 
       if(panel.state === 'opened'){
+        this._activePanel(panel);
         def.resolve(panel);
         return def;
       }
@@ -182,7 +189,7 @@ function (declare, lang, array, html, baseFx, Deferred, all, on, topic, when,
         return def;
       }
 
-      return this.playClosePanelAnimation(panel).then(function(){
+      return this.playClosePanelAnimation(panel).then(lang.hitch(this, function(){
         if(this.activePanel && this.activePanel.id === panel.id){
           this.activePanel.onDeActive();
           this.activePanel = null;
@@ -192,7 +199,7 @@ function (declare, lang, array, html, baseFx, Deferred, all, on, topic, when,
         if(panel.domNode){
           html.setStyle(panel.domNode, 'display', 'none');
         }
-      });
+      }));
     },
 
     minimizePanel: function(panel){
@@ -432,12 +439,25 @@ function (declare, lang, array, html, baseFx, Deferred, all, on, topic, when,
           }
         };
       }else if(panel.windowState === 'minimized'){
+        var minimizedPanels = this.panels.filter(function(p){
+          return p.windowState === 'minimized' && p.state !== 'closed' && p.id !== panel.id;
+        });
+
+        var bottom = 0;
+        if(minimizedPanels.some(function(p){
+          return p._mobileBottom === 0;
+        })){
+          bottom = panel.titleHeight;
+        }
+
+        panel._mobileBottom = bottom;
+
         if(box.h > box.w){ //portrait, stay at bottom
           return {
             left: 0,
             right: 0,
             top: 'auto',
-            bottom: 0,
+            bottom: bottom,
             width: 'auto',
             height: panel.titleHeight,
             contentHeight: 0,
@@ -453,7 +473,7 @@ function (declare, lang, array, html, baseFx, Deferred, all, on, topic, when,
             left: box.w - box.w / 2,
             right: 0,
             top: 'auto',
-            bottom: 0,
+            bottom: bottom,
             width: box.w / 2,
             height: panel.titleHeight,
             contentHeight: box.h,
@@ -515,6 +535,14 @@ function (declare, lang, array, html, baseFx, Deferred, all, on, topic, when,
     },
 
     _onPanelClick: function(panel){
+      this._activePanel(panel);
+    },
+
+    activatePanel: function(panel){
+      if(panel.state !== 'opened'){
+        return;
+      }
+
       this._activePanel(panel);
     },
 

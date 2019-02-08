@@ -1,0 +1,7 @@
+@import 'css/jimu-override.css';
+@import 'css/jimu-theme.css';
+@import 'css/launchpad.css';
+@import 'icons/styles.css';
+.esriPopup .titlePane {
+  background-color: #3b8fc4;
+}

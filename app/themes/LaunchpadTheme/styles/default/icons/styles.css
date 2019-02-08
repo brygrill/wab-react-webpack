@@ -1,0 +1,235 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "launchpad-icons";
+  src:url("fonts/launchpad-icons.eot");
+  src:url("fonts/launchpad-icons.eot?#iefix") format("embedded-opentype"),
+    url("fonts/launchpad-icons.woff") format("woff"),
+    url("fonts/launchpad-icons.ttf") format("truetype"),
+    url("fonts/launchpad-icons.svg#launchpad-icons") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="launchpad-icon-"]:before,
+[class*=" launchpad-icon-"]:before {
+  font-family: "launchpad-icons" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.launchpad-icon-swipe-horizontal:before {
+  content: "\47";
+}
+.launchpad-icon-plus:before {
+  content: "\61";
+}
+.launchpad-icon-arrow-drop-down:before {
+  content: "\6e";
+}
+.launchpad-icon-refresh:before {
+  content: "\6f";
+}
+.launchpad-icon-arrow-drop-up:before {
+  content: "\70";
+}
+.launchpad-icon-search:before {
+  content: "\63";
+}
+.launchpad-icon-arrow-up:before {
+  content: "\64";
+}
+.launchpad-icon-arrow-drop-left:before {
+  content: "\71";
+}
+.launchpad-icon-arrow-drop-right:before {
+  content: "\72";
+}
+.launchpad-icon-arrow-right:before {
+  content: "\65";
+}
+.launchpad-icon-arrow-left:before {
+  content: "\66";
+}
+.launchpad-icon-previous:before {
+  content: "\73";
+}
+.launchpad-icon-next:before {
+  content: "\28";
+}
+.launchpad-icon-arrow-down:before {
+  content: "\67";
+}
+.launchpad-icon-home:before {
+  content: "\68";
+}
+.launchpad-icon-play:before {
+  content: "\75";
+}
+.launchpad-icon-pause:before {
+  content: "\76";
+}
+.launchpad-icon-locate:before {
+  content: "\69";
+}
+.launchpad-icon-clear:before {
+  content: "\6a";
+}
+.launchpad-icon-error:before {
+  content: "\77";
+}
+.launchpad-icon-calendar:before {
+  content: "\78";
+}
+.launchpad-icon-check:before {
+  content: "\6b";
+}
+.launchpad-icon-double-arrow-up:before {
+  content: "\6c";
+}
+.launchpad-icon-folder-open:before {
+  content: "\79";
+}
+.launchpad-icon-folder-closed:before {
+  content: "\7a";
+}
+.launchpad-icon-double-arrow-down:before {
+  content: "\6d";
+}
+.launchpad-icon-fullscreen:before {
+  content: "\4d";
+}
+.launchpad-icon-grid:before {
+  content: "\4c";
+}
+.launchpad-icon-time:before {
+  content: "\4b";
+}
+.launchpad-icon-slide:before {
+  content: "\4a";
+}
+.launchpad-icon-link:before {
+  content: "\49";
+}
+.launchpad-icon-swipe-vertical:before {
+  content: "\48";
+}
+.launchpad-icon-minus:before {
+  content: "\62";
+}
+.launchpad-icon-visibility-off:before {
+  content: "\45";
+}
+.launchpad-icon-visibility-on:before {
+  content: "\46";
+}
+.launchpad-icon-three-dots:before {
+  content: "\44";
+}
+.launchpad-icon-map-pin:before {
+  content: "\43";
+}
+.launchpad-icon-apps:before {
+  content: "\42";
+}
+.launchpad-icon-add-circle:before {
+  content: "\41";
+}
+.launchpad-icon-fullscreen-exit:before {
+  content: "\4e";
+}
+.launchpad-icon-print:before {
+  content: "\4f";
+}
+.launchpad-icon-line:before {
+  content: "\51";
+}
+.launchpad-icon-polyline:before {
+  content: "\52";
+}
+.launchpad-icon-polyline-freehand:before {
+  content: "\53";
+}
+.launchpad-icon-triangle:before {
+  content: "\54";
+}
+.launchpad-icon-rectangle-fill:before {
+  content: "\55";
+}
+.launchpad-icon-circle-fill:before {
+  content: "\56";
+}
+.launchpad-icon-ellipse-fill:before {
+  content: "\57";
+}
+.launchpad-icon-polygon-fill:before {
+  content: "\58";
+}
+.launchpad-icon-polygon-freehand-fill:before {
+  content: "\59";
+}
+.launchpad-icon-text:before {
+  content: "\5a";
+}
+.launchpad-icon-measurement-area:before {
+  content: "\23";
+}
+.launchpad-icon-measurementd:before {
+  content: "\22";
+}
+.launchpad-icon-pin:before {
+  content: "\21";
+}
+.launchpad-icon-edit:before {
+  content: "\34";
+}
+.launchpad-icon-redo:before {
+  content: "\39";
+}
+.launchpad-icon-undo:before {
+  content: "\38";
+}
+.launchpad-icon-reshape:before {
+  content: "\37";
+}
+.launchpad-icon-union:before {
+  content: "\36";
+}
+.launchpad-icon-cut:before {
+  content: "\35";
+}
+.launchpad-icon-trash:before {
+  content: "\33";
+}
+.launchpad-icon-selection-subtract:before {
+  content: "\32";
+}
+.launchpad-icon-selection-add:before {
+  content: "\31";
+}
+.launchpad-icon-cursor:before {
+  content: "\25";
+}
+.launchpad-icon-point:before {
+  content: "\50";
+}

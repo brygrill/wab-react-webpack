@@ -5,6 +5,7 @@ define({
   "labelLayer": "Ime sloja",
   "itemZoomTo": "Približaj na",
   "itemTransparency": "Prosojnost",
+  "itemSetVisibilityRange": "Nastavi razpon vidljivosti",
   "itemTransparent": "Prozorno",
   "itemOpaque": "Neprosojno",
   "itemMoveUp": "Premakni gor",
@@ -23,5 +24,9 @@ define({
   "turnAllLabelsOff": "Izklopi vse napise",
   "turnAllLabelsOn": "Vklopi vse napise",
   "showLabels": "Pokaži napise",
-  "hideLables": "Skrij napise"
+  "hideLables": "Skrij napise",
+  "keyword": "Ključna beseda",
+  "basemapLayers": "Sloji temeljne karte",
+  "typeAKeywork": "Vnesi ključno besedo",
+  "layers": "Sloji"
 });

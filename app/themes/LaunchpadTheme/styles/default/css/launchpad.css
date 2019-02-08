@@ -1,0 +1,2587 @@
+a,
+a:visited {
+  color: #3b8fc4;
+  text-decoration: none;
+}
+a:hover,
+a:visited:hover {
+  text-decoration: underline;
+}
+.claro .jimu-widget-header {
+  background-color: rgba(51,51,51,0.9);
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  -webkit-transition: width ease-in 0.1s;
+  -moz-transition: width ease-in 0.1s;
+  -o-transition: width ease-in 0.1s;
+  -ms-transition: width ease-in 0.1s;
+  transition: width ease-in 0.1s;
+}
+.claro .jimu-widget-header .logo {
+  height: 50px;
+  min-width: 50px;
+  background-color: #3b8fc4;
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+}
+.claro .jimu-widget-header .logo img {
+  margin: 0 auto;
+  display: block;
+}
+.claro .jimu-widget-header .links-icon {
+  background-color: #262626;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  color: #3b8fc4;
+}
+.claro .jimu-widget-header .links {
+  margin-top: 5px;
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+}
+.claro .jimu-widget-header .links a {
+  display: block;
+  min-width: 150px;
+  height: 30px;
+  padding: 5px 10px;
+  color: #6d6e70;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.claro .jimu-widget-header .links a:hover {
+  background-color: #f1f1f1;
+  color: #333;
+}
+.claro .jimu-widget-header .links .signin-section {
+  border-top: 1px solid #ddd;
+}
+.claro .jimu-widget-search.has-transition {
+  -webkit-transition: left ease-in 0.1s;
+  -moz-transition: left ease-in 0.1s;
+  -o-transition: left ease-in 0.1s;
+  -ms-transition: left ease-in 0.1s;
+  transition: left ease-in 0.1s;
+}
+.claro.is-mobile .jimu-widget-header {
+  right: 0px !important;
+  left: auto !important;
+  width: 60px !important;
+  background-color: transparent !important;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.claro.is-mobile .jimu-widget-header .logo,
+.claro.is-mobile .jimu-widget-header .titles {
+  visibility: hidden;
+}
+.claro.is-mobile .jimu-widget-header .links-icon {
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+}
+.claro.is-mobile .jimu-widget-header .links-icon:hover {
+  background-color: #e6e6e6;
+}
+.claro.is-mobile .jimu-widget-header .links-icon:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "I";
+  color: #333;
+}
+.claro.is-mobile .jimu-widget-header .links-icon img {
+  display: none;
+}
+.claro.is-mobile .jimu-widget-header .links {
+  margin-top: 10px;
+  right: 0;
+}
+.claro .jimu-anchorbar-controller .docker {
+  background-color: rgba(51,51,51,0.9);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.claro .jimu-anchorbar-controller .docker .previousBtn,
+.claro .jimu-anchorbar-controller .docker .nextBtn {
+  background-image: none;
+  color: #6d6e70;
+  padding: 3px;
+  -webkit-transition: all ease 0.2s;
+  -moz-transition: all ease 0.2s;
+  -o-transition: all ease 0.2s;
+  -ms-transition: all ease 0.2s;
+  transition: all ease 0.2s;
+  cursor: default;
+}
+.claro .jimu-anchorbar-controller .docker .previousBtn.enabled,
+.claro .jimu-anchorbar-controller .docker .nextBtn.enabled {
+  color: #f1f1f1;
+  cursor: pointer;
+}
+.claro .jimu-anchorbar-controller .docker .previousBtn.enabled:hover,
+.claro .jimu-anchorbar-controller .docker .nextBtn.enabled:hover {
+  background-image: none;
+  background-color: #262626;
+}
+.claro .jimu-anchorbar-controller .docker .previousBtn:before,
+.claro .jimu-anchorbar-controller .docker .nextBtn:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "f";
+  font-size: 24px;
+}
+.claro .jimu-anchorbar-controller .docker .nextBtn:before {
+  content: "e";
+}
+.claro .jimu-anchorbar-controller .docker .seperatorLeft {
+  background-color: #262626;
+}
+.claro .jimu-anchorbar-controller .docker .seperatorRight {
+  background-color: #262626;
+}
+.claro .jimu-anchorbar-iconitem .icon-item {
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  -webkit-transition: margin ease-in 0.1s;
+  -moz-transition: margin ease-in 0.1s;
+  -o-transition: margin ease-in 0.1s;
+  -ms-transition: margin ease-in 0.1s;
+  transition: margin ease-in 0.1s;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+}
+.claro .jimu-anchorbar-iconitem .icon-item:before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  opacity: 0.05;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=5)";
+  filter: alpha(opacity=5);
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-transition: all ease-in 0.1s;
+  -moz-transition: all ease-in 0.1s;
+  -o-transition: all ease-in 0.1s;
+  -ms-transition: all ease-in 0.1s;
+  transition: all ease-in 0.1s;
+}
+.claro .jimu-anchorbar-iconitem .icon-item .icon {
+  width: 20px;
+  height: 20px;
+  margin-top: 10px;
+}
+.claro .jimu-anchorbar-iconitem .icon-item:hover:before {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.claro .jimu-anchorbar-iconitem .icon-item.dockable.selected {
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2) 0.5;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2) 0.5;
+}
+.claro .jimu-anchorbar-iconitem .status {
+  background-color: #fff;
+  width: 0;
+  height: 0;
+  display: block;
+  margin: 5px auto;
+  -webkit-transition: all ease-in 0.1s;
+  -moz-transition: all ease-in 0.1s;
+  -o-transition: all ease-in 0.1s;
+  -ms-transition: all ease-in 0.1s;
+  transition: all ease-in 0.1s;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.claro .jimu-anchorbar-iconitem .status.selected {
+  width: 4px;
+  height: 4px;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.claro.is-mobile .jimu-anchorbar-controller {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro .jimu-widget-homebutton,
+.claro .jimu-widget-mylocation {
+  background-color: transparent;
+}
+.claro .jimu-widget-homebutton .HomeButton .home,
+.claro .jimu-widget-mylocation .place-holder {
+  background-color: #fff;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  padding: 7px;
+}
+
+.claro .jimu-widget-mylocation .place-holder.nohttps {
+  color: #bcbcbc;
+}
+
+.claro .jimu-widget-mylocation .nohttps:hover{
+  background-color: #fff !important;
+}
+
+.claro .jimu-widget-homebutton .HomeButton .home:hover,
+.claro .jimu-widget-mylocation .place-holder:hover {
+  background-color: #e6e6e6;
+}
+.claro .HomeButton .home {
+  background-image: none;
+}
+.claro .HomeButton .home:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "h";
+}
+.claro .jimu-widget-mylocation .place-holder {
+  background-image: none;
+}
+.claro .jimu-widget-mylocation .place-holder:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "i";
+}
+.claro .jimu-widget-swipe .swipe-icon {
+  background: #da4d1e;
+  border: 0 none;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  height: 20px;
+  position: relative;
+  width: 40px;
+  /*display: inline-block;*/
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.claro .jimu-widget-swipe .swipe-icon:after {
+  content: "";
+  background: #fff;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  position: absolute;
+  height: 16px;
+  left: 2px;
+  padding: 0;
+  top: 2px;
+  width: 16px;
+  -webkit-transition: left 0.3s;
+  -moz-transition: left 0.3s;
+  -o-transition: left 0.3s;
+  -ms-transition: left 0.3s;
+  transition: left 0.3s;
+}
+.claro .jimu-widget-swipe .swipe-icon.swipe-icon-enable {
+  background: #35ac46;
+}
+.claro .jimu-widget-swipe .swipe-icon.swipe-icon-enable:after {
+  left: 22px;
+}
+.claro .jimu-widget-swipe .swipe-icon .swipe-icon-inner {
+  display: none;
+}
+.claro.is-mobile .esriSimpleSlider {
+  top: auto;
+  left: auto;
+  border: 0px solid transparent;
+  right: 10px;
+  bottom: 70px;
+}
+.claro .esriOverviewMap.ovwTL {
+  top: 20px !important;
+  left: 20px !important;
+}
+.claro .esriOverviewMap.ovwTR {
+  top: 20px !important;
+  right: 20px !important;
+}
+.claro .esriOverviewMap.ovwBL {
+  bottom: 20px !important;
+  left: 20px !important;
+}
+.claro .esriOverviewMap.ovwBR {
+  bottom: 20px !important;
+  right: 20px !important;
+}
+.claro .esriOverviewMap .ovwShow,
+.claro .esriOverviewMap .ovwHide {
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  background-image: none;
+  background-color: #fff;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+}
+.claro .esriOverviewMap .ovwShow:before,
+.claro .esriOverviewMap .ovwHide:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "E";
+  font-size: 20px;
+}
+.claro .esriOverviewMap .ovwShow:hover,
+.claro .esriOverviewMap .ovwHide:hover {
+  background-color: #e6e6e6;
+}
+.claro .esriOverviewMap .ovwHide:before {
+  content: "F";
+}
+.claro .esriOverviewMap.ovwTL .ovwContainer {
+  top: 45px;
+  left: 5px;
+}
+.claro .esriOverviewMap.ovwTR .ovwContainer {
+  top: 45px;
+  right: 5px;
+}
+.claro .esriOverviewMap.ovwBL .ovwContainer {
+  bottom: 45px;
+  left: 5px;
+}
+.claro .esriOverviewMap.ovwBR .ovwContainer {
+  bottom: 45px;
+  right: 5px;
+}
+.claro .esriOverviewMap .ovwContainer {
+  padding: 5px;
+  background: #fff;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  border: 0 none;
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+}
+.claro .esriOverviewMap .ovwContainer .map .container {
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+.claro .esriOverviewMap .ovwMaximize,
+.claro .esriOverviewMap .ovwRestore {
+  background-image: none;
+  background-color: #fff;
+  padding: 5px;
+  width: 26px;
+  height: 26px;
+  margin: 5px;
+}
+.claro .esriOverviewMap .ovwMaximize:before,
+.claro .esriOverviewMap .ovwRestore:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.claro .esriOverviewMap .ovwMaximize:before {
+  content: "M";
+}
+.claro .esriOverviewMap .ovwRestore:before {
+  content: "N";
+}
+.claro.is-mobile .jimu-widget-overview {
+  display: none;
+}
+.claro .esriScalebarLine {
+  border-color: #6d6e70;
+  border-width: 1px;
+  height: 5px;
+  top: 5px;
+}
+.claro .esriScalebarEnglishLine {
+  top: 5px;
+}
+.claro .esriScaleLabelDiv {
+  top: 0;
+}
+.claro .esriScalebarLabel {
+  color: #6d6e70;
+  font-weight: normal;
+  font-size: 12px;
+  height: 8px;
+  top: 2px;
+}
+.claro .esriScalebarRuler {
+  border-color: #6d6e70;
+}
+.claro .esriScalebarRulerBlock {
+  background-color: #6d6e70;
+}
+.claro .jimu-widget-coordinate .coordinate-info {
+  font-size: 12px;
+  color: #6d6e70;
+}
+.claro .jimu-widget-coordinate .dijitMenu .dijitMenuItem td{
+  color: #fff !important;
+}
+.claro.is-mobile .jimu-widget-coordinate {
+  display: none;
+}
+.claro .esriAttribution {
+  font-size: 10px;
+  color: #6d6e70;
+}
+.claro .jimu-widget-search {
+  min-height: 0;
+}
+.claro .jimu-widget-search .arcgisSearch * {
+  outline: none;
+}
+.claro .jimu-widget-search .arcgisSearch .searchGroup {
+  display: table;
+  width: 100%;
+}
+.claro .jimu-widget-search .arcgisSearch .searchGroup .searchExpandContainer,
+.claro .jimu-widget-search .arcgisSearch .searchGroup .searchSubmit {
+  display: table-cell;
+  float: none;
+}
+.claro .jimu-widget-search .arcgisSearch .searchGroup .searchAnimate {
+  display: table;
+  width: 100%;
+}
+.claro .jimu-widget-search .arcgisSearch .searchGroup .searchAnimate > .searchInputGroup {
+  display: table-cell;
+  float: none;
+}
+.claro .jimu-widget-search .arcgisSearch .searchGroup .searchExpandContainer {
+  width: 100%;
+  background-color: #fff;
+  -webkit-border-radius: 15px 0 0 15px;
+  border-radius: 15px 0 0 15px;
+}
+.claro .jimu-widget-search .arcgisSearch .searchGroup .searchInput {
+  width: 100%;
+  color: #6d6e70;
+  font-size: 12px;
+  border: 0 none;
+  padding: 5px 25px 5px 15px;
+  -webkit-border-radius: 15px 0 0 15px;
+  border-radius: 15px 0 0 15px;
+}
+.claro .jimu-widget-search .arcgisSearch .searchGroup .searchInput:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.claro .jimu-widget-search .arcgisSearch .searchBtn {
+  color: #3b8fc4;
+  border: 0 none;
+  padding: 5px;
+}
+.claro .jimu-widget-search .arcgisSearch .searchBtn:hover,
+.claro .jimu-widget-search .arcgisSearch .searchBtn:focus {
+  background-color: #e6e6e6;
+  color: #3b8fc4;
+}
+.claro .jimu-widget-search .arcgisSearch .searchToggle,
+.claro .jimu-widget-search .arcgisSearch .searchSubmit {
+  position: relative;
+}
+.claro .jimu-widget-search .arcgisSearch .searchToggle:before,
+.claro .jimu-widget-search .arcgisSearch .searchSubmit:before {
+  content: "";
+  display: block;
+  width: 1px;
+  position: absolute;
+  background: #ddd;
+  top: 5px;
+  bottom: 5px;
+}
+.claro .jimu-widget-search .arcgisSearch .searchToggle {
+  -webkit-border-radius: 15px 0 0 15px;
+  border-radius: 15px 0 0 15px;
+}
+.claro .jimu-widget-search .arcgisSearch .searchToggle:before {
+  right: 0;
+}
+.claro .jimu-widget-search .arcgisSearch .searchSubmit {
+  color: #3b8fc4;
+  border: 0 none;
+  padding: 5px 10px;
+  -webkit-border-radius: 0 15px 15px 0;
+  border-radius: 0 15px 15px 0;
+}
+.claro .jimu-widget-search .arcgisSearch .searchSubmit:before {
+  left: 0;
+}
+.claro .jimu-widget-search .arcgisSearch .searchSubmit:hover,
+.claro .jimu-widget-search .arcgisSearch .searchSubmit:focus {
+  background-color: #e6e6e6;
+  color: #3b8fc4;
+}
+.claro .jimu-widget-search .arcgisSearch .searchIcon {
+  vertical-align: top;
+}
+.claro .jimu-widget-search .arcgisSearch .hasMultipleSources .searchToggle {
+  display: table-cell;
+}
+.claro .jimu-widget-search .arcgisSearch .hasMultipleSources .searchInput {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro .jimu-widget-search .arcgisSearch .esri-icon-search {
+  font-size: 20px;
+}
+.claro .jimu-widget-search .arcgisSearch .esri-icon-down-arrow:before,
+.claro .jimu-widget-search .arcgisSearch .esri-icon-close:before,
+.claro .jimu-widget-search .arcgisSearch .esri-icon-loading-indicator:before,
+.claro .jimu-widget-search .arcgisSearch .esri-icon-search:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  vertical-align: top;
+}
+.claro .jimu-widget-search .arcgisSearch .esri-icon-down-arrow:before {
+  content: "n";
+}
+.claro .jimu-widget-search .arcgisSearch .esri-icon-close {
+  color: #999;
+  padding: 5px 0px;
+}
+.claro .jimu-widget-search .arcgisSearch .esri-icon-close:before {
+  content: "j";
+}
+.claro .jimu-widget-search .arcgisSearch .esri-icon-loading-indicator:before {
+  content: "o";
+}
+.claro .jimu-widget-search .arcgisSearch .esri-icon-search:before {
+  content: "c";
+}
+.claro .arcgisSearch .searchMenu {
+  padding: 5px 0;
+  margin: 2px 0 0;
+  color: #6d6e70;
+  font-size: 12px;
+  line-height: 16px;
+  background-color: #fff;
+  -webkit-background-clip: padding;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border: 0 none;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  top: 100%;
+  left: 0;
+}
+.claro .arcgisSearch .searchMenu li {
+  padding: 5px 10px;
+  line-height: 20px;
+}
+.claro .arcgisSearch .searchMenu li:hover,
+.claro .arcgisSearch .searchMenu li:focus {
+  background-color: #f1f1f1;
+}
+.claro .arcgisSearch .searchMenu li.active,
+.claro .arcgisSearch .searchMenu li.result-item-selected {
+  background-color: #3b8fc4;
+  color: #fff;
+  font-size: 12px;
+}
+.claro .arcgisSearch .searchMenu li.active:hover,
+.claro .arcgisSearch .searchMenu li.result-item-selected:hover {
+  background-color: #3b8fc4;
+  color: #fff;
+}
+.claro .arcgisSearch .searchMenu .menuHeader {
+  background-color: transparent;
+  color: #999;
+  font-size: 14px;
+  padding: 0 10px;
+  line-height: 30px;
+  border-bottom: 1px solid #ddd;
+}
+.claro .arcgisSearch .show-all-results {
+  height: auto;
+  padding: 5px 10px;
+  margin: 5px 0 0;
+  color: #6d6e70;
+  font-size: 12px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+}
+.claro .arcgisSearch .noResultsBody {
+  padding: 10px;
+}
+.claro .arcgisSearch .searchClear {
+  top: 0;
+  background-color: #fff;
+}
+.claro.is-mobile .jimu-widget-search {
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+}
+.claro.is-mobile .jimu-widget-search .arcgisSearch .searchToggle,
+.claro.is-mobile .jimu-widget-search .arcgisSearch .searchGroup .searchInput,
+.claro.is-mobile .jimu-widget-search .arcgisSearch .searchSubmit {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro.is-mobile.header-has-links .jimu-widget-search {
+  right: 60px !important;
+}
+.claro .jimu-preload-widget-icon-panel >.jimu-panel-title {
+  width: 100%;
+  background-color: #333;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.claro .jimu-preload-widget-icon-panel >.jimu-panel-title >.title-label {
+  font-size: 14px;
+}
+.claro .jimu-preload-widget-icon-panel >.jimu-panel-title >.close-btn {
+  background-image: none;
+}
+.claro .jimu-preload-widget-icon-panel >.jimu-panel-title >.close-btn:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "j";
+  display: block;
+  position: relative;
+  top: 50%;
+  margin-top: -10px;
+  font-size: 20px;
+  text-align: center;
+}
+.claro .jimu-on-screen-widget-panel .title-label {
+  color: #f1f1f1;
+}
+.claro .jimu-on-screen-widget-panel >.jimu-panel-title {
+  background-color: #333;
+  color: #f1f1f1;
+}
+.claro .jimu-on-screen-widget-panel >.jimu-panel-title >.close-btn {
+  background-image: none;
+  width: 36px;
+  height: 33px;
+  margin: 0;
+}
+.claro .jimu-on-screen-widget-panel >.jimu-panel-title >.close-btn:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "j";
+  display: block;
+  position: relative;
+  top: 50%;
+  margin-top: -10px;
+  font-size: 20px;
+  text-align: center;
+}
+.claro .jimu-launchpad-panel .title-label {
+  line-height: 33px;
+}
+.claro .jimu-launchpad-panel .title {
+  height: 36px;
+  color: #f1f1f1;
+}
+.claro .jimu-launchpad-panel .title .expand-icon,
+.claro .jimu-launchpad-panel .title .close-icon {
+  background-image: none;
+}
+.claro .jimu-launchpad-panel .title .expand-icon:before,
+.claro .jimu-launchpad-panel .title .close-icon:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "l";
+  display: block;
+  position: relative;
+  top: 50%;
+  margin-top: -10px;
+  font-size: 20px;
+  text-align: center;
+}
+.claro .jimu-launchpad-panel .title .expand-icon:before {
+  content: "l";
+}
+.claro .jimu-launchpad-panel .title .expand-icon.minimized:before {
+  content: "m";
+}
+.claro .jimu-launchpad-panel .title .close-icon:before {
+  content: "j";
+}
+.claro .jimu-launchpad-panel .title .widget-icon {
+  width: 36px;
+  height: 36px;
+  left: 0;
+  top: 0;
+  padding: 10px;
+}
+.claro .jimu-launchpad-panel .title .widget-icon .icon {
+  width: 16px;
+  height: 16px;
+}
+.claro .jimu-launchpad-panel .jimu-panel-content {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 36px;
+}
+.claro .launchpad-tooltip .dijitTooltipContainer {
+  color: #6d6e70;
+  padding: 5px 15px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  opacity: 0.85;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
+  filter: alpha(opacity=85);
+}
+.claro .launchpad-tooltip.dijitTooltipAbove {
+  padding-bottom: 12px;
+}
+.claro .launchpad-tooltip.dijitTooltipAbove .dijitTooltipConnector {
+  opacity: 0.85;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=85)";
+  filter: alpha(opacity=85);
+  border-top-color: #fff;
+  bottom: 5px;
+}
+.claro .launchpad-tooltip.dijitTooltipAbove .dijitTooltipConnector:after {
+  content: none;
+}
+.claro.is-mobile .expand-icon {
+  display: none;
+}
+.claro .esriLegendServiceLabel {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  line-height: 20px;
+}
+.claro .jimu-widget-layerList .showLegend-div {
+  width: 16px;
+  height: 16px;
+  color: #3b8fc4;
+}
+.claro .jimu-widget-layerList .layer-row-mouseover {
+  background-color: #f5f5f5;
+}
+.claro .jimu-widget-layerList .jimu-widget-row-selected {
+  background-color: #f1f1f1;
+}
+.claro .jimu-widget-layerList .layers-section .layer-list-title {
+  height: auto;
+  line-height: 20px;
+  color: #333;
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+.claro .jimu-widget-layerList .div-select {
+  right: -5px;
+}
+.claro .jimu-widget-layerList .div-content {
+  color: #4d4d4d;
+  padding-left: 20px;
+}
+.claro .jimu-widget-layerList .layers-list-popupMenu-div {
+  width: 20px;
+  padding-top: 10px;
+}
+
+/*
+.claro .jimu-widget-layerList .jimu-dropmenu .jimu-icon-btn {
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+  min-width: 16px;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+
+}
+*/
+.claro .jimu-widget-layerList .jimu-dropmenu .jimu-icon-btn:before {
+  content: none;
+}
+
+.claro .jimu-widget-layerList .jimu-dropmenu .jimu-icon-btn-selected {
+  color: #3b8fc4;
+  background-color: #fff;
+  border-color: #ddd;
+}
+
+.claro .jimu-widget-layerList .jimu-dropmenu .drop-menu {
+  outline-color: transparent;
+  outline-style: none;
+  outline-width: 0;
+  color: #6d6e70;
+  z-index: 1 !important;
+}
+.claro .jimu-widget-layerList .jimu-dropmenu .menu-item {
+  line-height: 40px;
+}
+.claro .jimu-widget-layerList .popup-menu-transparency-body {
+  color: #999;
+  font-size: 10px;
+  min-width: 200px;
+  height: 80px;
+  background-color: #fff;
+  border: 1px solid #3b8fc4;
+  outline: none;
+  padding: 5px 10px;
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  margin-left: 10px;
+  z-index: 3;
+}
+.claro .jimu-widget-layerList .popup-menu-transparency-body .label {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.claro .jimu-widget-layerList .legends-div {
+  margin-left: 50px;
+}
+.claro .jimu-widget-basemapgallery .esriBasemapGalleryThumbnail {
+  height: 67px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.claro .jimu-widget-basemapgallery .esriBasemapGalleryNode:hover {
+  color: #3b8fc4;
+}
+.claro .jimu-widget-basemapgallery .esriBasemapGalleryNode:hover .esriBasemapGalleryThumbnail {
+  border-color: #3b8fc4 !important;
+}
+.claro .jimu-widget-basemapgallery .esriBasemapGallerySelectedNode {
+  color: #3b8fc4;
+}
+.claro .jimu-widget-basemapgallery .esriBasemapGallerySelectedNode a {
+  display: block;
+  position: relative;
+}
+.claro .jimu-widget-basemapgallery .esriBasemapGallerySelectedNode a:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "k";
+  position: absolute;
+  background: #3b8fc4;
+  display: block;
+  width: 30px;
+  height: 30px;
+  left: 50%;
+  top: 50%;
+  margin-left: -15px;
+  margin-top: -15px;
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+  padding: 5px;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.claro .jimu-widget-basemapgallery .esriBasemapGallerySelectedNode .esriBasemapGalleryThumbnail {
+  border-color: #fff !important;
+  outline: 1px solid #3b8fc4;
+}
+.claro .esriBasemapGalleryLabelContainer {
+  height: 3em;
+  margin-top: 5px;
+}
+/*
+.claro .jimu-widget-timeslider {
+  margin: 5px;
+}
+.claro .jimu-widget-timeslider .time-content {
+  height: auto;
+  background: #fff;
+  padding: 0;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+}
+.claro .jimu-widget-timeslider .time-content .time-close {
+  position: absolute;
+  right: 0;
+  top: 2px;
+  background-image: none;
+  width: 35px;
+  height: 33px;
+  cursor: pointer;
+}
+.claro .jimu-widget-timeslider .time-content .time-close:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  content: "j";
+  display: block;
+  position: relative;
+  top: 50%;
+  margin-top: -10px;
+  font-size: 20px;
+  text-align: center;
+}
+.claro .jimu-widget-timeslider .time-extent {
+  height: 35px;
+  line-height: 35px;
+  font-size: 14px;
+  font-weight: normal;
+  color: #6d6e70;
+  background-color: #f1f1f1;
+  margin-bottom: 10px;
+}
+.claro .jimu-widget-timeslider .layer-labels {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.claro .jimu-widget-timeslider .slider-content {
+  position: static;
+  padding: 10px 10px 20px;
+}
+.claro .jimu-widget-timeslider .slider-content:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .tsTicks {
+  height: 8px;
+  margin-top: 3px;
+  margin-bottom: -4px;
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .dijitButton .dijitButtonNode {
+  min-width: 0;
+  padding: 5px;
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .ts {
+  margin-top: 10px;
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .tsButton {
+  background-image: none;
+  width: 20px;
+  height: 20px;
+  color: #3b8fc4;
+  margin: 0;
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .tsButton:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .tsPlayButton:before {
+  content: "u";
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .tsPauseButton:before {
+  content: "v";
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .tsNextButton:before {
+  content: "t";
+}
+.claro .jimu-widget-timeslider .esriTimeSlider .tsPrevButton:before {
+  content: "s";
+}*/
+.claro .jimu-widget-bookmark .jimu-img-node {
+  color: #6d6e70;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro .jimu-widget-bookmark .jimu-img-node .node-box {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro .jimu-widget-bookmark .jimu-img-node:hover {
+  color: #3b8fc4;
+}
+.claro .jimu-widget-bookmark .jimu-img-node:hover img {
+  border: 1px solid #3b8fc4;
+}
+.claro .jimu-widget-bookmark .jimu-img-node.jimu-state-selected .node-box img {
+  border: 1px solid #3b8fc4;
+}
+.claro .jimu-widget-bookmark .jimu-img-node.jimu-state-selected .node-box:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "k";
+  position: absolute;
+  background: #3b8fc4;
+  display: block;
+  width: 30px;
+  height: 30px;
+  left: 50%;
+  top: 50%;
+  margin-left: -15px;
+  margin-top: -15px;
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+  padding: 5px;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  transform: translate(0,0);
+}
+.claro .jimu-widget-bookmark .jimu-img-node.jimu-state-selected .node-label {
+  background-color: transparent;
+}
+.claro .jimu-widget-bookmark .btn-add {
+  color: #3b8fc4;
+  width: 30px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  background-color: #fff;
+  text-align: center;
+}
+.claro .jimu-widget-bookmark .btn-add .jimu-center-img {
+  display: none;
+}
+.claro .jimu-widget-bookmark .btn-add:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "a";
+  line-height: 30px;
+  top: 0;
+}
+.claro .jimu-widget-bookmark .btn-add:hover {
+  background-color: #e6e6e6;
+}
+.claro .jimu-widget-bookmark .play-section {
+  margin-top: 20px;
+}
+.claro .jimu-widget-bookmark .jimu-btn.btn-delete {
+  width: 120px;
+  float: right;
+}
+.jimu-rtl .claro .jimu-widget-bookmark .jimu-btn.btn-delete {
+  float: left;
+}
+.claro .jimu-widget-attributetable.jimu-widget {
+  padding: 0;
+  z-index: 100;
+}
+.claro .jimu-widget-attributetable .dijitToolbar {
+  background-color: #333;
+  border-bottom: 1px solid #4d4d4d;
+}
+.claro .jimu-widget-attributetable .dijitToolbar .dijitButton .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitDropDownButton .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitComboButton .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitToggleButton .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitComboBox .dijitButtonNode {
+  min-width: 0;
+  color: #999;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+.claro .jimu-widget-attributetable .dijitToolbar .dijitButtonHover .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitToggleButtonHover .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitComboButtonHover .dijitButtonNode {
+  background-color: #262626;
+  border-color: transparent;
+  color: #fff;
+}
+.claro .jimu-widget-attributetable .dijitToolbar .dijitButtonActive .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitToggleButtonActive .dijitButtonNode {
+  background-color: #262626;
+  border-color: transparent;
+  color: #fff;
+}
+.claro .jimu-widget-attributetable .dijitToolbarSeparator {
+  background-color: #4d4d4d;
+}
+.claro .jimu-widget-attributetable .dijitTabListContainer-top {
+  background-color: #333;
+}
+.claro .jimu-widget-attributetable .dijitTabListContainer-top .dijitTabContainerTop-tabs .dijitTab {
+  font-size: 12px;
+  border-top: 0 none;
+  padding: 15px 20px 10px;
+  min-width: 100px;
+  background: transparent;
+  color: #ddd;
+}
+.claro .jimu-widget-attributetable .dijitTabListContainer-top .dijitTabContainerTop-tabs .dijitTab.dijitTabChecked {
+  color: #fff;
+  border-top-color: transparent;
+  border-bottom: 4px solid #3b8fc4;
+}
+.claro .jimu-widget-attributetable .dijitTabListContainer-top .tabStripButton {
+  margin-top: 10px;
+}
+.claro .jimu-widget-attributetable .dijitTabListContainer-top .tabStripButton .dijitTabStripIcon {
+  background-color: #3b8fc4;
+  border: 0 none;
+  color: #fff;
+}
+.claro .jimu-widget-attributetable .dijitTabContainerTop-dijitContentPane {
+  padding: 0;
+}
+.claro .jimu-widget-attributetable .dgrid {
+  border: 0 none;
+}
+.claro .jimu-widget-attributetable .dgrid-row .dgrid-cell {
+  padding: 5px 10px;
+  border-right: 0 none;
+}
+.claro .jimu-widget-attributetable .dgrid-status {
+  padding: 5px;
+}
+.claro .jimu-widget-attributetable-move {
+  height: 11px;
+  background-color: #333;
+  border-bottom: 1px solid #4d4d4d;
+}
+.claro .jimu-widget-attributetable-thumb {
+  background-color: #999;
+  margin: 5px auto;
+}
+.claro .jimu-widget-attributetable-bar.close {
+  height: 40px;
+  width: 40px;
+  padding: 10px;
+  margin: 0;
+  background-image: none;
+  background-color: #fff;
+  border: 0 none;
+  cursor: pointer;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  position: absolute;
+  right: 20px;
+  left: auto;
+  top: auto;
+  bottom: 80px;
+}
+.claro .jimu-widget-attributetable-bar.close:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "L";
+  font-size: 20px;
+}
+.claro .jimu-widget-attributetable-bar.open {
+  display: none;
+}
+.claro .jimu-widget-attributetable .dijitToolbar .dijitToggleButton,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitButton,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitDropDownButton,
+.claro .jimu-widget-attributetable .dijitToolbar .dijitComboButton {
+  border-left: 1px solid #4d4d4d;
+}
+.claro .jimu-widget-attributetable .dijitToolbar >:first-child {
+  border-left: 0 none;
+}
+.claro .jimu-widget-attributetable .dijitToolbar .jimu-float-trailing {
+  border: 0 none;
+  margin: 0;
+}
+.claro .jimu-widget-attributetable .dijitToolbar .jimu-float-trailing .esriAttributeTableCloseImage {
+  margin: 0;
+}
+.claro .esriAttributeTableOptionsImage,
+.claro .esriAttributeTableZoomImage,
+.claro .esriAttributeTableClearImage,
+.claro .esriAttributeTableRefreshImage,
+.claro .esriAttributeTableCloseImage {
+  background-image: none;
+  height: 20px;
+  width: 20px;
+}
+.claro .esriAttributeTableOptionsImage:before,
+.claro .esriAttributeTableZoomImage:before,
+.claro .esriAttributeTableClearImage:before,
+.claro .esriAttributeTableRefreshImage:before,
+.claro .esriAttributeTableCloseImage:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+}
+.claro .esriAttributeTableOptionsImage:before {
+  content: "B";
+}
+.claro .esriAttributeTableZoomImage:before {
+  content: "C";
+}
+.claro .esriAttributeTableClearImage:before {
+  content: "j";
+}
+.claro .esriAttributeTableRefreshImage:before {
+  content: "o";
+}
+.claro .esriAttributeTableCloseImage:before {
+  content: "j";
+}
+.claro.is-mobile .jimu-widget-attributetable-bar.close {
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  right: auto;
+  left: 10px;
+  bottom: 70px;
+}
+.claro.is-mobile .jimu-widget-attributetable-bar.close:before {
+  font-size: 16px;
+}
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitToggleButton,
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitButton,
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitDropDownButton,
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitComboButton {
+  margin-right: 0;
+}
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitToggleButton .dijitButtonNode,
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitButton .dijitButtonNode,
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitDropDownButton .dijitButtonNode,
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitComboButton .dijitButtonNode {
+  padding: 5px;
+  font-size: 10px;
+}
+.claro.is-mobile .jimu-widget-attributetable .dijitToolbar .dijitDropDownButton .dijitArrowButtonInner {
+  margin-left: 0;
+}
+.claro.is-mobile .esriAttributeTableOptionsImage,
+.claro.is-mobile .esriAttributeTableZoomImage,
+.claro.is-mobile .esriAttributeTableClearImage,
+.claro.is-mobile .esriAttributeTableRefreshImage {
+  display: none;
+}
+/*
+.claro .jimu-widget-swipe {
+  background-color: transparent;
+  margin: 5px;
+}
+.claro .jimu-widget-swipe .swipe-layer-menu {
+  color: #6d6e70;
+  padding: 14px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  z-index: 50;
+}
+.claro .jimu-widget-swipe .swipe-layer-menu .hint {
+  font-weight: normal;
+  padding-bottom: 10px;
+}
+.claro .jimu-widget-swipe .swipe-layer-menu .dijitSelect {
+  color: #6d6e70;
+  border-color: #ddd;
+}
+.claro .jimu-widget-swipe .swipe-layer-menu .dijitArrowButton {
+  padding: 5px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}*/
+.claro .LayerSwipe .vertical,
+.claro .LayerSwipe .horizontal {
+  background-color: #f8f8f8;
+  border-color: #f8f8f8;
+  -webkit-box-shadow: 1px 0 0.5px rgba(0,0,0,0.3), 2px 0 2px rgba(0,0,0,0.2);
+  box-shadow: 1px 0 0.5px rgba(0,0,0,0.3), 2px 0 2px rgba(0,0,0,0.2);
+}
+.claro .LayerSwipe .vertical .handle,
+.claro .LayerSwipe .horizontal .handle {
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  background-color: #3b8fc4;
+  border: 0 none;
+  background-image: none;
+  padding: 8px;
+  color: #f1f1f1;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  -webkit-transition: all 0.1s ease;
+  -moz-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  -ms-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+.claro .LayerSwipe .vertical .handle:before,
+.claro .LayerSwipe .horizontal .handle:before {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "G";
+}
+.claro .LayerSwipe .vertical.dojoMoveItem,
+.claro .LayerSwipe .horizontal.dojoMoveItem,
+.claro .LayerSwipe .vertical:hover,
+.claro .LayerSwipe .horizontal:hover {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.claro .LayerSwipe .vertical.dojoMoveItem .handle,
+.claro .LayerSwipe .horizontal.dojoMoveItem .handle,
+.claro .LayerSwipe .vertical:hover .handle,
+.claro .LayerSwipe .horizontal:hover .handle {
+  -webkit-box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 7px 3px -4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.2);
+}
+.claro .LayerSwipe .vertical {
+  width: 3px;
+}
+.claro .LayerSwipe .horizontal {
+  height: 3px;
+  -webkit-box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+}
+.claro .LayerSwipe .horizontal .handle:before {
+  content: "H";
+}
+.claro .gis_PrintDijit .formContainer .dijit {
+  margin-bottom: 5px;
+}
+.claro .gis_PrintDijit .buttonActionBar {
+  padding: 0 5px;
+}
+.claro .gis_PrintDijit .buttonActionBar .dijitToggleButton,
+.claro .gis_PrintDijit .buttonActionBar .dijitButton,
+.claro .gis_PrintDijit .buttonActionBar .dijitDropDownButton,
+.claro .gis_PrintDijit .buttonActionBar .dijitComboButton {
+  margin: 0;
+}
+.claro .gis_PrintDijit .resultsContainer {
+  margin: 20px 0;
+  border-top: 1px solid $print-results-divider-color;
+  padding-top: 10px;
+}
+.claro .gis_PrintDijit .printResult {
+  height: 30px;
+  margin-bottom: 0;
+}
+.claro .gis_PrintDijit .printResultHover table:hover {
+  background-color: #e6e6e6;
+}
+.claro .gis_PrintDijit.dijitTooltipDialog form td {
+  padding: $$print-dialog-form-row-spacing 0;
+}
+.claro .simpleDirections .arcgisSearch .searchGroup .searchInput {
+  height: 30px;
+  line-height: 20px;
+  padding: 5px 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  margin: 0;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 14px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.claro .simpleDirections .esriStop .esriStopDnDHandleHidden {
+  width: 10px;
+}
+.claro .simpleDirections .esriStopsReverse {
+  margin-top: 0;
+}
+.claro .simpleDirections .LocateButton {
+  top: 1px;
+  right: 1px;
+  background-color: #fff;
+  padding: 4px;
+}
+.claro .simpleDirections .LocateButton .zoomLocateButton {
+  background-image: none;
+  color: #3b8fc4;
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.claro .simpleDirections .LocateButton .zoomLocateButton:before {
+  content: "i";
+}
+.claro .simpleDirections .esriStopsAdd .esriStopsAddDestination {
+  margin: 10px;
+  height: auto;
+}
+.claro .simpleDirections .esriStopsAdd .esriStopsAddDestination:after {
+  content: "";
+  clear: both;
+  display: block;
+  margin: 0;
+}
+.claro .simpleDirections .esriStopsAddDestinationBtn {
+  padding: 10px;
+  line-height: 20px;
+  color: #3b8fc4;
+}
+.claro .simpleDirections .esriActivateButton {
+  width: 30px;
+  height: 30px;
+  margin: 5px 0;
+  background-color: #fff;
+  border: 1px solid $directions-activate-btn-bordxer-color;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.claro .simpleDirections .esriActivateButton:hover {
+  background-color: #e6e6e6;
+  border-color: #ddd;
+}
+.claro .simpleDirections .esriDirectionsButton {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  color: #333;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.claro .simpleDirections .esriDirectionsButton + .esriDirectionsTabButton {
+  border-left: 0 none;
+}
+.claro .simpleDirections .esriDirectionsButton:hover {
+  background-color: #e6e6e6;
+  border-color: #d2d2d2;
+}
+.claro .simpleDirections .esriDirectionsButton.esriDirectionsPressedButton,
+.claro .simpleDirections .esriDirectionsButton.esriDirectionsPressedButton:hover {
+  background-color: #3b8fc4;
+  border-color: transparent;
+  color: #fff;
+}
+.claro .simpleDirections .esriDirectionsButton.esriLineBarrierButton,
+.claro .simpleDirections .esriDirectionsButton.esriLineBarrierButton:hover {
+  width: 30px;
+  height: 30px;
+  margin: 5px 0;
+}
+.claro .simpleDirections .esriDirectionsButton.esriDirectionsButton {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro .simpleDirections .esriDirectionsButton.esriDirectionsButton:first-child {
+  -webkit-border-radius: 2px 0 0 2px;
+  border-radius: 2px 0 0 2px;
+}
+.claro .simpleDirections .esriDirectionsButton.esriDirectionsButton.esriDirectionsTabLastButton {
+  -webkit-border-radius: 0 2px 2px 0;
+  border-radius: 0 2px 2px 0;
+}
+.claro .simpleDirections .esriTravelModesContainer {
+  margin: 10px;
+}
+.claro .simpleDirections .esriTravelModeCar {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.claro .simpleDirections .esriTravelModeTruck {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro .simpleDirections .esriTravelModeWalking {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.claro .simpleDirections .travelModesDirectionsIcon {
+  vertical-align: middle;
+}
+.claro .simpleDirections .tmTypeName {
+  margin-left: 15px;
+  color: #6d6e70;
+}
+.claro .simpleDirections .esriLinkButton {
+  color: #3b8fc4;
+}
+.claro .simpleDirections .esriStopsOptionsEnabled .esriStopsOptionsButton {
+  margin: 10px 20px 0 20px;
+  float: none;
+}
+.claro .simpleDirections .esriStopsGetDirectionsContainer {
+  padding-top: 20px;
+  margin: 20px 10px;
+  border-top: 1px solid #ddd;
+}
+.claro .simpleDirections .esriStopsGetDirections {
+  background-color: #3b8fc4;
+  border-color: transparent;
+  color: #fff;
+}
+.claro .simpleDirections .esriStopsGetDirections:hover {
+  background-color: #3581b0;
+  border-color: #3581b0;
+}
+.claro .simpleDirections .esriStopsClearDirections {
+  min-width: 120px;
+  line-height: 20px;
+  border: 1px solid transparent;
+}
+.claro .simpleDirections .esriResultsContainer {
+  background-color: #f8f8f8;
+  margin: -10px;
+}
+.claro .simpleDirections .esriRouteIconColumn,
+.claro .simpleDirections .esriRouteTextColumn {
+  border-bottom-color: #ddd;
+}
+.claro .simpleDirections .esriResultsPrint {
+  background-image: none;
+  height: auto;
+  width: auto;
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #3b8fc4;
+  font-size: 20px;
+}
+.claro .simpleDirections .esriResultsPrint:before {
+  content: "O";
+}
+.claro .simpleDirections .esriRouteZoom:hover,
+.claro .simpleDirections .esriRouteZoom:focus {
+  background-color: #e6e6e6;
+}
+.claro .simpleDirections .esriSaveContainer .dijitSelect{
+  height: auto;
+}
+.claro .jimu-widget-draw.jimu-widget {
+  padding: 0;
+}
+.claro .jimu-widget-draw > label,
+.claro .jimu-widget-draw .jimu-draw-box {
+  background-color: #f8f8f8;
+  padding: 10px;
+}
+.claro .jimu-widget-draw > label {
+  display: block;
+}
+.claro .jimu-widget-draw .view {
+  padding: 10px 20px;
+}
+.claro .jimu-widget-draw .jimu-symbol-chooser .symbol-set-table {
+  font-size: 12px;
+}
+.claro .jimu-widget-draw .measure-section {
+  margin: 0;
+  padding: 10px 20px;
+}
+.claro .jimu-widget-draw .operations {
+  margin: 20px 0;
+}
+.claro .jimu-widget-draw .operations .jimu-btn {
+  height: 30px;
+  line-height: 30px;
+}
+.claro .jimu-draw-box {
+  margin-top: 0 !important;
+}
+.claro .jimu-draw-box .draw-item {
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  background-color: #fff;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  color: #6d6e70;
+  padding: 4px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+.claro .jimu-draw-box .draw-item:hover {
+  background-color: #e6e6e6;
+  border-color: #ddd;
+}
+.claro .jimu-draw-box .draw-item.jimu-state-active {
+  background-color: #3b8fc4;
+  border-color: #3b8fc4;
+  color: #fff;
+}
+.claro .jimu-draw-box .drawings-clear {
+  width: 30px;
+  height: 30px;
+  color: #3b8fc4;
+  text-decoration: none;
+  line-height: 30px;
+  margin: 5px;
+  border-radius: 2px;
+}
+.claro .jimu-draw-box .drawings-clear:hover {
+  text-decoration: underline;
+}
+.claro .jimu-draw-box .point-icon,
+.claro .jimu-draw-box .line-icon,
+.claro .jimu-draw-box .polyline-icon,
+.claro .jimu-draw-box .freehand-polyline-icon,
+.claro .jimu-draw-box .triangle-icon,
+.claro .jimu-draw-box .extent-icon,
+.claro .jimu-draw-box .circle-icon,
+.claro .jimu-draw-box .ellipse-icon,
+.claro .jimu-draw-box .polygon-icon,
+.claro .jimu-draw-box .freehand-polygon-icon,
+.claro .jimu-draw-box .text-icon {
+  background-image: none;
+}
+.claro .jimu-draw-box .point-icon:before {
+  content: "P";
+  font-size: 16px;
+  position: relative;
+  top: -1px;
+}
+.claro .jimu-draw-box .line-icon:before {
+  content: "Q";
+}
+.claro .jimu-draw-box .polyline-icon:before {
+  content: "R";
+}
+.claro .jimu-draw-box .freehand-polyline-icon:before {
+  content: "S";
+}
+.claro .jimu-draw-box .triangle-icon:before {
+  content: "T";
+}
+.claro .jimu-draw-box .extent-icon:before {
+  content: "U";
+  position: relative;
+  top: -3px;
+}
+.claro .jimu-draw-box .circle-icon:before {
+  content: "V";
+}
+.claro .jimu-draw-box .ellipse-icon:before {
+  content: "W";
+}
+.claro .jimu-draw-box .polygon-icon:before {
+  content: "X";
+}
+.claro .jimu-draw-box .freehand-polygon-icon:before {
+  content: "Y";
+}
+.claro .jimu-draw-box .text-icon:before {
+  content: "Z";
+}
+.claro .jimu-widget-edit .templatePicker {
+  border: 1px solid #ddd;
+  padding: 5px;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro .jimu-widget-edit .dijitToolbar {
+  border: 1px solid #ddd;
+  border-top: 0 none;
+}
+.claro .jimu-widget-edit .dijitToolbar .dijitComboButton .dijitButtonNode {
+  padding: 0;
+}
+.claro .jimu-widget-edit .dijitToolbar .dijitComboButton .dijitButtonContents {
+  border: 1px solid transparent;
+  padding: 9px !important;
+}
+.claro .jimu-widget-edit .dijitToolbar .dijitComboButton .dijitArrowButton {
+  padding: 9px 0;
+}
+.claro .jimu-widget-edit .dijitToolbar .dijitToggleButtonChecked .dijitButtonNode {
+  background-color: #d4dff2;
+  border-color: #316ac5;
+}
+.claro .jimu-widget-geoprocessing.jimu-widget {
+  margin: 0;
+  padding: 0;
+}
+.claro .jimu-widget-geoprocessing .jimu-tab >.control {
+  background-color: #3b8fc4;
+}
+.claro .jimu-widget-geoprocessing .jimu-tab >.control >.tab {
+  color: #fff;
+  height: 40px;
+  background-color: #3b8fc4;
+  margin-top: 5px;
+}
+.claro .jimu-widget-geoprocessing .jimu-tab >.control >.tab.jimu-state-selected {
+  background-color: #fff;
+  color: #3b8fc4;
+  border-bottom: 0;
+  border-top: 0;
+}
+.claro .jimu-widget-geoprocessing .jimu-viewstack {
+  top: 40px;
+  padding: 10px;
+}
+.claro .jimu-widget-geoprocessing .jimu-gp-editor-base .jimu-checkbox {
+  display: block;
+  margin: 5px 0;
+}
+.claro .jimu-widget-geoprocessing .input-node,
+.claro .jimu-widget-geoprocessing .output-node {
+  padding: 5px 10px;
+}
+.claro .jimu-widget-geoprocessing .input-node>.input-label,
+.claro .jimu-widget-geoprocessing .output-node>.output-label {
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+}
+.claro .jimu-widget-geoprocessing .input-node>.editor-container,
+.claro .jimu-widget-geoprocessing .output-node>.renderer-container {
+  width: 98%;
+  margin: 10px 1%;
+}
+.claro .jimu-widget-geoprocessing .section.opts {
+  padding: 0 10px;
+  margin: 20px 0 40px;
+}
+.claro .jimu-widget-geoprocessing .section.opts [class*="col"] {
+  height: auto;
+  width: 49%;
+  margin-right: 1%;
+  text-align: right;
+}
+.claro .jimu-widget-geoprocessing .section.opts [class*="col"]:first-child {
+  text-align: center;
+}
+.claro .jimu-widget-geoprocessing .section.opts a.help {
+  line-height: 30px;
+}
+.claro .jimu-widget-geoprocessing .section.opts .jimu-btn {
+  background-color: #3b8fc4;
+  border-color: transparent;
+  color: #fff;
+}
+.claro .jimu-widget-geoprocessing .section.opts .jimu-btn:hover {
+  background-color: #3581b0;
+  border-color: #3888ba;
+}
+.claro .esriMeasurement {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+.claro .esriMeasurement .esriMeasurementButtonContainer {
+  background-color: #f8f8f8;
+  padding: 10px;
+}
+.claro .esriMeasurement .esriButton {
+  width: 33%;
+  float: left;
+}
+.claro .esriMeasurement .esriButton .dijitButtonNode {
+  width: 100%;
+  height: auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  color: #333;
+  font-size: 14px;
+  text-align: center;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.claro .esriMeasurement .esriButton + .esriButton .dijitButtonNode {
+  border-left: 0 none;
+}
+.claro .esriMeasurement .esriButton.esriButtonHover .dijitButtonNode {
+  background-image: none;
+  background-color: #e6e6e6;
+  border-color: #d2d2d2;
+}
+.claro .esriMeasurement .esriButton.esriButtonActive .dijitButtonNode {
+  background-image: none;
+  background-color: #e6e6e6;
+  border-color: #d2d2d2;
+}
+.claro .esriMeasurement .esriButton.esriButtonChecked .dijitButtonNode {
+  background-color: #e6e6e6;
+  border-color: #d2d2d2;
+}
+.claro .esriMeasurement:first-child .dijitButtonNode {
+  -webkit-border-radius: 2px 0 0 2px;
+  border-radius: 2px 0 0 2px;
+}
+.claro .esriMeasurement:nth-child(2) .dijitButtonNode {
+  -webkit-border-radius: 0 2px 2px 0;
+  border-radius: 0 2px 2px 0;
+}
+.claro .esriMeasurement .esriButtonChecked .dijitButtonNode {
+  background-image: none;
+}
+.claro .esriMeasurement .esriToggleButton {
+  width: auto;
+  display: block;
+}
+.claro .esriMeasurement .esriToggleButton .dijitButtonNode {
+  width: auto;
+  height: auto;
+  padding-top: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+  font-size: 14px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+.claro .esriMeasurement .esriToggleButton.esriToggleButtonHover .dijitButtonNode {
+  background-image: none;
+  background-color: #e6e6e6;
+  border-color: #d2d2d2;
+}
+.claro .esriMeasurement .esriToggleButton.esriToggleButtonActive .dijitButtonNode {
+  background-image: none;
+  background-color: #e6e6e6;
+  border-color: #d2d2d2;
+}
+.claro .esriMeasurement .esriToggleButton .dijitButtonText {
+  padding: 0 10px;
+}
+.claro .esriMeasurement .esriToggleButton .dijitArrowButtonInner {
+  background-image: none;
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 5px;
+}
+.claro .esriMeasurement .esriToggleButton .dijitArrowButtonInner:before {
+  content: "n";
+}
+.claro .esriMeasurement .esriMeasurementSeparator {
+  visibility: hidden;
+  display: block;
+  clear: both;
+}
+.claro .esriMeasurement .esriMeasurementResultLabel {
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+  border-bottom: 0 none;
+}
+.claro .esriMeasurement .esriMeasurementTableContainer {
+  padding: 10px;
+}
+.claro .esriMeasurement .esriMeasurementTableContainer .esriMeasurementResultTable .esriMeasurementTableCell {
+  padding: 5px;
+}
+.claro .esriMeasurement .esriMeasurementResultValue {
+  padding: 10px;
+  text-align: center;
+  font-size: large;
+  color: #3b8fc4;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.claro .jimu-widget-Measurement .operations{
+  position: absolute;
+  top: 230px;
+  left: 50%;
+  margin-left: -40px;
+  text-align: center;
+  position: absolute;
+}
+.claro .jimu-widget-query {
+  width: 100%;
+}
+.claro .jimu-widget-query .query-list .no-query-tip {
+  color: #999;
+  font-size: 10px;
+  padding: 10px;
+}
+.claro .jimu-widget-query .query-list .queries .execute-tip {
+  color: #999;
+  font-size: 10px;
+  padding: 10px;
+}
+.claro .jimu-widget-query .query-list .queries .queries-table {
+  width: 100%;
+}
+.claro .jimu-widget-query .query-list .queries .queries-table td {
+  height: 40px;
+  line-height: 40px;
+}
+.claro .jimu-widget-query .query-list .queries .queries-table .third-td .arrow {
+  background-image: none;
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 10px 0;
+}
+.claro .jimu-widget-query .query-list .queries .queries-table .third-td .arrow:before {
+  content: "e";
+}
+.claro .jimu-widget-query .query-list .queries .queries-table-container {
+  margin-top: 10px;
+}
+.claro .jimu-widget-query .jimu-table-row {
+  color: #3b8fc4;
+  border: 1px solid #ddd;
+  border-left: 0;
+  border-right: 0;
+}
+.claro .jimu-widget-query .jimu-table-row:hover {
+  background-color: #f1f1f1;
+  color: #3b8fc4;
+  border-color: #ddd;
+}
+.claro .jimu-widget-query .jimu-table-row.jimu-state-active {
+  background-color: #f1f1f1;
+  color: #3b8fc4;
+  border-color: #ddd;
+}
+.claro .jimu-widget-query .btn-section {
+  padding: 10px;
+}
+.claro .jimu-widget-query .btn-section .btn-clear-all {
+  background-color: #da4d1e;
+  border-color: transparent;
+  color: #fff;
+}
+.claro .jimu-widget-query .btn-section .btn-clear-all:hover {
+  background-color: #c4451b;
+  border-color: #cf491c;
+}
+.claro .jimu-widget-query .step-title {
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+}
+.claro .jimu-widget-query .step-head {
+  height: 40px;
+  line-height: 40px;
+  background-color: #3b8fc4;
+}
+.claro .jimu-widget-query .step-head .operations .params-back .back-icon {
+  color: #fff;
+  background-image: none;
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 10px 0;
+}
+.claro .jimu-widget-query .step-head .operations .params-back .back-icon:before {
+  content: "f";
+}
+.claro .jimu-widget-query .step-head .operations .apply,
+.claro .jimu-widget-query .step-head .operations .params-back .back-tip {
+  color: #fff;
+  text-align: center;
+}
+.claro .jimu-widget-query .step-head .operations .params-back,
+.claro .jimu-widget-query .step-head .operations .apply {
+  min-width: 60px;
+  padding: 0 5px;
+}
+.claro .jimu-widget-query .step-head .operations .params-back:hover,
+.claro .jimu-widget-query .step-head .operations .apply:hover {
+  background-color: #2c6b93;
+}
+.claro .jimu-widget-query .query-params .params-container {
+  background-color: #f8f8f8;
+  padding: 10px;
+}
+.claro .jimu-widget-query .query-params .operational-tip-div {
+  color: #999;
+  font-size: 10px;
+  margin: 10px 15px 0;
+}
+/*.claro .jimu-widget-query .results-number {
+  padding: 20px 10px 10px;
+  background-color: #3b8fc4;
+  color: #cee3f0;
+}*/
+.claro .jimu-widget-query .query-results .results-container {
+  top: 85px;
+}
+.claro .jimu-widget-chart {
+  width: 100%;
+}
+.claro .jimu-widget-chart .chart-list .no-chart-tip {
+  color: #999;
+  font-size: 10px;
+  padding: 10px;
+}
+.claro .jimu-widget-chart .chart-list .charts .execute-tip {
+  color: #999;
+  font-size: 10px;
+  padding: 10px;
+}
+.claro .jimu-widget-chart .chart-list .charts .charts-table {
+  width: 100%;
+}
+.claro .jimu-widget-chart .chart-list .charts .charts-table td {
+  height: 40px;
+  line-height: 40px;
+}
+.claro .jimu-widget-chart .chart-list .charts .charts-table .second-td {
+  color: #3b8fc4;
+}
+.claro .jimu-widget-chart .chart-list .charts .charts-table .third-td .arrow {
+  background-image: none;
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 10px 0;
+}
+.claro .jimu-widget-chart .chart-list .charts .charts-table .third-td .arrow:before {
+  content: "e";
+}
+.claro .jimu-widget-chart .chart-list .charts .charts-table-container {
+  margin-top: 10px;
+}
+.claro .jimu-widget-chart .jimu-table-row {
+  color: #3b8fc4;
+  border: 1px solid #ddd;
+  border-left: 0;
+  border-right: 0;
+}
+.claro .jimu-widget-chart .jimu-table-row:hover {
+  background-color: #f1f1f1;
+  color: #3b8fc4;
+  border-color: #ddd;
+}
+.claro .jimu-widget-chart .jimu-table-row.jimu-state-active {
+  background-color: #f1f1f1;
+  color: #3b8fc4;
+  border-color: #ddd;
+}
+.claro .jimu-widget-chart .step-title {
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+}
+.claro .jimu-widget-chart .step-head {
+  height: 40px;
+  line-height: 40px;
+  background-color: #3b8fc4;
+}
+.claro .jimu-widget-chart .step-head .operations .params-back .back-icon {
+  color: #fff;
+  background-image: none;
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 10px 0;
+}
+.claro .jimu-widget-chart .step-head .operations .params-back .back-icon:before {
+  content: "f";
+}
+.claro .jimu-widget-chart .step-head .operations .apply,
+.claro .jimu-widget-chart .step-head .operations .params-back .back-tip {
+  color: #fff;
+  text-align: center;
+}
+.claro .jimu-widget-chart .step-head .operations .params-back,
+.claro .jimu-widget-chart .step-head .operations .apply {
+  min-width: 60px;
+  padding: 0 5px;
+}
+.claro .jimu-widget-chart .step-head .operations .params-back:hover,
+.claro .jimu-widget-chart .step-head .operations .apply:hover {
+  background-color: $chart-operations-link-hover-bg-color;
+}
+.claro .jimu-widget-chart .chart-params .params-container {
+  background-color: #f8f8f8;
+  padding: 10px;
+}
+.claro .jimu-widget-chart .chart-results .results-container {
+  top: 40px;
+}
+.claro .jimu-widget-chart .results-header {
+  padding: 20px 10px 10px;
+  background-color: #f8f8f8;
+  color: #333;
+  height: auto;
+  zoom: 1;
+}
+.claro .jimu-widget-chart .results-header:before,
+.claro .jimu-widget-chart .results-header:after {
+  content: "";
+  display: table;
+}
+.claro .jimu-widget-chart .results-header:after {
+  clear: both;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-title {
+  width: auto;
+  margin: 0 30px;
+  float: none !important;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .settings {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0;
+  margin: 20px 10px;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .paging-section {
+  float: none !important;
+  text-align: center;
+  margin: 5px 0;
+  zoom: 1;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .paging-section:before,
+.claro .jimu-widget-chart .jimu-widget-chart-preview .paging-section:after {
+  content: "";
+  display: table;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .paging-section:after {
+  clear: both;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .paging-section ul {
+  display: inline-block;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .paging-section ul li a {
+  background-image: none;
+  width: 5px;
+  height: 5px;
+  margin: 0 5px;
+  padding: 0;
+  background-color: #999;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .paging-section ul li.selected a {
+  background-color: #3b8fc4;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-section .left-arrow,
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-section .right-arrow {
+  position: absolute;
+  left: 0;
+  background-image: none;
+  padding: 20px 0;
+  color: #3b8fc4;
+  font-family: "launchpad-icons" !important;
+  content: attr(data-icon);
+  font-size: 16px;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-section .left-arrow:before,
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-section .right-arrow:before {
+  content: "f";
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-section .left-arrow:hover,
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-section .right-arrow:hover {
+  background-color: #f8f8f8;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-section .right-arrow {
+  left: auto;
+  right: 0;
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-section .right-arrow:before {
+  content: "e";
+}
+.claro .jimu-widget-chart .jimu-widget-chart-preview .chart-description {
+  text-align: center;
+}
+.jimu-rtl .claro.is-mobile .jimu-widget-header {
+  left: 0px !important;
+  right: auto !important;
+}
+.jimu-rtl .claro .jimu-anchorbar-controller .docker .previousBtn:before {
+  content: "e";
+}
+.jimu-rtl .claro .jimu-anchorbar-controller .docker .nextBtn:before {
+  content: "f";
+}
+.jimu-rtl .claro .jimu-widget-search .arcgisSearch .searchGroup .searchExpandContainer,
+.jimu-rtl .claro .jimu-widget-search .arcgisSearch .searchGroup .searchInput,
+.jimu-rtl .claro .jimu-widget-search .arcgisSearch .searchGroup .searchToggle {
+  -webkit-border-radius: 0 15px 15px 0;
+  border-radius: 0 15px 15px 0;
+}
+.jimu-rtl .claro .jimu-widget-search .arcgisSearch .searchGroup .searchToggle:before {
+  right: auto;
+  left: 0;
+}
+.jimu-rtl .claro .jimu-widget-search .arcgisSearch .searchGroup .searchSubmit {
+  -webkit-border-radius: 15px 0 0 15px;
+  border-radius: 15px 0 0 15px;
+}
+.jimu-rtl .claro .jimu-widget-search .arcgisSearch .searchGroup .searchSubmit:before {
+  left: auto;
+  right: 0;
+}
+.jimu-rtl .claro .jimu-widget-search .arcgisSearch .hasMultipleSources .searchInput {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.jimu-rtl .claro.is-mobile.header-has-links .jimu-widget-search {
+  left: 60px !important;
+  right: 10px !important;
+}
+.jimu-rtl .claro.is-mobile .jimu-widget-search .arcgisSearch .searchGroup .searchToggle,
+.jimu-rtl .claro.is-mobile .jimu-widget-search .arcgisSearch .searchGroup .searchInput,
+.jimu-rtl .claro.is-mobile .jimu-widget-search .arcgisSearch .searchGroup .searchSubmit {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.jimu-rtl .claro .jimu-widget-attributetable .dijitToolbar .dijitToggleButton,
+.jimu-rtl .claro .jimu-widget-attributetable .dijitToolbar .dijitButton,
+.jimu-rtl .claro .jimu-widget-attributetable .dijitToolbar .dijitDropDownButton,
+.jimu-rtl .claro .jimu-widget-attributetable .dijitToolbar .dijitComboButton {
+  border-left: 0 none;
+  border-right: 1px solid #4d4d4d;
+}
+.jimu-rtl .claro .jimu-widget-attributetable .dijitToolbar >:first-child {
+  border-right: 0 none;
+}
+.jimu-rtl .claro .simpleDirections .LocateButton {
+  left: 1px;
+  right: auto;
+}
+.jimu-rtl .claro .esriTravelModesTypeName {
+  margin-left: auto;
+  margin-right: 5px;
+}
+.jimu-rtl .claro .jimu-widget-chart .chart-list .charts .charts-table .third-td .arrow:before {
+  content: "f";
+}
+.jimu-rtl .claro .jimu-widget-chart .step-head .operations .params-back .back-icon:before {
+  content: "e";
+}
+.jimu-rtl .claro .jimu-widget-chart .jimu-widget-chart-preview .settings {
+  top: 0;
+  left: 0;
+  right: auto;
+}
+.jimu-rtl .claro .jimu-widget-query .query-list .queries .queries-table .third-td .arrow:before {
+  content: "f";
+}
+.jimu-rtl .claro .jimu-widget-query .step-head .operations .params-back .back-icon:before {
+  content: "e";
+}
+.dj_ie8 .claro .jimu-widget-header .logo {
+  height: 46px !important;
+  min-width: 46px;
+  padding: 0;
+  top: 0;
+  left: 0;
+}
+.dj_ie8 .claro .jimu-anchorbar-iconitem .icon-item:before {
+  content: none;
+  display: none;
+}
+.dj_ie8 .claro .jimu-widget-zoomslider {
+  background-color: transparent;
+}
+.dj_ie8 .claro .jimu-widget-zoomslider .esriSimpleSliderIncrementButton:hover,
+.dj_ie8 .claro .jimu-widget-zoomslider .zoom-in:hover,
+.dj_ie8 .claro .jimu-widget-zoomslider .esriSimpleSliderDecrementButton:hover,
+.dj_ie8 .claro .jimu-widget-zoomslider .zoom-out:hover {
+  background-color: #e6e6e6;
+}
+.dj_ie8 .claro .vertical.jimu-widget-zoomslider .zoom-in {
+  border-bottom: 0 none;
+}
+.dj_ie8 .claro .jimu-widget-swipe .swipe-icon-loaded.swipe-icon {
+  width: 40px;
+  height: 20px;
+}
+.claro .jimu-widget-analysis .esriAnalysis .dijitToggleButton .dijitButtonNode{
+  min-width: 16px;
+}
+.claro .jimu-widget-analysis .esriAnalysis .dijitToggleButton .dijitIcon{
+  display: block;
+}
+.claro .jimu-widget-analysis .esriAnalysis .toolbarIcon{
+  background-image: url('./images/toolbar_icons.png');
+}
+
+.claro .jimu-widget-analysis .esriAnalysis .esriAnalysisSubmitButton.dijitButton>span.dijitButtonNode,
+.claro .jimu-widget-analysis .esriAnalysis .dijitButton.calcite > span.dijitButtonNode{
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  color: #333;
+}
+
+.claro .jimu-widget-analysis .esriAnalysis .esriAnalysisSubmitButton.dijitButton>span.dijitButtonNode .dijitButtonText,
+.claro .jimu-widget-analysis .esriAnalysis .dijitButton.calcite > span.dijitButtonNode .dijitButtonText {
+  line-height: 20px;
+}
+
+.claro .jimu-widget-analysis .esriAnalysis .esriAnalysisSubmitButton.dijitButtonHover>span.dijitButtonNode,
+.claro .jimu-widget-analysis .esriAnalysis .dijitButton.calcite.dijitButtonHover>span.dijitButtonNode{
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #d2d2d2;
+}

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ define([
    * that template  is used (eg: A3, A4, Letter etc), and for all other cases,
    * where a matching template is not available, the "MAP_ONLY" template is used.
    */
-  mo.PageSizes = { // to store the object containing page size like AO, A1, A2...
+  mo.PageSizes = { // to store the object containing page size like A0, A1, A2...
     //Considered portrait sizes
     "A0": {
       "Height": 46.80, "Width": 33.10,
@@ -48,13 +48,18 @@ define([
       "Height": 8.30, "Width": 5.80,
       "SizeName": window.jimuNls.report.a5, "MapLayout": "MAP_ONLY" },
 
-    "ANSI_A": {
+    "Letter_ANSI_A": {
       "Height": 11.00, "Width": 8.50,
-      "SizeName": window.jimuNls.report.ansi_a, "MapLayout": "Letter ANSI A"},
-    "ANSI_B": {
-      "Height": 17.00, "Width": 11.00,
-      "SizeName": window.jimuNls.report.ansi_b, "MapLayout": "Tabloid ANSI B"
+      "SizeName": window.jimuNls.report.letter + " " + window.jimuNls.report.ansi_a,
+      "MapLayout": "Letter ANSI A"
     },
+
+    "Tabloid_ANSI_B": {
+      "Height": 17.00, "Width": 11.00,
+      "SizeName": window.jimuNls.report.tabloid + " " + window.jimuNls.report.ansi_b,
+      "MapLayout": "Tabloid ANSI B"
+    },
+
     "ANSI_C": {
       "Height": 22.00, "Width": 17.00,
       "SizeName": window.jimuNls.report.ansi_c, "MapLayout": "MAP_ONLY" },
@@ -65,26 +70,15 @@ define([
       "Height": 44.00, "Width": 34.00,
       "SizeName": window.jimuNls.report.ansi_e, "MapLayout": "MAP_ONLY" },
 
-    "Letter": {
-      "Height": 11.00, "Width": 8.50,
-      "SizeName": window.jimuNls.report.letter, "MapLayout": "Letter ANSI A"
-    },
-
     "Legal": {
       "Height": 14.00, "Width": 8.50,
       "SizeName": window.jimuNls.report.legal, "MapLayout": "MAP_ONLY" },
-
-    "Tabloid": {
-      "Height": 17.00, "Width": 11.00,
-      "SizeName": window.jimuNls.report.tabloid, "MapLayout": "Tabloid ANSI B"
-    },
 
     "Custom": window.jimuNls.common.custom
   };
 
   /**
    * This function is used to get the report page size in pixels
-   * @memberOf Screening/report/PageUtils
    */
   mo.getPageSizeInPixels = function (sizeInInches, dpi) {
     var sizeInPixels = {

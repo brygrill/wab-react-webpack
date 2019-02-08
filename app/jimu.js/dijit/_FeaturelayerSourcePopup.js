@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
 
-define(['dojo/_base/declare',
+define([
+  'dojo/_base/declare',
   'dojo/Evented',
   'dojo/on',
   'dojo/_base/lang',
@@ -31,6 +32,12 @@ function(declare, Evented, on, lang, html, Popup, FeaturelayerSource, LoadingInd
     height: 560,
     titleLabel: '',
 
+    //dijitArgs: {
+    //  layerChooserFromMap:,// optional, default value is 'jimu/dijit/FeaturelayerChooserFromMap'
+    //  multiple: false,
+    //  createMapResponse: ,
+    //  portalUrl: ,
+    //}
     dijitArgs: null,//refer to the parameters of dijit FeaturelayerSource
 
     //events:

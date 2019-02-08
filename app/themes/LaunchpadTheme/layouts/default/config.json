@@ -1,0 +1,231 @@
+{
+  "widgetOnScreen": {
+    "widgets": [{
+      "uri": "themes/LaunchpadTheme/widgets/AnchorBarController/Widget",
+      "position": {
+        "bottom": 10,
+        "height": 40,
+        "relativeTo": "map",
+        "zIndex": 0
+      },
+      "version": "2.11"
+    }, {
+      "uri": "themes/LaunchpadTheme/widgets/Header/Widget",
+      "position": {
+        "left": 15,
+        "top": 17,
+        "width": 670,
+        "height": 46,
+        "relativeTo": "map"
+      },
+      "version": "2.11"
+    }, {
+      "uri": "widgets/Search/Widget",
+      "position": {
+        "left": 350,
+        "top": 25,
+        "width": 300,
+        "zIndex": 1
+      },
+      "version": "2.11"
+    }, {
+      "uri": "widgets/OverviewMap/Widget",
+      "position": {
+        "right": 20,
+        "top": 20
+      },
+      "version": "2.11"
+    }, {
+      "uri": "widgets/ZoomSlider/Widget",
+      "position": {
+        "left": 25,
+        "top": 95
+      },
+      "version": "2.11"
+    }, {
+      "uri": "widgets/HomeButton/Widget",
+      "position": {
+        "left": 25,
+        "top": 175
+      }
+    }, {
+      "uri": "widgets/MyLocation/Widget",
+      "inPanel": false,
+      "position": {
+        "left": 25,
+        "top": 215
+      },
+      "version": "2.11"
+    }, {
+      "uri": "widgets/AttributeTable/Widget",
+      "version": "2.11",
+      "position": {
+        "right": 20,
+        "bottom": 80
+      },
+      "closeable": true
+    }, {
+      "uri": "widgets/Coordinate/Widget",
+      "position": {
+        "left": 20,
+        "bottom": 60
+      }
+    }, {
+      "uri": "widgets/Scalebar/Widget",
+      "position": {
+        "left": 27,
+        "bottom": 25
+      },
+      "version": "2.11"
+    }, {
+      "uri": "widgets/Splash/Widget",
+      "visible": false,
+      "position": {
+        "relativeTo": "browser"
+      },
+      "version": "2.11"
+    }, {
+      "position": {
+        "right": 130,
+        "top": 20
+      }
+    }, {
+      "position": {
+        "right": 180,
+        "top": 20
+      }
+    }, {
+      "position": {
+        "right": 230,
+        "top": 20
+      }
+    }, {
+      "uri": "widgets/ExtentNavigate/Widget",
+      "visible": false,
+      "position": {
+        "top": 255,
+        "left": 25
+      },
+      "version": "2.11"
+    }, {
+      "uri": "widgets/FullScreen/Widget",
+      "visible": false,
+      "position": {
+        "right": 70,
+        "top": 20
+      },
+      "version": "2.11"
+    }]
+  },
+
+  "map": {
+    "position": {
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0
+    }
+  },
+
+  "widgetPool": {
+    "panel": {
+      "uri": "themes/LaunchpadTheme/panels/LaunchpadPanel/Panel"
+    }
+  },
+
+  "mobileLayout": {
+    "widgetOnScreen": {
+      "widgets": {
+        "themes/LaunchpadTheme/widgets/AnchorBarController/Widget":{
+          "position": {
+            "bottom": 0,
+            "height": 40,
+            "width": "100%",
+            "zIndex": 0
+          },
+          "version": "2.11"
+        },
+        "themes/LaunchpadTheme/widgets/Header/Widget":{
+          "position": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "height": 46,
+            "relativeTo": "map"
+          },
+          "version": "2.11"
+        },
+        "widgets/Search/Widget":{
+          "position": {
+            "left": 10,
+            "top": 10,
+            "right": 10,
+            "zIndex": 0
+          },
+          "version": "2.11"
+        },
+        "widgets/ExtentNavigate/Widget": {
+          "position": {
+            "right": 10,
+            "bottom": 238
+          }
+        },
+        "widgets/ZoomSlider/Widget": {
+          "position": {
+            "right": 10,
+            "bottom": 160
+          },
+          "version": "2.11"
+        },
+        "widgets/HomeButton/Widget":{
+          "position": {
+            "right": 10,
+            "bottom": 75
+          },
+          "version": "2.11"
+        },
+        "widgets/MyLocation/Widget":{
+          "inPanel": false,
+          "position": {
+            "right": 10,
+            "bottom": 115
+          },
+          "version": "2.11"
+        },
+        "widgets/AttributeTable/Widget":{
+          "version": "2.11",
+          "position": {
+            "left": 10,
+            "bottom": 70
+          }
+        },
+        "widgets/Scalebar/Widget":{
+          "inPanel": false,
+          "position": {
+            "left": 50,
+            "bottom": 70
+          },
+          "version": "2.11"
+        },
+        "ph_11":{
+          "position": {
+            "left": 10,
+            "bottom": 195
+          }
+        },
+        "ph_12": {
+          "position": {
+            "left": 10,
+            "bottom": 155
+          }
+        },
+        "ph_13": {
+          "position": {
+            "left": 10,
+            "bottom": 115
+          }
+        }
+      }
+    }
+  }
+}

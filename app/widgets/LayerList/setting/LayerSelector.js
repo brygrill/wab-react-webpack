@@ -43,7 +43,7 @@ define([
     },
 
     postCreate: function() {
-      array.forEach(this.operLayerInfos.getLayerInfoArray(), function(layerInfo) {
+      array.forEach(this.operLayerInfos.getLayerInfoArrayOfWebmap(), function(layerInfo) {
         this.drawListNode(layerInfo, 0, this.layerListTable);
       }, this);
 

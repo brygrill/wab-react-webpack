@@ -13,6 +13,16 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+    font-family: 'Themefont';
+    src: url('fonts/Themefont.eot?cwzds4');
+    src: url('fonts/Themefont.eot?cwzds4#iefix') format('embedded-opentype'),
+         url('fonts/Themefont.ttf?cwzds4') format('truetype'),
+         url('fonts/Themefont.woff?cwzds4') format('woff'),
+         url('fonts/Themefont.svg?cwzds4#Themefont') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
 /* css for jimu-main- */
 .jimu-main-background{
   background-color: #485566;
@@ -35,7 +45,7 @@
   font-size: 12px;
   font-weight: normal;
   color: #ffffff;
-  color: rgba(255, 255, 255, 0.8);
+  font-family: Avenir Medium;
 }
 
 /* css for jimu-footer */
@@ -49,23 +59,23 @@
 .jimu-link{
   font-size: 14px;
   font-weight: normal;
+  color: #ffffff;
+  font-family: Avenir Medium;
 }
 
 .jimu-link:link, .jimu-link:visited{
   text-decoration: none;
-  color: #95a2a9;
-  color: rgba(255, 255, 255, 0.7);
 }
 
 .jimu-link:hover{
-  text-decoration: none;
+  text-decoration: underline;
   color: #ffffff;
+  opacity: 1;
 }
 
 .jimu-link:active{
   text-decoration: none;
   color: #ececec;
-  color: rgba(255, 255, 255, 0.9);
 }
 
 /* css for jimu-widget- */
@@ -89,14 +99,14 @@
 .jimu-widget-placeholder{
   background-color: #000000;
   filter:alpha(opacity=20);
-  opacity: 0.2;
+  opacity: 0.5;
   border-radius: 4px;
   border: 1px dashed #a0acbf;
 }
 
 .jimu-widget-placeholder:hover{
   filter:alpha(opacity=40);
-  opacity: 0.4;
+  opacity: 0.7;
 }
 
 .jimu-widget-placeholder .inner {
@@ -119,18 +129,14 @@
 }
 
 .jimu-widget-onscreen-icon{
-  background-color: #ccc;
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid #000000;
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  background-color: #555;
+  border: 1px solid #999;
 }
 .jimu-widget-onscreen-icon:hover{
-  background-color: #999;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: #333;
 }
 .jimu-widget-onscreen-icon.jimu-state-selected{
-  background-color: #666;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: #333;
 }
 
 /* css for jimu-panel- */
@@ -275,18 +281,6 @@
   color: #596679;
 }
 
-/* css for Filter dijit */
-.jimu-filter .odd-filter{
-  background: #eef2f5;
-  border-left: 1px solid #eef2f5;
-  border-right: 1px solid #eef2f5;
-}
-
-.jimu-filter .even-filter{
-  background: #ffffff;
-  border: 1px solid #eef2f5;
-}
-
 /* css for ItemSelector dijit */
 .jimu-item-selector .signin-tip{
   color: #d6d6d6;
@@ -334,6 +328,7 @@
   border-right: 0;
   border-top: 0;
   border-bottom: 1px solid #ccc;
+  font-family: "Avenir Light";
 }
 
 /*.jimu-tab3 .tab-item-td.jimu-state-active{
@@ -347,9 +342,8 @@
 .jimu-tab3 .tab-item-td.jimu-state-active{
   color: #48494B;
   border-bottom: 2px solid #24B5CC;
-  /*font-family: "Avenir Medium";*/
-  color: #000;
-  font-weight: bold;
+  font-family: "Avenir Medium";
+  color: #24B5CC;
 }
 
 /* css for LayerChooserFromMap dijit */
@@ -358,6 +352,17 @@
 }
 
 /* css for DrawBox dijit */
+@font-face {
+  font-family: 'draw box';
+
+  src: url('fonts/drawbox.eot');
+  src: url('fonts/drawbox.eot?#iefix') format('embedded-opentype'),
+  url('fonts/drawbox.woff') format('woff'),
+  url('fonts/drawbox.ttf') format('truetype'),
+  url('fonts/drawbox.svg#drawbox') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 .jimu-draw-box .draw-item.jimu-state-active{
   background-color: #DDDDDD;
   border: 2px solid #000000;
@@ -366,53 +371,73 @@
   background-color: #c0c0c0;
 }*/
 
-.jimu-draw-box .point-icon{
-  background-image: url(images/draw_point.png);
+.jimu-draw-box .draw-item {
+  font-family: 'draw box' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: rgba(0,0,0,0.5);
+  cursor: pointer;
+  font-size: 16px;
+  color: black;
 }
 
-.jimu-draw-box .line-icon{
-  background-image: url(images/draw_line.png);
+.jimu-draw-box .point-icon:before{
+  content: '\e90c';
 }
 
-.jimu-draw-box .polyline-icon{
-  background-image: url(images/draw_polyline.png);
+.jimu-draw-box .line-icon:before{
+  content: '\e90b';
 }
 
-.jimu-draw-box .freehand-polyline-icon{
-  background-image: url(images/draw_freehand_polyline.png);
+.jimu-draw-box .polyline-icon:before{
+  content: '\e90e';
 }
 
-.jimu-draw-box .triangle-icon{
-  background-image: url(images/draw_triangle.png);
+.jimu-draw-box .freehand-polyline-icon:before{
+  content: '\e908';
 }
 
-.jimu-draw-box .extent-icon{
-  background-image: url(images/draw_extent.png);
+.jimu-draw-box .triangle-icon:before{
+  content: '\e910';
 }
 
-.jimu-draw-box .circle-icon{
-  background-image: url(images/draw_circle.png);
+.jimu-draw-box .extent-icon:before{
+  content: '\e905';
 }
 
-.jimu-draw-box .ellipse-icon{
-  background-image: url(images/draw_ellipse.png);
+.jimu-draw-box .circle-icon:before{
+  content: '\e907';
 }
 
-.jimu-draw-box .polygon-icon{
-  background-image: url(images/draw_polygon.png);
+.jimu-draw-box .ellipse-icon:before{
+  content: '\e904';
 }
 
-.jimu-draw-box .freehand-polygon-icon{
-  background-image: url(images/draw_freehand_polygon.png);
+.jimu-draw-box .polygon-icon:before{
+  content: '\e90d';
 }
 
-.jimu-draw-box .text-icon{
-  background-image: url(images/draw_text.png);
+.jimu-draw-box .freehand-polygon-icon:before{
+  content: '\e90a';
+}
+
+.jimu-draw-box .text-icon:before{
+  content: '\e900';
 }
 
 .jimu-draw-box .drawings-clear{
-  background-image: url(images/rubbish_bin_white.png);
-  background-color: #D0021B;
+  font-family: 'draw box' !important;
+  background-color: #D0021B !important;
+  color: white !important;
+}
+.jimu-draw-box .drawings-clear:before{
+  content: '\e901';
 }
 
 .jimu-draw-box.enabled .drawings-clear:hover{
