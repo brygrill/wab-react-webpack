@@ -8,8 +8,9 @@ define(['dojo/_base/declare',
   'dojo/on',
   'dojo/mouse',
   'dojo/_base/fx',
+  'dojo/topic',
   'dojo/Evented'
-], function(declare, _WidgetBase, lang, html, on, Mouse, baseFx, Evented) {
+], function(declare, _WidgetBase, lang, html, on, Mouse, baseFx, topic, Evented) {
   var ANIMATION_DURATION = 1000,
     AUTO_CLOSE_INTERVAL = 10000,
     STATE_HIDE = 0,
@@ -64,16 +65,11 @@ define(['dojo/_base/declare',
       })));
 
       this.own(on(this.domNode, Mouse.enter, lang.hitch(this, function() {
-        if(this.timeoutHandler) {
-          clearTimeout(this.timeoutHandler);
-          this.timeoutHandler = undefined;
-        }
+        this._timerStop();
       })));
 
       this.own(on(this.domNode, Mouse.leave, lang.hitch(this, function() {
-        if(this.currentState === STATE_SHOW && !this.timeoutHandler) {
-          this.timeoutHandler = setTimeout(lang.hitch(this, this.hide), AUTO_CLOSE_INTERVAL);
-        }
+        this._timerStart();
       })));
     },
 
@@ -102,6 +98,14 @@ define(['dojo/_base/declare',
           this.currentState = STATE_SHOW;
         })
       }).play();
+
+      //wait for splash hide, when init
+      topic.subscribe("splashPopupShow", lang.hitch(this, function () {
+        this._timerStop();
+      }));
+      topic.subscribe("splashPopupHide", lang.hitch(this, function () {
+        this._timerStart();
+      }));
 
       this.timeoutHandler = setTimeout(lang.hitch(this, this.hide), AUTO_CLOSE_INTERVAL);
     },
@@ -137,6 +141,18 @@ define(['dojo/_base/declare',
           html.setStyle(this.domNode, 'display', 'none');
         })
       }).play();
+    },
+
+    _timerStart: function () {
+      if (this.currentState === STATE_SHOW && !this.timeoutHandler) {
+        this.timeoutHandler = setTimeout(lang.hitch(this, this.hide), AUTO_CLOSE_INTERVAL);
+      }
+    },
+    _timerStop: function () {
+      if (this.timeoutHandler) {
+        clearTimeout(this.timeoutHandler);
+        this.timeoutHandler = undefined;
+      }
     }
   });
 });

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ function(declare, _WidgetBase, _TemplatedMixin, lang, array, html, on, query, Ev
     offsetY: 5,
     shelter: null,
     paddingOffsetY: 8,
+    dropdownMenuClass: '',
     dropdownMenuItemClass: 'dropdown-menu-item',
 
     //options:
@@ -54,7 +55,8 @@ function(declare, _WidgetBase, _TemplatedMixin, lang, array, html, on, query, Ev
         this.items = [];
       }
       this.shelter = html.toDom('<div class="jimu-dijit-dropdownmenu-shelter"></div>');
-      this.itemsContainer = html.toDom('<div class="jimu-dijit-dropdownmenu-items-container"></div>');
+      this.itemsContainer = html.toDom('<div class="jimu-dijit-dropdownmenu-items-container ' +
+                                       this.dropdownMenuClass + '"></div>');
       if(this.maxDisplayItems <= 0){
         this.maxDisplayItems = 20;
       }
@@ -74,12 +76,12 @@ function(declare, _WidgetBase, _TemplatedMixin, lang, array, html, on, query, Ev
       }
     },
 
-    _onIconClick: function(evt){
+    _onIconClick: function(evt, srcElement){
       evt.stopPropagation();
       if(this.isShowing()){
         this.hideMenu();
       }else{
-        var position = html.position(evt.target || evt.srcElement);
+        var position = html.position(srcElement || evt.target || evt.srcElement);
         this.showMenu(position);
       }
     },
@@ -124,6 +126,20 @@ function(declare, _WidgetBase, _TemplatedMixin, lang, array, html, on, query, Ev
         return itemDom.itemInfo.value;
       }
       return null;
+    },
+
+    getHighlightLabel: function() {
+      var highlightValue = this.getHighlightValue();
+      var highlightLabel = '';
+      array.some(this.items, function(item) {
+        if(item.value === highlightValue) {
+          highlightLabel = item.label;
+          return true;
+        } else {
+          return false;
+        }
+      }, this);
+      return highlightLabel;
     },
 
     isShowing: function(){

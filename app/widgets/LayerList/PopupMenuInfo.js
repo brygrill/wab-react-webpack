@@ -97,6 +97,9 @@ define([
       }, {
         key: 'transparency',
         label: this.nls.itemTransparency
+      },  {
+        key: 'setVisibilityRange',
+        label: this.nls.itemSetVisibilityRange
       }, {
         key: 'moveup',
         label: this.nls.itemMoveUp
@@ -198,6 +201,27 @@ define([
         dynamicDeniedItems.push({
           'key': 'controlLabels',
           'denyType': 'hidden'
+        });
+      }
+
+      // deny setVisibilityRange
+      if(this._layerInfo.originOperLayer.featureCollection) {
+        dynamicDeniedItems.push({
+          'key': 'setVisibilityRange',
+          'denyType': 'hidden'
+        });
+      } else if(!this._layerInfo.isRootLayer() &&
+          this._layerInfo.getRootLayerInfo().layerObject.declaredClass === "esri.layers.ArcGISTiledMapServiceLayer") {
+        dynamicDeniedItems.push({
+          'key': 'setVisibilityRange',
+          'denyType': 'hidden'
+        });
+      } else if(!this._layerInfo.isRootLayer() &&
+          this._layerInfo.getRootLayerInfo().layerObject.declaredClass === "esri.layers.ArcGISDynamicMapServiceLayer" &&
+          !this._layerInfo.getRootLayerInfo().layerObject.supportsDynamicLayers) {
+        dynamicDeniedItems.push({
+          'key': 'setVisibilityRange',
+          'denyType': 'disable'
         });
       }
 
@@ -386,6 +410,8 @@ define([
       }, {
         key: 'transparency'
       }, {
+        key: 'setVisibilityRange'
+      }, {
         key: 'separator'
       }, {
         key: 'moveup'
@@ -400,6 +426,8 @@ define([
         key: 'zoomto'
       }, {
         key: 'transparency'
+      }, {
+        key: 'setVisibilityRange'
       }, {
         key: 'separator'
       }, {
@@ -424,6 +452,10 @@ define([
         key: 'url'
       }],
       'FeatureLayer': [{
+        key: 'setVisibilityRange'
+      }, {
+        key: 'separator'
+      },{
         key: 'controlPopup'
       }, {
         key: 'separator'
@@ -434,11 +466,31 @@ define([
       }, {
         key: 'url'
       }],
+      'SublayerOfDynamicMapserviceLayer': [{
+        key: 'setVisibilityRange'
+      }, {
+        key: 'separator'
+      }, {
+        key: 'url'
+      }],
       'GroupLayer': [{
+        key: 'setVisibilityRange'
+      }, {
+        key: 'separator'
+      },{
         key: 'url'
       }],
       'Table': [{
         key: 'table'
+      }, {
+        key: 'separator'
+      }, {
+        key: 'url'
+      }],
+      'BasemapLayer': [{
+        key: 'zoomto'
+      }, {
+        key: 'transparency'
       }, {
         key: 'separator'
       }, {
@@ -449,7 +501,11 @@ define([
 
     layerInfo.getLayerType().then(lang.hitch(this, function(layerType) {
       var itemInfoCategory = "";
-      if (isRootLayer &&
+      if (layerInfo.isBasemap() && layerInfo.isRootLayer()) {
+        itemInfoCategory = "BasemapLayer";
+      } else if(layerInfo.isBasemap()) {
+        itemInfoCategory = "default";
+      } else if (isRootLayer &&
           (layerType === "FeatureLayer" ||
             layerType === "CSVLayer" ||
             layerType === "ArcGISImageServiceLayer" ||
@@ -460,6 +516,11 @@ define([
         itemInfoCategory = "RootLayer";
       } else if (layerType === "FeatureLayer" || layerType === "CSVLayer") {
         itemInfoCategory = "FeatureLayer";
+      } else if (layerInfo.isLeaf() &&
+                layerInfo.getRootLayerInfo() &&
+                layerInfo.getRootLayerInfo().layerObject &&
+                layerInfo.getRootLayerInfo().layerObject.declaredClass === "esri.layers.ArcGISDynamicMapServiceLayer") {
+        itemInfoCategory = "SublayerOfDynamicMapserviceLayer";
       } else if (layerType === "GroupLayer") {
         itemInfoCategory = "GroupLayer";
       } else if (layerType === "Table") {

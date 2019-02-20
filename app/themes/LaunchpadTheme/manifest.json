@@ -1,0 +1,43 @@
+{
+  "name": "LaunchpadTheme",
+  "label": "Launchpad Theme",
+  "platform": "HTML",
+  "panels": [
+  ],
+  "styles": [
+    {
+      "name": "default",
+      "description": "this is default style",
+      "styleColor": "#3b8fc4"
+    },
+    {
+      "name": "style2",
+      "description": "this is an alternative style",
+      "styleColor": "#333"
+    },
+    {
+      "name": "style3",
+      "description": "this is an alternative style",
+      "styleColor": "#8b572a"
+    }
+  ],
+  "layouts": [
+    {
+      "name": "default",
+      "description": "this is the default layout"
+    },
+    {
+      "name": "layout2",
+      "description": "this is an alternative layout"
+    }
+  ],
+  "version": "2.11",
+  "wabVersion": "2.11",
+  "author": "Esri R&D Center Beijing",
+  "description": "",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+    "hasLocale": true
+  }
+}

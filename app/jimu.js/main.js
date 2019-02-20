@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,10 +21,13 @@ define([
     './WidgetManager',
     './FeatureActionManager',
     './SelectionManager',
+    './DataSourceManager',
+    './FilterManager',
     'dojo/_base/html',
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/on',
+    'dojo/keys',
     'dojo/mouse',
     'dojo/topic',
     'dojo/cookie',
@@ -39,14 +42,18 @@ define([
     './utils',
     'require',
     'dojo/i18n',
-    'dojo/i18n!./nls/main'
+    'dojo/i18n!./nls/main',
+    'esri/main',
+    'dojo/ready'
   ],
   function(ConfigManager, LayoutManager, DataManager, WidgetManager, FeatureActionManager, SelectionManager,
-     html, lang, array, on, mouse,
+    DataSourceManager, FilterManager, html, lang, array, on, keys, mouse,
     topic, cookie, Deferred, all, ioquery, esriConfig, esriRequest, urlUitls, IdentityManager,
-    portalUrlUtils, jimuUtils, require, i18n, mainBundle) {
+    portalUrlUtils, jimuUtils, require, i18n, mainBundle, esriMain, dojoReady) {
     /* global jimuConfig:true */
     var mo = {}, appConfig;
+
+    window.topic = topic;
 
     //set the default timeout to 3 minutes
     esriConfig.defaults.io.timeout = 60000 * 3;
@@ -66,19 +73,22 @@ define([
 
     //jimu nls
     window.jimuNls = mainBundle;
+    window.apiNls = esriMain.bundle;
 
     IdentityManager.setProtocolErrorHandler(function() {
       return true;
     });
 
     var ancestorWindow = jimuUtils.getAncestorWindow();
-    var parentHttps = false;
+    var parentHttps = false, patt = /^http(s?):\/\//gi;
 
     try {
       parentHttps = ancestorWindow.location.href.indexOf("https://") === 0;
     } catch (err) {
-      console.log(err);
-      parentHttps = window.location.protocol === "https:";
+      //if it's in different domain, we do not force https
+
+      // console.log(err);
+      // parentHttps = window.location.protocol === "https:";
     }
 
     esriRequest.setRequestPreCallback(function(ioArgs) {
@@ -88,7 +98,6 @@ define([
 
       //use https protocol
       if (parentHttps) {
-        var patt = /^http(s?):\/\//gi;
         ioArgs.url = ioArgs.url.replace(patt, '//');
       }
 
@@ -118,16 +127,36 @@ define([
       }
 
       // Use proxies to replace the premium content
-      if(!window.isBuilder && appConfig &&
-          !appConfig.mode &&
-          appConfig.appProxies &&
-          appConfig.appProxies.length > 0) {
-        array.some(appConfig.appProxies, function(proxyItem) {
-          if(ioArgs.url.indexOf(proxyItem.sourceUrl) >= 0) {
-            ioArgs.url = ioArgs.url.replace(proxyItem.sourceUrl, proxyItem.proxyUrl);
-            return true;
-          }
-        });
+      if(!window.isBuilder && appConfig && !appConfig.mode) {
+        if (appConfig.appProxies && appConfig.appProxies.length > 0) {
+          array.some(appConfig.appProxies, function(proxyItem) {
+            var sourceUrl = proxyItem.sourceUrl, proxyUrl = proxyItem.proxyUrl;
+            if (parentHttps) {
+              sourceUrl = sourceUrl.replace(patt, '//');
+              proxyUrl = proxyUrl.replace(patt, '//');
+            }
+            if(ioArgs.url.indexOf(sourceUrl) >= 0) {
+              ioArgs.url = ioArgs.url.replace(sourceUrl, proxyUrl);
+              return true;
+            }
+          });
+        }
+        if (appConfig.map.appProxy) {
+          array.some(appConfig.map.appProxy.proxyItems, function(proxyItem) {
+            if (!proxyItem.useProxy || !proxyItem.proxyUrl) {
+              return false;
+            }
+            var sourceUrl = proxyItem.sourceUrl, proxyUrl = proxyItem.proxyUrl;
+            if (parentHttps) {
+              sourceUrl = sourceUrl.replace(patt, '//');
+              proxyUrl = proxyUrl.replace(patt, '//');
+            }
+            if (ioArgs.url.indexOf(sourceUrl) >= 0) {
+              ioArgs.url = ioArgs.url.replace(sourceUrl, proxyUrl);
+              return true;
+            }
+          });
+        }
       }
 
       return ioArgs;
@@ -136,6 +165,9 @@ define([
 
     // disable middle mouse button scroll
     on(window, 'mousedown', function(evt) {
+      if(jimuUtils.isInNavMode()){
+        html.removeClass(document.body, 'jimu-nav-mode');
+      }
       if (!mouse.isMiddle(evt)) {
         return;
       }
@@ -144,6 +176,11 @@ define([
       evt.stopPropagation();
       evt.returnValue = false;
       return false;
+    });
+    on(window, 'keydown', function(evt) {
+      if(evt.keyCode === keys.TAB && !jimuUtils.isInNavMode()){
+        html.addClass(document.body, 'jimu-nav-mode');
+      }
     });
 
     String.prototype.startWith = function(str) {
@@ -162,6 +199,12 @@ define([
       }
     };
 
+    // Polyfill isNaN for IE11
+    // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
+    Number.isNaN = Number.isNaN || function (value) {
+      return value !== value;
+    };
+
     /*jshint unused: false*/
     if (typeof jimuConfig === 'undefined') {
       jimuConfig = {};
@@ -177,10 +220,11 @@ define([
       breakPoints: [600, 1280]
     }, jimuConfig);
 
-    window.wabVersion = '2.4';
-    // window.productVersion = 'Online 5.1';
-    window.productVersion = 'Web AppBuilder for ArcGIS (Developer Edition) 2.4';
-    // window.productVersion = 'Portal for ArcGIS 10.5';
+
+    window.wabVersion = '2.11';
+    // window.productVersion = 'Online 6.4';
+    window.productVersion = 'Web AppBuilder for ArcGIS (Developer Edition) 2.11';
+    // window.productVersion = 'Portal for ArcGIS 10.7';
 
     function initApp() {
       var urlParams, configManager, layoutManager;
@@ -196,12 +240,16 @@ define([
         }
       }
 
+      if(urlParams.mode){
+        html.setStyle(jimuConfig.loadingId, 'display', 'none');
+        html.setStyle(jimuConfig.mainPageId, 'display', 'block');
+      }
+      //the order of initialize these managers does mater because this will affect the order of event listener.
       DataManager.getInstance(WidgetManager.getInstance());
       FeatureActionManager.getInstance();
       SelectionManager.getInstance();
-
-      html.setStyle(jimuConfig.loadingId, 'display', 'none');
-      html.setStyle(jimuConfig.mainPageId, 'display', 'block');
+      DataSourceManager.getInstance();
+      FilterManager.getInstance();
 
       layoutManager = LayoutManager.getInstance({
         mapId: jimuConfig.mapId,
@@ -213,16 +261,33 @@ define([
       configManager.loadConfig();
       //load this module here to make load modules and load app parallelly
       require(['dynamic-modules/preload']);
+
+      //temp fix for this issue: https://devtopia.esri.com/WebGIS/arcgis-webappbuilder/issues/14082
+      dojoReady(function(){
+        setTimeout(function(){
+          html.removeClass(document.body, 'dj_a11y');
+        }, 50);
+      });
     }
 
     function getUrlParams() {
       var s = window.location.search,
         p;
+      // params that don't need to `sanitizeHTML`
+      var exceptUrlParams = {
+        query: true
+      };
       if (s === '') {
         return {};
       }
 
       p = ioquery.queryToObject(s.substr(1));
+
+      for(var k in p){
+        if(!exceptUrlParams[k]){
+          p[k] = jimuUtils.sanitizeHTML(p[k]);
+        }
+      }
       return p;
     }
 
@@ -234,10 +299,26 @@ define([
       topic.subscribe("appConfigChanged", onAppConfigChanged);
     }
 
-    function onAppConfigChanged(_appConfig){
+    function onAppConfigChanged(_appConfig, reason){
       appConfig = _appConfig;
-    }
 
+      if(reason === 'loadingPageChange'){
+        return;
+      }
+
+      html.setStyle(jimuConfig.loadingId, 'display', 'none');
+      html.setStyle(jimuConfig.mainPageId, 'display', 'block');
+    }
+    //ie css
+    var ieVersion = jimuUtils.has('ie');
+    if(ieVersion > 9){
+      html.addClass(document.body, 'ie-nav-mode');
+    }else{
+      html.addClass(document.body, 'ie-low-nav-mode');
+    }
+    if(ieVersion > 10){
+      html.addClass(document.body, 'ie-gte-10');
+    }
     mo.initApp = initApp;
     return mo;
   });

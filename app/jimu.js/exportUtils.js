@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2015 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ define([
   'esri/geometry/webMercatorUtils',
   'jimu/LayerInfos/LayerInfos',
   './utils',
-  './jsonConverters'],
+  './GeojsonConverters'],
   function(declare, lang, array, JSON, Deferred, Query, QueryTask, FeatureSet, Graphic,
   SpatialReference, ProjectParameters, esriConfig, webMercatorUtils, LayerInfos,
-  jimuUtils, jsonConverters) {
+  jimuUtils, GeojsonConverters) {
     /* global dojo */
     var mo = {};
 
@@ -203,7 +203,7 @@ define([
             var features = [];
             array.forEach(featureset.features, function(feature) {
               var g = new Graphic();
-              g.attributes = feature.attribues;
+              g.attributes = feature.attributes;
               g.geometry = webMercatorUtils.webMercatorToGeographic(feature.geometry);
               features.push(g);
             });
@@ -227,7 +227,7 @@ define([
               var features = [];
               array.forEach(featureset.features, function(feature, i) {
                 var g = new Graphic();
-                g.attributes = feature.attribues;
+                g.attributes = feature.attributes;
                 g.geometry = geometries[i];
                 features.push(g);
               });
@@ -262,12 +262,15 @@ define([
         }))
         .then(lang.hitch(this, function(fs){
           var str = '';
-          if(fs){
-            var converter = new jsonConverters.esriConverter();
-            var jsonObj = converter.toGeoJson(fs);
-            if(jsonObj){
-              str = JSON.stringify(jsonObj);
-            }
+          if(fs && fs.features && fs.features.length > 0){
+            var jsonObj = {
+              type: 'FeatureCollection',
+              features: []
+            };
+            array.forEach(fs.features, function(feature) {
+              jsonObj.features.push(GeojsonConverters.arcgisToGeoJSON(feature));
+            });
+            str = JSON.stringify(jsonObj);
           }
           return str;
         }));
@@ -287,7 +290,19 @@ define([
         var fields = this._generateFields(featureSet);
 
         var datas = array.map(featureSet.features, function(feature){
-          return feature.attributes;
+          var attributes = lang.clone(feature.attributes);
+          if (featureSet.geometryType === 'esriGeometryPoint' ||
+          featureSet.geometryType === 'point') {
+            if (feature.geometry) {
+              attributes.x = feature.geometry.x;
+              attributes.y = feature.geometry.y;
+              if (feature.geometry.spatialReference &&
+                feature.geometry.spatialReference.wkid) {
+                attributes.wkid = feature.geometry.spatialReference.wkid;
+              }
+            }
+          }
+          return attributes;
         });
 
         return createCSVString(fields, datas);
@@ -302,27 +317,7 @@ define([
           layerId = feature._layer.id;
         }
 
-        fields = fields || featureSet.fields;
-        var layerInfos = LayerInfos.getInstanceSync();
-        var layerInfo = layerInfos.getLayerInfoById(layerId);
-        if (layerInfo) {
-          var popupInfo = layerInfo.getPopupInfo();
-          array.forEach(fields, lang.hitch(this, function(field) {
-            field.fieldInfo = this._findFieldInfo(popupInfo, field.name);
-          }));
-        }
-
-        if(featureSet.fieldAliases){
-          //Set of name-value pairs for the attribute's field and alias names.
-          for(item in featureSet.fieldAliases){
-            if(featureSet.fieldAliases.hasOwnProperty(item)){
-              fields.push({
-                name: item,
-                alias: featureSet.fieldAliases[item]
-              });
-            }
-          }
-        }
+        fields = lang.clone(fields || featureSet.fields);
         if(!fields || fields.length === 0){
           fields = [];
           var attributes = feature.attributes;
@@ -333,6 +328,46 @@ define([
               });
             }
           }
+        }
+
+        var layerInfos = LayerInfos.getInstanceSync();
+        var layerInfo = layerInfos.getLayerInfoById(layerId);
+        if (layerInfo) {
+          var popupInfo = layerInfo.getPopupInfo();
+          if (!popupInfo) {
+            // Try another way to get popupInfo
+            popupInfo = layerInfo.layerObject.infoTemplate && layerInfo.layerObject.infoTemplate.info;
+          }
+          array.forEach(fields, lang.hitch(this, function(field) {
+            field.fieldInfo = this._findFieldInfo(popupInfo, field.name);
+          }));
+        }
+
+        if(featureSet.fieldAliases){
+          //Set of name-value pairs for the attribute's field and alias names.
+          array.forEach(fields, function(field) {
+            if (featureSet.fieldAliases[field.name]) {
+              field.alias = featureSet.fieldAliases[field.name];
+            }
+          });
+        }
+        if (featureSet.geometryType === 'esriGeometryPoint' ||
+          featureSet.geometryType === 'point') {
+          fields.push({
+            name: 'x',
+            type: 'esriFieldTypeDouble',
+            alias: 'x'
+          });
+          fields.push({
+            name: 'y',
+            type: 'esriFieldTypeDouble',
+            alias: 'y'
+          });
+          fields.push({
+            name: 'wkid',
+            type: 'esriFieldTypeInteger',
+            alias: 'wkid'
+          });
         }
         return fields;
       },
@@ -495,7 +530,8 @@ define([
         saveTextAs(text, filename, 'utf-8');
       }else{
         var blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
-        saveAs(blob, filename);
+        // Use saveAs(blob, name, true) to turn off the auto-BOM stuff
+        saveAs(blob, filename, true);
       }
     }
 

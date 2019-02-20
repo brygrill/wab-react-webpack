@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,16 +23,31 @@ define([
   './TwoNumbersValueProvider',
   './TwoDatesValueProvider',
   './ListValueProvider',
+  './AdvancedListValueProvider',
+  './PredefinedValueProvider',
+  './NumberListValueProvider',
+  './DateIsInValueProvider',
+  'jimu/utils',
   'jimu/LayerInfos/LayerInfos'
 ],
   function(lang, array, declare, BlankValueProvider, SimpleValueProvider, TwoNumbersValueProvider,
-    TwoDatesValueProvider, ListValueProvider, LayerInfos) {
+    TwoDatesValueProvider,
+    ListValueProvider,
+    AdvancedListValueProvider,
+    PredefinedValueProvider,
+    NumberListValueProvider, DateIsInValueProvider, jimuUtils, LayerInfos) {
 
     var BLANK_VALUE_PROVIDER = "BLANK_VALUE_PROVIDER";
     var SIMPLE_VALUE_PROVIDER = "SIMPLE_VALUE_PROVIDER";
     var TWO_NUMBERS_VALUE_PROVIDER = "TWO_NUMBERS_VALUE_PROVIDER";
     var TWO_DATES_VALUE_PROVIDER = "TWO_DATES_VALUE_PROVIDER";
     var LIST_VALUE_PROVIDER = "LIST_VALUE_PROVIDER";
+    var NUMBER_LIST_VALUE_PROVIDER = "NUMBER_LIST_VALUE_PROVIDER";
+    var DATE_IS_IN_VALUE_PROVIDER = "DATE_IS_IN_VALUE_PROVIDER";
+
+    var ADVANCED_LIST_VALUE_PROVIDER = "ADVANCED_LIST_VALUE_PROVIDER";
+    var UNIQUE_PREDEFINED_VALUE_PROVIDER = "UNIQUE_PREDEFINED_VALUE_PROVIDER";
+    var MULTIPLE_PREDEFINED_VALUE_PROVIDER = "MULTIPLE_PREDEFINED_VALUE_PROVIDER";
 
     //operator + type => value provider
     var relationship = {
@@ -41,7 +56,8 @@ define([
         value: {
           normalProviderType: SIMPLE_VALUE_PROVIDER,
           codedValueProviderType: LIST_VALUE_PROVIDER,
-          supportAskForValue: true
+          supportAskForValue: true,
+          supportCaseSensitive: true
         },
         field: {
           normalProviderType: LIST_VALUE_PROVIDER
@@ -50,12 +66,19 @@ define([
           normalProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true,
           filterCodedValueIfPossible: true
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
         }
       },
       stringOperatorIsNot: {
         value: {
           normalProviderType: SIMPLE_VALUE_PROVIDER,
-          supportAskForValue: true
+          codedValueProviderType: LIST_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
         },
         field: {
           normalProviderType: LIST_VALUE_PROVIDER
@@ -64,11 +87,29 @@ define([
           normalProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true,
           filterCodedValueIfPossible: true
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
         }
       },
       stringOperatorStartsWith: {
         value: {
           normalProviderType: SIMPLE_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
+        },
+        values:{
+          normalProviderType: SIMPLE_VALUE_PROVIDER
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
+        },
+        multiplePredefined:{
+          normalProviderType: MULTIPLE_PREDEFINED_VALUE_PROVIDER,
           supportAskForValue: true,
           supportCaseSensitive: true
         }
@@ -78,11 +119,37 @@ define([
           normalProviderType: SIMPLE_VALUE_PROVIDER,
           supportAskForValue: true,
           supportCaseSensitive: true
+        },
+        values:{
+          normalProviderType: SIMPLE_VALUE_PROVIDER
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
+        },
+        multiplePredefined:{
+          normalProviderType: MULTIPLE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
         }
       },
       stringOperatorContains: {
         value: {
           normalProviderType: SIMPLE_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
+        },
+        values:{
+          normalProviderType: SIMPLE_VALUE_PROVIDER
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
+        },
+        multiplePredefined:{
+          normalProviderType: MULTIPLE_PREDEFINED_VALUE_PROVIDER,
           supportAskForValue: true,
           supportCaseSensitive: true
         }
@@ -92,6 +159,47 @@ define([
           normalProviderType: SIMPLE_VALUE_PROVIDER,
           supportAskForValue: true,
           supportCaseSensitive: true
+        },
+        values:{
+          normalProviderType: SIMPLE_VALUE_PROVIDER
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
+        },
+        multiplePredefined:{
+          normalProviderType: MULTIPLE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true,
+          supportCaseSensitive: true
+        }
+      },
+      stringOperatorIsAnyOf: {
+        values:{
+          normalProviderType: SIMPLE_VALUE_PROVIDER
+        },
+        multiple:{
+          normalProviderType: ADVANCED_LIST_VALUE_PROVIDER,
+          supportAskForValue: true,
+          filterCodedValueIfPossible: true
+        },
+        multiplePredefined:{
+          normalProviderType: MULTIPLE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
+        }
+      },
+      stringOperatorIsNoneOf: {
+        values:{
+          normalProviderType: SIMPLE_VALUE_PROVIDER
+        },
+        multiple:{
+          normalProviderType: ADVANCED_LIST_VALUE_PROVIDER,
+          supportAskForValue: true,
+          filterCodedValueIfPossible: true
+        },
+        multiplePredefined:{
+          normalProviderType: MULTIPLE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       stringOperatorIsBlank: {
@@ -119,11 +227,16 @@ define([
           normalProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true,
           filterCodedValueIfPossible: true
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       numberOperatorIsNot: {
         value: {
           normalProviderType: SIMPLE_VALUE_PROVIDER,
+          codedValueProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true
         },
         field: {
@@ -133,6 +246,10 @@ define([
           normalProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true,
           filterCodedValueIfPossible: true
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       numberOperatorIsAtLeast: {
@@ -147,6 +264,10 @@ define([
           normalProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true,
           filterCodedValueIfPossible: true
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       numberOperatorIsLessThan: {
@@ -161,6 +282,10 @@ define([
           normalProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true,
           filterCodedValueIfPossible: true
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       numberOperatorIsAtMost: {
@@ -175,6 +300,10 @@ define([
           normalProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true,
           filterCodedValueIfPossible: true
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       numberOperatorIsGreaterThan: {
@@ -189,6 +318,36 @@ define([
           normalProviderType: LIST_VALUE_PROVIDER,
           supportAskForValue: true,
           filterCodedValueIfPossible: true
+        },
+        uniquePredefined:{
+          normalProviderType: UNIQUE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
+        }
+      },
+      numberOperatorIsAnyOf: {
+        values:{
+          normalProviderType: SIMPLE_VALUE_PROVIDER
+        },
+        multiple:{
+          normalProviderType: ADVANCED_LIST_VALUE_PROVIDER,
+          supportAskForValue: true
+        },
+        multiplePredefined:{
+          normalProviderType: MULTIPLE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
+        }
+      },
+      numberOperatorIsNoneOf: {
+        values:{
+          normalProviderType: SIMPLE_VALUE_PROVIDER
+        },
+        multiple:{
+          normalProviderType: ADVANCED_LIST_VALUE_PROVIDER,
+          supportAskForValue: true
+        },
+        multiplePredefined:{
+          normalProviderType: MULTIPLE_PREDEFINED_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       numberOperatorIsBetween: {
@@ -223,6 +382,13 @@ define([
         field: {
           normalProviderType: LIST_VALUE_PROVIDER
         }
+        // Unique type can work already but we set it hidden in UI just right now.
+        // ,
+        // unique: {
+        //   normalProviderType: LIST_VALUE_PROVIDER,
+        //   supportAskForValue: true,
+        //   filterCodedValueIfPossible: true
+        // }
       },
       dateOperatorIsNotOn: {
         value: {
@@ -231,6 +397,25 @@ define([
         },
         field: {
           normalProviderType: LIST_VALUE_PROVIDER
+        }
+        // Unique type can work already but we set it hidden in UI just right now.
+        // ,
+        // unique: {
+        //   normalProviderType: LIST_VALUE_PROVIDER,
+        //   supportAskForValue: true,
+        //   filterCodedValueIfPossible: true
+        // }
+      },
+      dateOperatorIsIn: {
+        value: {
+          normalProviderType: DATE_IS_IN_VALUE_PROVIDER,
+          supportAskForValue: true
+        }
+      },
+      dateOperatorIsNotIn: {
+        value: {
+          normalProviderType: DATE_IS_IN_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       dateOperatorIsBefore: {
@@ -249,6 +434,36 @@ define([
         },
         field: {
           normalProviderType: LIST_VALUE_PROVIDER
+        }
+      },
+      dateOperatorIsOnOrBefore: {
+        value: {
+          normalProviderType: SIMPLE_VALUE_PROVIDER,
+          supportAskForValue: true
+        },
+        field: {
+          normalProviderType: LIST_VALUE_PROVIDER
+        }
+      },
+      dateOperatorIsOnOrAfter: {
+        value: {
+          normalProviderType: SIMPLE_VALUE_PROVIDER,
+          supportAskForValue: true
+        },
+        field: {
+          normalProviderType: LIST_VALUE_PROVIDER
+        }
+      },
+      dateOperatorInTheLast: {
+        value: {
+          normalProviderType: NUMBER_LIST_VALUE_PROVIDER,
+          supportAskForValue: true
+        }
+      },
+      dateOperatorNotInTheLast: {
+        value: {
+          normalProviderType: NUMBER_LIST_VALUE_PROVIDER,
+          supportAskForValue: true
         }
       },
       dateOperatorIsBetween: {
@@ -277,10 +492,13 @@ define([
 
     var clazz = declare([], {
       nls: null,
-      url: null,
-      layerDefinition: null,
-      layerInfo: null,//jimu/LayerInfos/LayerInfo
-      featureLayerId: null,//optional
+      layerInfo: null,//jimu/LayerInfos/LayerInfo, maybe null
+      popupInfo: null,//webmap popupInfo, maybe null
+
+      //options:
+      url: null,//required
+      layerDefinition: null,//required
+      featureLayerId: null,//required
 
       constructor: function(options){
         //{url,layerDefinition}
@@ -289,6 +507,9 @@ define([
         var layerInfosObj = LayerInfos.getInstanceSync();
         if(this.featureLayerId){
           this.layerInfo = layerInfosObj.getLayerOrTableInfoById(this.featureLayerId);
+          if(this.layerInfo){
+            this.popupInfo = this.layerInfo.getPopupInfo();
+          }
         }
       },
 
@@ -297,6 +518,7 @@ define([
 
         var operatorInfo = relationship[operator];
         if(operatorInfo){
+          // var version = parseFloat(this.layerDefinition.currentVersion);
           if(operatorInfo.value){
             valueTypes.push("value");
           }
@@ -309,10 +531,39 @@ define([
           if(operatorInfo.unique){
             if(this.url){
               if(!this._isStreamServer(this.url)){
-                var version = parseFloat(this.layerDefinition.currentVersion);
-                if(version >= 10.1){
-                  valueTypes.push("unique");
-                }
+                // if(version >= 10.1){
+                valueTypes.push("unique");
+                // }
+              }
+            }
+          }
+          if(operatorInfo.multiple){
+            if(this.url){
+              if(!this._isStreamServer(this.url)){
+                // if(version >= 10.1){  //version, for query params
+                valueTypes.push("multiple");
+                // }
+              }
+            }
+          }
+          // if(operatorInfo.values){   //hide values in UI
+          //   valueTypes.push("values");
+          // }
+          if(operatorInfo.uniquePredefined){
+            if(this.url){
+              if(!this._isStreamServer(this.url)){
+                // if(version >= 10.1){
+                valueTypes.push("uniquePredefined");
+                // }
+              }
+            }
+          }
+          if(operatorInfo.multiplePredefined){
+            if(this.url){
+              if(!this._isStreamServer(this.url)){
+                // if(version >= 10.1){
+                valueTypes.push("multiplePredefined");
+                // }
               }
             }
           }
@@ -340,6 +591,20 @@ define([
           }
         }));
         return fieldNames;
+      },
+
+      _getSameShortTypeFieldNameLabels: function(fieldName){
+        var fieldNameLabels = [];
+        var info = this._getFieldInfo(this.layerDefinition, fieldName);
+        var shortType = clazz.getShortTypeByEsriType(info.type);
+        array.forEach(this.layerDefinition.fields, lang.hitch(this, function(fieldInfo){
+          if(fieldInfo.name !== fieldName){
+            if(clazz.getShortTypeByEsriType(fieldInfo.type) === shortType){
+              fieldNameLabels.push({value: fieldInfo.name, label: fieldInfo.alias});
+            }
+          }
+        }));
+        return fieldNameLabels;
       },
 
       getValueProvider: function(partObj, runtime){
@@ -373,26 +638,14 @@ define([
           var valueTypeInfo = operatorInfo[valueType];
           var valueProviderType = valueTypeInfo.normalProviderType;
           var staticValues = null;
-          var codedValues = this._getCodedValues(fieldInfo);
 
-          if(!codedValues){
-            if(this.layerDefinition.typeIdField){
-              //typeIdField maybe doesn't match the real subtype field exactly
-              if(this.layerDefinition.typeIdField.toUpperCase() === fieldName.toUpperCase()){
-                codedValues = this._getSubTypes(this.layerDefinition);
-              }
-            }
-          }
+          //for codedValues
+          var codedValues = jimuUtils.getCodedValueListForCodedValueOrSubTypes(this.layerDefinition, fieldName);
 
-          if(valueType === 'field'){
-            var otherFieldNames = this._getSameShortTypeFieldNames(fieldName);
-            if(otherFieldNames.length > 0){
-              staticValues = array.map(otherFieldNames, lang.hitch(this, function(fieldName){
-                return {
-                  value: fieldName,
-                  label: fieldName
-                };
-              }));
+          if(valueType === 'field'){//display with alias and query with name.#14620
+            var otherFieldNameLabels = this._getSameShortTypeFieldNameLabels(fieldName);
+            if(otherFieldNameLabels.length > 0){
+              staticValues = otherFieldNameLabels;
             }
           }else{
             if(codedValues && codedValues.length > 0 && valueTypeInfo.codedValueProviderType){
@@ -411,6 +664,7 @@ define([
             codedValues: codedValues,
             staticValues: staticValues,
             layerInfo: this.layerInfo,
+            popupInfo: this.popupInfo,
             operatorInfo: operatorInfo,
             filterCodedValueIfPossible: filterCodedValueIfPossible,
             runtime: runtime
@@ -433,7 +687,37 @@ define([
             //   args.showNullValues = false;
             // }
             args.showNullValues = false;
-            valueProvider = new ListValueProvider(args);
+            if(valueType === 'value' || valueType === 'field'){
+              // || args.fieldInfo.type === 'esriFieldTypeDate'){
+              valueProvider = new ListValueProvider(args);//origin unique provider
+            }else{
+              args.providerType = valueProviderType;
+              args.selectUI = 'dropdown';
+              // if(valueType === 'field'){
+              //   args.isNumberField = false; //field's name is a string
+              // }
+              valueProvider = new AdvancedListValueProvider(args);
+            }
+
+          }else if(valueProviderType === NUMBER_LIST_VALUE_PROVIDER){
+            valueProvider = new NumberListValueProvider(args);
+          }else if(valueProviderType === DATE_IS_IN_VALUE_PROVIDER){
+            valueProvider = new DateIsInValueProvider(args);
+          }
+          else if(valueProviderType === ADVANCED_LIST_VALUE_PROVIDER){ //mutiple---setting&runtime
+            args.providerType = valueProviderType;
+            args.selectUI = 'dropdown';
+            valueProvider = new AdvancedListValueProvider(args);
+          }
+          else if(valueProviderType === UNIQUE_PREDEFINED_VALUE_PROVIDER ||
+            valueProviderType === MULTIPLE_PREDEFINED_VALUE_PROVIDER){
+            args.providerType = valueProviderType;
+            args.selectUI = args.partObj.valueObj ? args.partObj.valueObj.selectUI : null;
+            if(runtime){
+              valueProvider = new AdvancedListValueProvider(args);
+            }else{
+              valueProvider = new PredefinedValueProvider(args);
+            }
           }
         }
 
@@ -449,41 +733,6 @@ define([
           }
         }
         return null;
-      },
-
-      //return [{value,label}]
-      _getCodedValues:function(fieldInfo){
-        var codedValues = null;
-        var domain = fieldInfo.domain;
-        if(domain && domain.type === 'codedValue'){
-          if(domain.codedValues && domain.codedValues.length > 0){
-            codedValues = domain.codedValues;
-            //{code,name}=>{value,label}
-            //code is value and name is description
-            codedValues = array.map(codedValues, lang.hitch(this, function(item){
-              return {
-                value: item.code,
-                label: item.name
-              };
-            }));
-          }
-        }
-        return codedValues;
-      },
-
-      //return [{value,label}]
-      _getSubTypes: function(layerDefinition){
-        var subTypes = null;
-        if(layerDefinition.typeIdField && layerDefinition.types && layerDefinition.types.length > 0){
-          //{id,name}=>{value,label}
-          subTypes = array.map(layerDefinition.types, lang.hitch(this, function(item){
-            return {
-              value: item.id,
-              label: item.name
-            };
-          }));
-        }
-        return subTypes;
       }
     });
 
@@ -492,7 +741,7 @@ define([
       return operatorInfo;
     };
 
-    clazz.getOperatorsByShortType = function(shortType){
+    clazz.getOperatorsByShortType = function(shortType, isHosted){
       var operators = [];
       if(shortType === 'string'){
         operators = [
@@ -502,6 +751,8 @@ define([
           "stringOperatorEndsWith",
           "stringOperatorContains",
           "stringOperatorDoesNotContain",
+          "stringOperatorIsAnyOf",
+          "stringOperatorIsNoneOf",
           "stringOperatorIsBlank",
           "stringOperatorIsNotBlank"
         ];
@@ -510,9 +761,11 @@ define([
           "numberOperatorIs",
           "numberOperatorIsNot",
           "numberOperatorIsAtLeast",
-          "numberOperatorIsLessThan",
           "numberOperatorIsAtMost",
+          "numberOperatorIsLessThan",
           "numberOperatorIsGreaterThan",
+          "numberOperatorIsAnyOf",
+          "numberOperatorIsNoneOf",
           "numberOperatorIsBetween",
           "numberOperatorIsNotBetween",
           "numberOperatorIsBlank",
@@ -522,13 +775,20 @@ define([
         operators = [
           "dateOperatorIsOn",
           "dateOperatorIsNotOn",
+          "dateOperatorIsIn",
+          "dateOperatorIsNotIn",
           "dateOperatorIsBefore",
           "dateOperatorIsAfter",
+          "dateOperatorIsOnOrBefore",
+          "dateOperatorIsOnOrAfter",
           "dateOperatorIsBetween",
           "dateOperatorIsNotBetween",
           "dateOperatorIsBlank",
           "dateOperatorIsNotBlank"
         ];
+        if(isHosted){
+          operators.splice(8,0,"dateOperatorInTheLast","dateOperatorNotInTheLast");
+        }
       }
       return operators;
     };

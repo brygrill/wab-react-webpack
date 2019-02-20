@@ -1,5 +1,5 @@
 /*
-Copyright ©2014 Esri. All rights reserved.
+// Copyright © 2014 - 2018 Esri. All rights reserved.
 
 TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
 Unpublished material - all rights reserved under the
@@ -39,7 +39,8 @@ define([
   'jimu/dijit/ViewStack',
   'jimu/dijit/Search',
   'jimu/dijit/TabContainer3',
-  'jimu/dijit/_ItemTable'
+  'jimu/dijit/_ItemTable',
+  'dijit/form/RadioButton'
 ], function(declare, topic, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template,
   Evented, lang, dojoConfig, array, html, Deferred, all, query, on, jimuUtils, portalUtils,
   tokenUtils, portalUrlUtils, ViewStack, Search, TabContainer3,  _ItemTable) {
@@ -202,14 +203,12 @@ define([
     },
 
     _initPortalRadio: function(){
-      jimuUtils.combineRadioCheckBoxWithLabel(this.portalPublicRaido, this.portalPublicLabel);
-      jimuUtils.combineRadioCheckBoxWithLabel(this.onlinePublicRaido, this.onlinePublicLabel);
       var portalUrl = this._getPortalUrl();
       var portalServer = portalUrlUtils.getServerByUrl(portalUrl);
 
-      this.portalPublicRaido.disabled = false;
-      this.onlinePublicRaido.disabled = false;
-      this.portalPublicRaido.checked = true;
+      this.portalPublicRaido.set("disabled", false);
+      this.onlinePublicRaido.set("disabled", false);
+      this.portalPublicRaido.set("checked", true);
       var shouldHidePublicArcGIScom = false;
       if(portalUrlUtils.isArcGIScom(portalServer)){
         shouldHidePublicArcGIScom = true;
@@ -225,7 +224,7 @@ define([
         }
       }
       if(shouldHidePublicArcGIScom){
-        this.onlinePublicRaido.disabled = true;
+        this.onlinePublicRaido.set("disabled", true);
         html.setStyle(this.onlinePublicRaido, 'display', 'none');
         html.setStyle(this.onlinePublicLabel, 'display', 'none');
       }
@@ -358,14 +357,14 @@ define([
 
       var portalUrl = this._getPortalUrl();
       //portal public
-      if(!this.portalPublicRaido.disabled){
+      if(!this.portalPublicRaido.get("disabled")){
         this.publicPortalItemTable.set('portalUrl', portalUrl);
         this.publicPortalItemTable.searchAllItems(this._allPublicPortalQuery);
         this.publicPortalItemTable.set('filteredQuery', this._filterPublicPortalQuery);
       }
 
       //ArcGIS.com public
-      if(!this.onlinePublicRaido.disabled){
+      if(!this.onlinePublicRaido.get("disabled")){
         this.publicOnlineItemTable.set('portalUrl', window.location.protocol + '//www.arcgis.com');
         this.publicOnlineItemTable.searchAllItems(this._allPublicOnlineQuery);
         this.publicOnlineItemTable.set('filteredQuery', this._filterPublicOnlineQuery);
@@ -379,11 +378,11 @@ define([
     },
 
     _onPublicRaidoClicked: function(){
-      if(this.portalPublicRaido.checked){
+      if(this.portalPublicRaido.get("checked")){
         this.publicPortalItemTable.show();
         this.publicOnlineItemTable.hide();
       }
-      else if(this.onlinePublicRaido.checked){
+      else if(this.onlinePublicRaido.get("checked")){
         this.publicPortalItemTable.hide();
         this.publicOnlineItemTable.show();
       }
@@ -396,12 +395,12 @@ define([
         this.publicPortalItemTable.showFilterItemsSection();
         this.publicOnlineItemTable.showFilterItemsSection();
 
-        if (this.portalPublicRaido.checked) {
+        if (this.portalPublicRaido.get("checked")) {
           //text + this._itemTypeQueryString + ' AND access:public ' + this._typeKeywordQueryString
           this._filterPublicPortalQuery.q = text + ' ' + this._filterPublicPortalQuery.basicQ;
           this._filterPublicPortalQuery.start = 1;
           this.publicPortalItemTable.searchFilteredItems(this._filterPublicPortalQuery);
-        } else if (this.onlinePublicRaido.checked) {
+        } else if (this.onlinePublicRaido.get("checked")) {
           this._filterPublicOnlineQuery.q = text + ' ' + this._itemTypeQueryString +
           ' AND access:public ' + this._typeKeywordQueryString;
           this._filterPublicOnlineQuery.start = 1;
@@ -540,7 +539,7 @@ define([
 
     _searchGroups: function(user){
       this._resetGroupsSection();
-      html.setStyle(this.groupsSection, "display", "block");
+      html.setStyle(this.groupsSection, "display", "flex");
       var groups = user.getGroups();
       if (groups.length > 0) {
         html.setStyle(this.groupSearch.domNode, 'display', 'block');

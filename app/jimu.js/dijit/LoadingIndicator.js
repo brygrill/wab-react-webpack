@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ define(['dojo/_base/declare',
 ],
 function(declare, _WidgetBase, domStyle, domConstruct) {
   return declare(_WidgetBase, {
-    'baseClass': 'jimu-loading-indicator',
+    'baseClass': 'jimu-loading-indicator jimu-agol-loading',
     declaredClass: 'jimu.dijit.LoadingIndicator',
     hidden:false,
 
@@ -35,8 +35,8 @@ function(declare, _WidgetBase, domStyle, domConstruct) {
       }
       domStyle.set(this.domNode, {width: '100%', height: '100%'});
 
-      var str = '<div class="loading-section"><img class="jimu-loading" src="' +
-       require.toUrl('jimu') + '/images/loading2.gif"></div>';
+      var str = ' <div class="loading-container">' +
+        '<div data-dojo-attach-point="loadingNode" class="img-div"></div></div>';
       domConstruct.place(str, this.domNode);
     },
 
@@ -44,14 +44,20 @@ function(declare, _WidgetBase, domStyle, domConstruct) {
       if(!this.domNode){
         return;
       }
-      domStyle.set(this.domNode, 'display', 'block');
+      if(this.hidden){
+        domStyle.set(this.domNode, 'display', 'block');
+        this.hidden = false;
+      }
     },
 
     hide:function(){
       if(!this.domNode){
         return;
       }
-      domStyle.set(this.domNode, 'display', 'none');
+      if(!this.hidden){
+        domStyle.set(this.domNode, 'display', 'none');
+        this.hidden = true;
+      }
     }
   });
 });

@@ -1,23 +1,22 @@
 {
   "theme": {
-    "name": "FoldableTheme",
-    "styles": [
-      "default",
-      "black",
-      "blue",
-      "cyan",
-      "green",
-      "purple",
-      "red",
-      "yellow"
-    ],
-    "version": "2.4"
+    "name": "LaunchpadTheme",
+    "styles": ["default", "style2", "style3"],
+    "version": "2.11",
+    "sharedTheme": {
+      "useHeader": true,
+      "useLogo": true,
+      "isPortalSupport": true
+    },
+    "customStyles": {
+      "mainBackgroundColor": null
+    }
   },
-  "portalUrl": "http://geoit.maps.arcgis.com/",
+  "portalUrl": "https://geoit.maps.arcgis.com",
   "appId": "",
   "authorizedCrossOriginDomains": [],
   "title": "WAB Dev",
-  "subtitle": "",
+  "subtitle": "with Web AppBuilder for ArcGIS",
   "keepAppState": true,
   "logo": "images/app-logo.png",
   "geometryService": "https://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer",
@@ -25,70 +24,78 @@
   "widgetOnScreen": {
     "widgets": [
       {
-        "uri": "themes/FoldableTheme/widgets/HeaderController/Widget",
+        "uri": "themes/LaunchpadTheme/widgets/AnchorBarController/Widget",
         "position": {
-          "left": 0,
-          "top": 0,
-          "right": 0,
+          "bottom": 10,
           "height": 40,
-          "paddingRight": 275,
-          "relativeTo": "browser"
+          "relativeTo": "map",
+          "zIndex": 0
         },
-        "version": "2.4",
-        "id": "themes_FoldableTheme_widgets_HeaderController_Widget_1",
-        "name": "HeaderController"
+        "version": "2.11",
+        "id": "themes_LaunchpadTheme_widgets_AnchorBarController_Widget_20",
+        "name": "AnchorBarController"
+      },
+      {
+        "uri": "themes/LaunchpadTheme/widgets/Header/Widget",
+        "position": {
+          "left": 15,
+          "top": 17,
+          "width": 670,
+          "height": 46,
+          "relativeTo": "map"
+        },
+        "version": "2.11",
+        "id": "themes_LaunchpadTheme_widgets_Header_Widget_21",
+        "name": "Header"
       },
       {
         "uri": "widgets/ZoomSlider/Widget",
         "position": {
-          "top": 5,
-          "left": 7,
+          "left": 25,
+          "top": 95,
           "relativeTo": "map"
         },
-        "version": "2.8",
-        "id": "widgets_ZoomSlider_Widget_33",
+        "version": "2.11",
+        "id": "widgets_ZoomSlider_Widget_24",
         "name": "ZoomSlider"
       },
       {
         "uri": "widgets/HomeButton/Widget",
         "position": {
-          "top": 75,
-          "left": 7,
+          "left": 25,
+          "top": 175,
           "relativeTo": "map"
         },
-        "version": "2.8",
-        "id": "widgets_HomeButton_Widget_29",
-        "name": "HomeButton"
+        "id": "widgets_HomeButton_Widget_25",
+        "name": "HomeButton",
+        "version": "2.11"
       },
       {
         "position": {
-          "top": 5,
-          "left": 45,
+          "right": 130,
+          "top": 20,
           "relativeTo": "map"
         },
-        "placeholderIndex": 1,
-        "id": "_25",
-        "name": "LayerList",
-        "version": "2.8",
-        "closeable": true,
-        "uri": "widgets/LayerList/Widget"
+        "placeholderIndex": 2,
+        "id": "_31"
       },
       {
         "position": {
-          "top": 5,
-          "left": 90,
-          "width": 700,
+          "right": 180,
+          "top": 20,
           "relativeTo": "map"
         },
-        "placeholderIndex": 1,
-        "id": "widgets_MyReactWidget_Widget_1",
-        "name": "MyReactWidget",
-        "label": "MyReactWidget",
-        "version": "2.4",
-        "closeable": true,
-        "IsController": false,
-        "uri": "widgets/MyReactWidget/Widget",
-        "openAtStart": true
+        "placeholderIndex": 3,
+        "id": "_32"
+      },
+      {
+        "position": {
+          "right": 230,
+          "top": 20,
+          "relativeTo": "map"
+        },
+        "placeholderIndex": 4,
+        "id": "_33"
       }
     ],
     "panel": {
@@ -103,59 +110,147 @@
     "2D": true,
     "position": {
       "left": 0,
-      "top": 40,
+      "top": 0,
       "right": 0,
       "bottom": 0
     },
     "itemId": "aea0b8bf28884a27bfb5523b3d6d6aeb",
-    "mapOptions": {
-      "extent": {
-        "xmin": -8974338.141300933,
-        "ymin": 4843916.759294323,
-        "xmax": -8741969.575313909,
-        "ymax": 4975694.196058017,
-        "spatialReference": {
-          "wkid": 102100
-        }
-      }
-    },
+    "mapOptions": {},
     "id": "map",
-    "portalUrl": "http://geoit.maps.arcgis.com/"
+    "portalUrl": "https://geoit.maps.arcgis.com",
+    "mapRefreshInterval": {
+      "useWebMapRefreshInterval": true
+    }
   },
   "widgetPool": {
     "panel": {
-      "uri": "themes/FoldableTheme/panels/FoldablePanel/Panel",
+      "uri": "themes/LaunchpadTheme/panels/LaunchpadPanel/Panel",
       "position": {
-        "top": 5,
-        "right": 5,
-        "bottom": 5,
-        "zIndex": 5,
         "relativeTo": "map"
       }
     },
-    "widgets": []
+    "widgets": [
+      {
+        "uri": "widgets/Legend/Widget",
+        "version": "2.11",
+        "id": "widgets_Legend_Widget_18",
+        "name": "Legend",
+        "index": 2
+      },
+      {
+        "uri": "widgets/LayerList/Widget",
+        "version": "2.11",
+        "id": "widgets_LayerList_Widget_19",
+        "name": "LayerList",
+        "index": 3
+      },
+      {
+        "name": "MyReactWidget",
+        "version": "2.11",
+        "IsController": false,
+        "uri": "widgets/MyReactWidget/Widget",
+        "index": 5,
+        "id": "widgets_MyReactWidget_Widget_36",
+        "openAtStart": true
+      }
+    ],
+    "groups": []
   },
   "mobileLayout": {
     "widgetOnScreen": {
-      "widgets": []
+      "widgets": [
+        {
+          "uri": "themes/LaunchpadTheme/widgets/AnchorBarController/Widget",
+          "position": {
+            "bottom": 0,
+            "height": 40,
+            "width": "100%",
+            "zIndex": 0,
+            "relativeTo": "map"
+          },
+          "version": "2.11"
+        },
+        {
+          "uri": "themes/LaunchpadTheme/widgets/Header/Widget",
+          "position": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "height": 46,
+            "relativeTo": "map"
+          },
+          "version": "2.11"
+        },
+        {
+          "uri": "widgets/ZoomSlider/Widget",
+          "position": {
+            "right": 10,
+            "bottom": 160,
+            "relativeTo": "map"
+          },
+          "version": "2.11"
+        },
+        {
+          "uri": "widgets/HomeButton/Widget",
+          "position": {
+            "right": 10,
+            "bottom": 75,
+            "relativeTo": "map"
+          }
+        },
+        {
+          "position": {
+            "left": 10,
+            "bottom": 195,
+            "relativeTo": "map"
+          }
+        },
+        {
+          "position": {
+            "left": 10,
+            "bottom": 155,
+            "relativeTo": "map"
+          }
+        },
+        {
+          "position": {
+            "left": 10,
+            "bottom": 115,
+            "relativeTo": "map"
+          }
+        },
+        {
+          "uri": "widgets/ExtentNavigate/Widget",
+          "visible": false,
+          "position": {
+            "right": 10,
+            "bottom": 238,
+            "relativeTo": "map"
+          },
+          "version": "2.11"
+        },
+        {
+          "uri": "widgets/FullScreen/Widget",
+          "visible": false,
+          "position": {
+            "right": 70,
+            "top": 20
+          },
+          "version": "2.11"
+        }
+      ]
     },
     "map": {
       "position": {
         "left": 0,
-        "top": 40,
+        "top": 0,
         "right": 0,
         "bottom": 0
       }
     },
     "widgetPool": {
       "panel": {
-        "uri": "themes/FoldableTheme/panels/FoldablePanel/Panel",
-        "position": {
-          "top": 5,
-          "right": 5,
-          "bottom": 5,
-          "zIndex": 5
-        }
+        "uri": "themes/LaunchpadTheme/panels/LaunchpadPanel/Panel"
       }
     }
   },
@@ -171,7 +266,7 @@
       "height": 29
     }
   },
-  "wabVersion": "2.4",
+  "wabVersion": "2.11",
   "isTemplateApp": true,
   "isWebTier": false,
   "httpProxy": {
@@ -179,5 +274,9 @@
     "alwaysUseProxy": false,
     "url": "",
     "rules": []
+  },
+  "dataSource": {
+    "dataSources": {},
+    "settings": {}
   }
 }

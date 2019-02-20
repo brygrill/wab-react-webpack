@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ define([
   'dojo/_base/lang',
   'dojo/_base/html',
   'dojo/_base/array',
+  'dojo/on',
   'dojo/_base/declare',
   './ValueProvider',
   'dijit/_TemplatedMixin',
@@ -29,7 +30,7 @@ define([
   'jimu/utils',
   'dijit/form/FilteringSelect'
 ],
-  function(aspect, Deferred, lang, html, array, declare, ValueProvider, _TemplatedMixin, _WidgetsInTemplateMixin,
+  function(aspect, Deferred, lang, html, array, on, declare, ValueProvider, _TemplatedMixin, _WidgetsInTemplateMixin,
     template, Memory, jimuUtils) {
 
     return declare([ValueProvider, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -37,16 +38,24 @@ define([
       codedValues: null,//[{value,label}] for coded values and sub types
       staticValues: null,//[{value,label}]
       showNullValues: false,//show null values
+      layerDataChanged: false, //layer data update status
+      ifDropDown: false,
 
       postCreate: function(){
         this.inherited(arguments);
         html.addClass(this.domNode, 'jimu-filter-list-value-provider');
 
         this._uniqueValueCache = {};
+        this.noDataTips = '<div class="error-tip-section" style="display: block;">' +
+                          '<span class="jimu-icon jimu-icon-error"></span>' +
+                          '<span class="jimu-state-error-text">' + this.nls.noFilterValueTip + '</span></div>';
 
         //[{id,value,label}]
         var store = new Memory({idProperty:'id', data: []});
         this.valuesSelect.set('store', store);
+
+        //is numberical field
+        this.isNumberField = jimuUtils.isNumberField(this.fieldInfo.type);
 
         if(!this.staticValues && typeof this.valuesSelect._onDropDownMouseDown === 'function'){
           if(!this.codedValues || (this.codedValues && this.filterCodedValue)){
@@ -55,6 +64,16 @@ define([
                             "_onDropDownMouseDown",
                             lang.hitch(this, this._onBeforeDropDownMouseDown))
             );
+            this.own(on(document.body, 'click', lang.hitch(this, this._onBodyClick)));
+
+            if(this.layerInfo){ //it always exsits because it's required from valueProviderFactory constructor
+              //it will tragger after the  add/remove/update events happen
+              this.layerInfo.getLayerObject().then(lang.hitch(this, function(layerObject){
+                layerObject.on("edits-complete", lang.hitch(this, function() {
+                  this.layerDataChanged = true;
+                }));
+              }));
+            }
           }
         }
       },
@@ -63,13 +82,76 @@ define([
         this.emit('change');
       },
 
+      _getCodedValueLabelsBySubTypeId:function(){
+        // var newExpr = this.getDropdownFilterExpr();
+        // return jimuUtils.getCodedValueLabelsByExprs(this.layerDefinition, this.fieldName, newExpr, this.codedValues);
+        var newParj = this.getDropdownFilterPartsObj();
+        return this.getCodedValueListByPartsObj(this.layerDefinition, this.fieldName, newParj, this.codedValues);
+      },
+
       _onBeforeDropDownMouseDown: function(){
+        this.ifDropDown = true;
         this._tryUpdatingUniqueValues(undefined, true);
         return arguments;
       },
 
+      _onBodyClick: function(evt){
+        var target = evt.target || evt.srcElement;
+        if(target === this.domNode || html.isDescendant(target, this.domNode)){
+          return;
+        }
+        if(this.msgDiv){
+          html.setStyle(this.msgDiv, "display", "none");
+        }
+      },
+
       getDijits: function(){
         return [this.valuesSelect];
+      },
+
+      isValidValue: function(){
+        return this.getStatus() > 0;
+      },
+
+      //-1 means invalid value type
+      //0 means empty value, this ValueProvider should be ignored
+      //1 means valid value
+      getStatus: function(){
+        var item = this.valuesSelect.get('item');
+        if(item){
+          if(item.value !== undefined){ //if(item.label !== ''){
+            //Its value must be a string when valueType is 'field', not need to check validation
+            if(this.isNumberField && !jimuUtils.isValidNumber(item.value) &&
+             this.partObj.valueObj.type === 'value'){
+              var newVal = parseFloat(item.value);
+              if(jimuUtils.isValidNumber(newVal)){
+                item.value = newVal;
+                return this._getStatusForDijit(this.valuesSelect);
+              }
+              return -1;
+            }
+            return this._getStatusForDijit(this.valuesSelect);
+          }else{
+            return 0;
+          }
+        }else{
+          return 0;
+        }
+      },
+
+      //return -1 means input a wrong value
+      //return 0 means empty value
+      //return 1 means valid value
+      _getStatusForDijit: function(dijit){
+        if(dijit.validate()){
+          if(dijit.get("DisplayedValue")){
+            return 1;
+          }else{
+            return 0;
+          }
+        }else{
+          return -1;
+        }
       },
 
       //maybe return a deferred
@@ -78,6 +160,7 @@ define([
           return this._setValueForStaticValues(valueObj.value, this.staticValues);
         } else if(this.codedValues){
           if(this.filterCodedValue){
+
             return this._tryUpdatingUniqueValues(valueObj.value, false);
           }else{
             return this._setValueForStaticValues(valueObj.value, this.codedValues);
@@ -140,7 +223,7 @@ define([
               value: item.value,
               label: item.label
             };
-            if(dataItem.value === selectedValue){
+            if(dataItem.value + '' === selectedValue + ''){
               selectedId = index;
             }
             return dataItem;
@@ -152,6 +235,7 @@ define([
               this.valuesSelect.set('item', selectedItem);
             }
           }
+          this._checkIfNoData();
         }
       },
 
@@ -162,8 +246,8 @@ define([
       _tryUpdatingUniqueValues: function(selectedValue, showDropDownAfterValueUpdate){
         var def = new Deferred();
         if(!this.valuesSelect._opened){
-          var newExpr = this.getFilterExpr();
-          if(newExpr !== this._uniqueValueLoadingExpr){
+          var newExpr = this.getDropdownFilterExpr();
+          if(newExpr !== this._uniqueValueLoadingExpr || this.layerDataChanged){
             //expr changed
             this.valuesSelect.readOnly = true;
             if(this._uniqueValueLoadingDef){
@@ -183,6 +267,7 @@ define([
               if(showDropDownAfterValueUpdate){
                 this.valuesSelect.toggleDropDown();
               }
+              this._checkIfNoData();
               def.resolve();
             }), lang.hitch(this, function(err){
               console.error(err);
@@ -192,12 +277,15 @@ define([
               this._uniqueValueLoadingDef = null;
               this.valuesSelect.readOnly = false;
               this._hideLoadingIcon();
+              this._checkIfNoData();
               def.reject(err);
             }));
           }else{
+            this._checkIfNoData();
             def.resolve();
           }
         }else{
+          this._checkIfNoData();
           def.resolve();
         }
         return def;
@@ -235,7 +323,7 @@ define([
             label: item.label
           };
 
-          if (item.value === selectedValue) {
+          if (item.value + '' === selectedValue + '') {
             selectedId = index;
           }
 
@@ -253,6 +341,23 @@ define([
         this.valuesSelect.set('item', selectedItem);
       },
 
+      _checkIfNoData: function(){
+        if(this.runtime && this.ifDropDown){
+          this.ifDropDown = false;
+          var dataList = this.valuesSelect.store.data;
+          if (dataList.length === 0) {
+            if(!this.msgDiv){
+              this.msgDiv = document.createElement('div');
+              html.addClass(this.msgDiv, "jimu-filter-list-value-provider-tip-container");
+              this.msgDiv.innerHTML = this.noDataTips;
+              this.valuesSelect.domNode.parentNode.appendChild(this.msgDiv);
+            }else{
+              html.setStyle(this.msgDiv, "display", "block");
+            }
+          }
+        }
+      },
+
       _showLoadingIcon: function(){
         html.addClass(this.valuesSelect.domNode, 'loading');
       },
@@ -263,11 +368,11 @@ define([
 
       _getUniqueValues: function(where){
         var def = new Deferred();
-        if(this._uniqueValueCache[where]){
+        if(this._uniqueValueCache[where] && !this.layerDataChanged){
           def.resolve(this._uniqueValueCache[where]);
         }else{
           this._showLoadingIcon();
-          jimuUtils.getUniqueValues(this.url, this.fieldName, where, this.layerDefinition)
+          jimuUtils.getUniqueValues(this.url, this.fieldName, where, this.layerDefinition, this.fieldPopupInfo)
           .then(lang.hitch(this, function(valueLabels){
             if(!this.domNode){
               return;
@@ -283,6 +388,7 @@ define([
             this._hideLoadingIcon();
           }));
         }
+        this.layerDataChanged = false;//reset default value
         return def;
       }
 

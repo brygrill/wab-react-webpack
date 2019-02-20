@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,15 +43,18 @@ define([
 
       //public methods:
       //getValueObject
+      //build: partsObj -> UI
 
       //events:
       //change
+      //enter
 
       postCreate: function(){
         this.inherited(arguments);
         this.valueProvider = this.valueProviderFactory.getValueProvider(this.part, true);
         this.valueProvider.placeAt(this.valueProviderTd);
         this.own(on(this.valueProvider, 'change', lang.hitch(this, this._onValueProviderChanged)));
+        this.own(on(this.valueProvider, 'enter', lang.hitch(this, this._onValueProviderEnter)));
         this.valueProvider.bindChangeEvents();
       },
 
@@ -80,7 +83,7 @@ define([
           resultDef = def;
         }else{
           resultDef = new Deferred();
-          resultDef.resolve();
+          resultDef.resolve(this.valueProvider);
         }
 
         return resultDef;
@@ -109,6 +112,10 @@ define([
             _dijit.focusNode.blur();
           }
         }
+      },
+
+      _onValueProviderEnter: function(){
+        this.emit('enter');
       },
 
       _onValueProviderChanged: function(){

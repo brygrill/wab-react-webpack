@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,8 +42,12 @@ define(['dojo/_base/declare',
       maxWidth: 350,
       maxHeight: 180,
 
+      customZIndex: null, //optional
+
       postMixInProperties: function() {
         this.content = this.message;
+        //register msg popup when app starts because cursor needs to focus it from other widget's first node.
+        window.currentMsgPopup = this;
       },
 
       _createTitleNode: function(){
@@ -56,9 +60,16 @@ define(['dojo/_base/declare',
             innerHTML: this.titleLabel || '&nbsp'
           }, this.titleNode);
           this.closeBtnNode = html.create('div', {
-            'class': 'close-btn jimu-float-trailing'
+            'class': 'close-btn jimu-icon jimu-icon-close jimu-float-trailing',
+            'tabindex': 0
           }, this.titleNode);
           this.own(on(this.closeBtnNode, 'click', lang.hitch(this, this.close)));
+          this.own(on(this.closeBtnNode, 'keydown', lang.hitch(this, function(evt){
+            if(evt.keyCode === keys.ENTER){
+              this.close();
+              this.focusLastActiveNode();
+            }
+          })));
         }
       },
 
@@ -77,5 +88,6 @@ define(['dojo/_base/declare',
         html.setStyle(this.domNode, 'zIndex', count + baseIndex + 1);
         html.setStyle(this.overlayNode, 'zIndex', count + baseIndex);
       }
+
     });
   });

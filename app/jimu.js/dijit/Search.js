@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@
 define(['dojo/_base/declare',
   'dojo/_base/html',
   'dojo/string',
+  'dojo/keys',
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin'
 ],
-function(declare, html, string, _WidgetBase, _TemplatedMixin) {
+function(declare, html, string, keys, _WidgetBase, _TemplatedMixin) {
   return declare([_WidgetBase, _TemplatedMixin], {
     baseClass: 'jimu-search',
     declaredClass: 'jimu.dijit.Search',
@@ -63,8 +64,9 @@ function(declare, html, string, _WidgetBase, _TemplatedMixin) {
     },
 
     _onKeyDown: function(evt){
+      this.doChange();
       var keyNum = evt.keyCode !== undefined ? evt.keyCode : evt.which;
-      if (keyNum === 13) {
+      if (keyNum === keys.ENTER) {
         this.doSearch();
       }
       evt.stopPropagation();
@@ -78,6 +80,12 @@ function(declare, html, string, _WidgetBase, _TemplatedMixin) {
 
     _onBtnClick: function(){
       this.doSearch();
+    },
+
+    doChange: function(){
+      if(this.onChange){
+        this.onChange(this.getValue());
+      }
     }
   });
 });

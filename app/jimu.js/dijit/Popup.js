@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,15 @@
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
 
-define(['dojo/_base/declare',
+define([
+    'dojo/_base/declare',
     'dojo/_base/lang',
+    'dojo/Evented',
     'dojo/_base/array',
     'dojo/_base/html',
     'dojo/_base/fx',
     'dojo/on',
+    'dojo/keys',
     'dojo/sniff',
     'dojo/touch',
     'dojo/query',
@@ -27,11 +30,11 @@ define(['dojo/_base/declare',
     'dijit/_WidgetBase',
     'jimu/utils'
   ],
-  function(declare, lang, array, html, baseFx, on, has, touch,
+  function(declare, lang, Evented, array, html, baseFx, on, keys, has, touch,
     query, Move, _WidgetBase, jimuUtils) {
     var count = 0;
     /* global jimuConfig */
-    return declare(_WidgetBase, {
+    return declare([_WidgetBase, Evented], {
       //summary:
       //  show a popup window
       declaredClass: 'jimu.dijit.Popup',
@@ -47,6 +50,8 @@ define(['dojo/_base/declare',
       //container: String|DOM
       //  this popup parent dom node
       container: null,
+
+      customZIndex: null, //custom z-index
 
       //buttons: Object[]
       //  this is the object format
@@ -73,13 +78,31 @@ define(['dojo/_base/declare',
       //If this function return false, the popup will not close
       onClose: null,
 
-      _fixedHeight: false,
+      _fixedHeight: false, //it's true only when height is numberical value.
       // the height of Popup depends on the height of content
       autoHeight: false,
+
+      isResize: true,
+
+      // the width of Popup depends on the windows.w.
+      // Its range is (0,1]
+      horizontalWidthRate: 0,
 
       maxHeight: 800,
       maxWidth: 1024,
 
+      //optional
+      enableMoveable: true,
+      hasTitle: true, //if false, no title bar and close btn
+      contentHasNoMargin: false, //no margin on content except margin-bottom is 3px.
+      hasOverlay: true, //if has overlay
+      moveToCenter: true,
+      //it works when moveToCenter is false. eg: {left: 1px, top: 1px, width: 100, height: 100}
+      //left and top are required, width and height are optional.
+      customPosition: null,
+      hiddenAfterInit: false,
+
+      useFocusLogic: true,
 
       constructor: function() {
         this.buttons = [];
@@ -89,7 +112,14 @@ define(['dojo/_base/declare',
         this.container = jimuConfig.layoutId;
       },
 
+      focusLastActiveNode: function(){
+        if(this.focusedNodeBeforeOpen && this.useFocusLogic){
+          this.focusedNodeBeforeOpen.focus();
+        }
+      },
+
       postCreate: function() {
+        this.focusedNodeBeforeOpen = document.activeElement;
         this._preProcessing();
 
         this.inherited(arguments);
@@ -99,33 +129,51 @@ define(['dojo/_base/declare',
         // this.domNode.tabIndex = 1;
         // init dom node
         this._initDomNode();
+        this._addStylesByHeightType();
 
         //position the popup
-        this._positioning();
+        this._calcAndSetPosition();
 
         html.place(this.domNode, this.container);
 
-        setTimeout(lang.hitch(this, function() {
-          this._moveToMiddle();
+        //although this function only works when autoHeight is true.
+        //but we need it to trigger event 'popupHasInitedSuccessfully', so keep this setTimeout
+        // if(this.autoHeight){
+        setTimeout(lang.hitch(this, function() { //tolerance height
+          this._calcAndSetPosition(true, false);
+
+          //init focusable nodes
+          this.initFocusNodes();
         }), 50);
-        // this._moveToMiddle();
+        // }else{
+        //   this._calcAndSetPosition(true, false);
+        // }
         // this._limitButtonsMaxWidth();
 
-        this.own(on(window, 'resize', lang.hitch(this, function() {
-          if (this._fixedHeight || this.autoHeight) {
-            this._calculatePosition();
+        if(this.isResize){
+          this.own(on(window, 'resize', lang.hitch(this, function() {
+            this._calcAndSetPosition(true, true);
+          })));
+        }
 
-            this._moveToMiddle();
-            return;
+        if(this.hasOverlay){
+          this.overlayNode = html.create('div', {
+            'class': 'jimu-overlay'
+          }, this.container);
+        }
+
+        if(this.customZIndex || this.customZIndex === 0){//numberical value could be 0.
+          html.setStyle(this.domNode, 'zIndex', this.customZIndex + 1);
+          if(this.overlayNode){
+            html.setStyle(this.overlayNode, 'zIndex', this.customZIndex);
           }
-          this._positioning();
-        })));
+        }else{
+          this._increaseZIndex();
+        }
 
-        this.overlayNode = html.create('div', {
-          'class': 'jimu-overlay'
-        }, this.container);
-
-        this._increaseZIndex();
+        if(this.hiddenAfterInit){
+          this.hide();
+        }
 
         baseFx.animateProperty({
           node: this.domNode,
@@ -135,10 +183,113 @@ define(['dojo/_base/declare',
           duration: 200
         }).play();
 
-        this.domNode.focus();
+
+        html.setAttr(this.domNode, 'role', 'application');
+        this.own(on(this.domNode, 'keydown', lang.hitch(this, function(evt) {
+          if (evt.keyCode === keys.ESCAPE) {
+            this.close();
+          }
+          jimuUtils.preventMapNavigation(evt);
+        })));
+      },
+
+      initFocusNodes: function(){
+        if(this.useFocusLogic){
+          this.firstFocusNode = this._getFirstFocusNode();
+          this.lastFocusNode = this._getLastFocusNode();
+          if(this.firstFocusNode){
+            this.own(on(this.firstFocusNode, 'keydown', lang.hitch(this, function(evt) {
+              if(evt.shiftKey && evt.keyCode === keys.TAB) {
+                evt.preventDefault();
+                this.firstFocusNode.focus();
+              }
+            })));
+            this.firstFocusNode.focus();
+          }
+          if(this.lastFocusNode){
+            this.own(on(this.lastFocusNode, 'keydown', lang.hitch(this, function(evt) {
+              if(!evt.shiftKey && evt.keyCode === keys.TAB) {
+                evt.preventDefault();
+                this.firstFocusNode.focus();
+              }
+            })));
+          }
+        }
+      },
+
+      _getFirstFocusNode: function(){
+        var firstNode = this.closeBtnNode;
+        if(!firstNode){
+          if (typeof this.content !== 'string') {
+            var focusableNodes;
+            if(this.content.domNode) {
+              focusableNodes = jimuUtils.getFocusNodesInDom(this.content.domNode);
+            }else if (this.content.nodeType === 1) {
+              focusableNodes = jimuUtils.getFocusNodesInDom(this.content);
+            }
+            if(focusableNodes.length > 0 ){
+              firstNode = focusableNodes[0];
+            }else if(this.buttons.length){
+              firstNode = this._getFirstBtn();
+            }
+          }else if(this.buttons.length){
+            firstNode = this._getFirstBtn();
+          }
+        }
+        return firstNode;
+      },
+
+      _getLastFocusNode: function(){
+        var lastNode = this._getLastBtn();
+        if(!lastNode){
+          if(this.content && typeof this.content !== 'string') {
+            var focusableNodes;
+            if(this.content.domNode) {
+              focusableNodes = jimuUtils.getFocusNodesInDom(this.content.domNode);
+            }else if (this.content.nodeType === 1) {
+              focusableNodes = jimuUtils.getFocusNodesInDom(this.content);
+            }
+            if(focusableNodes.length > 0 ){
+              lastNode = focusableNodes[focusableNodes.length - 1];
+            }else{
+              lastNode = this.closeBtnNode;
+            }
+          }else{
+            lastNode = this.closeBtnNode;
+          }
+        }
+        return lastNode;
+      },
+
+      _getFirstBtn: function(){
+        var firstBtn = null;
+        var btns = query('.jimu-btn', this.buttonContainer);
+        for(var i = 0; i <= btns.length - 1; i++) {
+          if(html.getStyle(btns[i], 'display') !== 'none'){
+            firstBtn = btns[i];
+            break;
+          }
+        }
+        return firstBtn;
+      },
+
+      _getLastBtn: function(){
+        var lastBtn = null;
+        var btns = query('.jimu-btn', this.buttonContainer);
+        for(var i = btns.length - 1; i >= 0; i--) {
+          if(html.getStyle(btns[i], 'display') !== 'none'){
+            lastBtn = btns[i];
+            break;
+          }
+        }
+        return lastBtn;
       },
 
       _preProcessing: function() {
+        if (typeof this.width !== 'number') {
+          this.width = this.maxWidth;
+        }
+
         if (typeof this.height === 'number') {
           this._fixedHeight = true;
           this.autoHeight = false;
@@ -158,7 +309,8 @@ define(['dojo/_base/declare',
           innerHTML: this.titleLabel || '&nbsp'
         }, this.titleNode);
         this.closeBtnNode = html.create('div', {
-          'class': 'close-btn jimu-icon jimu-icon-close jimu-float-trailing'
+          'class': 'close-btn jimu-icon jimu-icon-close jimu-float-trailing',
+          'tabindex': 0
         }, this.titleNode);
 
         var eventName = null;
@@ -168,10 +320,17 @@ define(['dojo/_base/declare',
           eventName = 'click';
         }
         this.own(on(this.closeBtnNode, eventName, lang.hitch(this, this.close)));
+        this.own(on(this.closeBtnNode, 'keydown', lang.hitch(this, function(evt){
+          if(evt.keyCode === keys.ENTER){
+            this.close();
+          }
+        })));
       },
 
       _initDomNode: function() {
-        this._createTitleNode();
+        if(this.hasTitle){
+          this._createTitleNode();
+        }
 
         this.contentContainerNode = html.create('div', {
           'class': 'content'
@@ -196,7 +355,8 @@ define(['dojo/_base/declare',
           html.setStyle(this.buttonContainer, 'display', 'none');
         }
 
-        for (var i = this.buttons.length - 1; i > -1; i--) {
+        // for (var i = this.buttons.length - 1; i > -1; i--) {
+        for(var i = 0; i <= this.buttons.length - 1; i++) {
           this._createButton(this.buttons[i]);
           if (this.buttons[i].disable) {
             this.disableButton(i);
@@ -279,39 +439,109 @@ define(['dojo/_base/declare',
         return footerBox;
       },
 
-      _calculatePosition: function() {
+      _calcAndSetPosition: function(ifSendEvent, ifResize) {
+        var selfBox = html.getMarginBox(this.domNode);
+
+        //because this method is called async, so the container may be destoryed before this.
+        if(typeof this.container === 'string' && !html.byId(this.container)){
+          return;
+        }
         var box = html.getContentBox(this.container);
         var headerBox = this._getHeaderBox(),
           footerBox = this._getFooterBox();
 
         var flexHeight = box.h - headerBox.h - footerBox.h - 40;
-        var initHeight = 0;
-        if (this._fixedHeight) {
-          initHeight = this.height;
-        } else if (this.autoHeight) {
-          initHeight = flexHeight - 100 * 2; // tolerance
-        } else {
-          this.height = flexHeight > this.maxHeight ? this.maxHeight : flexHeight;
-          initHeight = this.height;
+
+        var width = 0, height = 0;
+        if(this.customPosition && this.customPosition.height){
+          this.height = this.customPosition.height;
+          height = (typeof this.height === 'number') ? this.height + 'px' : this.height;
+        }else{
+          if (this._fixedHeight) {
+            //use flexH when height is out of bounds
+            this.height = this.height > flexHeight ? flexHeight : this.height;
+          } else if (this.autoHeight) {
+            var selfBoxH = selfBox.h > flexHeight ? flexHeight : selfBox.h;//out of bounds
+            this.height = selfBoxH || flexHeight - 100 * 2; // tolerance
+          } else {
+            this.height = flexHeight > this.maxHeight ? this.maxHeight : flexHeight;
+          }
+          height = this.height + 'px';
         }
 
-        var top = (flexHeight - initHeight) / 2 + headerBox.h + 20;
-        top = top < headerBox.h ? headerBox.h : top;
+        if(this.customPosition && this.customPosition.width){
+          this.width = this.customPosition.width;
+          width = (typeof this.width === 'number') ? this.width + 'px' : this.width;
+        }else{
+          // this.width = this.width || this.maxWidth;
+          // _calculateWidth
+          if (typeof this.horizontalWidthRate === 'number' && this.horizontalWidthRate > 0) {
+            var popupWidth = (html.getMarginBox(window.document.body).w) * this.horizontalWidthRate;
+            popupWidth = popupWidth > this.maxWidth ? popupWidth : this.maxWidth;
+            this.width = popupWidth;
+          }else{
+            this.width = this.width || this.maxWidth;
+          }
+          width = this.width + 'px';
+        }
 
-        this.width = this.width || this.maxWidth;
-        var left = (box.w - this.width) / 2;
+        var left = 0, top = 0;
+        if(this.customPosition){
+          left = (typeof this.customPosition.left === 'number') ?
+            this.customPosition.left + 'px' : this.customPosition.left;
+          top = (typeof this.customPosition.top === 'number') ?
+           this.customPosition.top + 'px' : this.customPosition.top;
+        }else if(this.moveToCenter){
+          top = (flexHeight - this.height) / 2 + headerBox.h + 20;
+          top = top < headerBox.h ? headerBox.h : top;
+          left = (box.w - this.width) / 2 + 'px';
+          top = top + 'px';
+        }
 
         html.setStyle(this.domNode, {
-          left: left + 'px',
-          top: top + 'px',
-          width: this.width + 'px'
+          width: width,
+          height: this.autoHeight ? 'auto' : height,
+          left: left,
+          top: top
+        });
+
+        if(this.enableMoveable){
+          this._moveableNode(this.width, 100);
+        }
+
+        // console.log("calc popup's position");
+        if(!this.moveToCenter && ifSendEvent && html.getStyle(this.domNode, 'display') === 'block'){
+          this.emit('popupHasInitedSuccessfully', ifResize);
+        }
+      },
+
+      setDomNodeStyls: function(stylesObj){
+        html.setStyle(this.domNode, stylesObj);
+      },
+
+      setCustomPosition: function(left, top, width, height) {
+        this.width = width || this.width || this.maxWidth;
+        this.height = height || this.height || this.maxHeight;
+
+        left = (typeof left === 'number') ? left + 'px' : left;
+        top = (typeof top === 'number') ? top + 'px' : top;
+        width = (typeof this.width === 'number') ? this.width + 'px' : this.width;
+        height = (typeof this.height === 'number') ? this.height + 'px' : this.height;
+
+        html.setStyle(this.domNode, {
+          left: left,
+          top: top,
+          width: width,
+          height: this.autoHeight ? 'auto' : height
         });
       },
 
-      _calculateHeight: function() {
+      _addStylesByHeightType: function() {
         if (!this.autoHeight) { // position: absolute
-          html.setStyle(this.domNode, 'height', this.height + 'px');
           html.addClass(this.contentContainerNode, 'content-absolute');
+          if(!this.hasTitle){
+            html.addClass(this.contentContainerNode, 'no-popup-title-content-absolute');
+          }
           html.addClass(this.buttonContainer, 'button-container-absolute');
 
           if (this.buttons.length === 0) {
@@ -320,7 +550,6 @@ define(['dojo/_base/declare',
             });
           }
         } else { // position: static
-          html.setStyle(this.domNode, 'height', 'auto');
           html.addClass(this.contentContainerNode, 'content-static');
 
           if (this.buttons.length === 0) {
@@ -330,42 +559,17 @@ define(['dojo/_base/declare',
           }
         }
 
-        this._moveableNode(this.width, 100);
-      },
-
-      _moveToMiddle: function() {
-        if (this.autoHeight) {
-          var selfBox = html.getMarginBox(this.domNode);
-          var box = html.getContentBox(this.container);
-          var headerBox = this._getHeaderBox(),
-            footerBox = this._getFooterBox();
-
-          var flexHeight = box.h - headerBox.h - footerBox.h - 40;
-          var initHeight = 0;
-          initHeight = selfBox.h || flexHeight - 100 * 2; // tolerance
-
-          var top = (flexHeight - initHeight) / 2 + headerBox.h + 20;
-          top = top < headerBox.h ? headerBox.h : top;
-
-          var left = (box.w - this.width) / 2;
-
-          html.setStyle(this.domNode, {
-            left: left + 'px',
-            top: top + 'px',
-            width: this.width + 'px'
-          });
+        if(this.contentHasNoMargin){
+          html.addClass(this.contentContainerNode, 'content-fill-Popup');
         }
-      },
-
-      _positioning: function() {
-        this._calculatePosition();
-        this._calculateHeight();
       },
 
       _increaseZIndex: function() {
         var baseIndex = 200;
         html.setStyle(this.domNode, 'zIndex', count + baseIndex + 1);
-        html.setStyle(this.overlayNode, 'zIndex', count + baseIndex);
+        if(this.overlayNode){
+          html.setStyle(this.overlayNode, 'zIndex', count + baseIndex);
+        }
         count++;
       },
 
@@ -381,6 +585,20 @@ define(['dojo/_base/declare',
         html.setStyle(mover.node, 'opacity', 1);
       },
 
+      show: function(){
+        if(this.overlayNode){
+          html.setStyle(this.overlayNode, 'display', 'block');
+        }
+        html.setStyle(this.domNode, 'display', 'block');
+      },
+
+      hide: function(){
+        if(this.overlayNode){
+          html.setStyle(this.overlayNode, 'display', 'none');
+        }
+        html.setStyle(this.domNode, 'display', 'none');
+      },
+
       close: function() {
         if (this.onClose && this.onClose() === false) {
           return;
@@ -389,9 +607,13 @@ define(['dojo/_base/declare',
         var parent = this.domNode.parentNode;
         var cloneNode = lang.clone(this.domNode);
         html.setStyle(this.domNode, 'display', 'none');
-        html.destroy(this.overlayNode);
+        if(this.overlayNode){
+          html.destroy(this.overlayNode);
+        }
         this.destroy();
-        this.moveable.destroy();
+        if(this.moveable) {
+          this.moveable.destroy();
+        }
         html.place(cloneNode, parent);
 
         baseFx.animateProperty({
@@ -404,6 +626,10 @@ define(['dojo/_base/declare',
             html.destroy(cloneNode);
           }
         }).play();
+
+        this.focusLastActiveNode();
+
+        window.currentMsgPopup = null;
       },
 
       addButton: function(btn) {
@@ -421,20 +647,22 @@ define(['dojo/_base/declare',
           'class': 'jimu-btn jimu-popup-action-btn jimu-float-trailing jimu-trailing-margin1 ' +
             appendedClasses,
           'innerHTML': button.label,
+          'tabindex': 0,
           'title': button.title || button.label
         }, this.buttonContainer);
-        this.enabledButtons.unshift(node);
+        this.enabledButtons.push(node);
 
         var disableNode = html.create('div', {
           'class': 'jimu-btn jimu-state-disabled jimu-float-trailing jimu-trailing-margin1 ' +
             appendedClasses,
           'title': button.title || button.label,
           'innerHTML': button.label,
+          'tabindex': 0,
           'style': {
             display: 'none'
           }
         }, this.buttonContainer);
-        this.disabledButtons.unshift(disableNode);
+        this.disabledButtons.push(disableNode);
 
         this.own(on(node, 'click', lang.hitch(this, function(evt) {
           //we don't close popup because that maybe the
@@ -445,23 +673,16 @@ define(['dojo/_base/declare',
             this.close();
           }
         })));
-        // var existKey = false;
-        // if (typeof button.key === 'number') {
-        //   for (var attr in keys) {
-        //     if (keys[attr] === button.key) {
-        //       existKey = true;
-        //       break;
-        //     }
-        //   }
-        // }
-        // if (existKey) {
-        //   this.own(on(this.domNode, 'keydown', lang.hitch(this, function(event) {
-        //     var keyCode = event.keyCode !== undefined ? event.keyCode : event.which;
-        //     if (keyCode === button.key && this.pauseKeys.indexOf(keyCode) === -1) {
-        //       node.click();
-        //     }
-        //   })));
-        // }
+
+        this.own(on(node, 'keydown', lang.hitch(this, function(evt) {
+          if(evt.keyCode === 13){
+            if (button.onClick) {
+              button.onClick(evt);
+            } else {
+              this.close();
+            }
+          }
+        })));
       },
 
       setButtonProps: function(idx, props) {
@@ -565,6 +786,21 @@ define(['dojo/_base/declare',
           array.forEach(this.enabledButtons, lang.hitch(this, function(itm) {
             html.setStyle(itm, 'display', 'none');
           }));
+        }
+      },
+
+      //custom resize popup's width and height
+      resize: function(size){
+        // console.log('function - resize');
+        if(size){
+          this.width = size.w;
+          this.height = size.h;
+        }
+
+        this._calcAndSetPosition();
+
+        if (this.content && this.content.domNode && this.content.resize){
+          this.content.resize();
         }
       }
     });

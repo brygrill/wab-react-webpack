@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -71,6 +71,8 @@ define([
 
   exports.getStddevVal = getStddevVal;
 
+  exports.getStatisticsResultFromClientSync = getStatisticsResultFromClientSync;
+
   function getStatisticsResultFromServer(params){
     var query, queryTask;
 
@@ -110,7 +112,7 @@ define([
     });
   }
 
-  function getStatisticsResultFromClient(params){
+  function getStatisticsResultFromClientSync(params){
     var attributes = {
       countField: 0,
       sumField: 0
@@ -125,42 +127,41 @@ define([
       stypes.forEach(function(statisticType){
         //"count", "sum", "min", "max", "avg", "stddev"
         switch(statisticType){
-        case 'count':
-          attributes.countField ++;
-          break;
-        case 'sum':
-          attributes.sumField += val;
-          break;
-        case 'min':
-          if(typeof attributes.minField === 'undefined'){
-            attributes.minField = val;
-          }else{
-            attributes.minField = Math.min(attributes.minField, val);
-          }
-          break;
-        case 'max':
-          if(typeof attributes.maxField === 'undefined'){
-            attributes.maxField = val;
-          }else{
-            attributes.maxField = Math.max(attributes.maxField, val);
-          }
-          break;
-        case 'avg':
-          c++;
-          s += val;
-          break;
-        case 'stddev':
-          break;
+          case 'count':
+            attributes.countField ++;
+            break;
+          case 'sum':
+            attributes.sumField += val;
+            break;
+          case 'min':
+            if(typeof attributes.minField === 'undefined'){
+              attributes.minField = val;
+            }else{
+              attributes.minField = Math.min(attributes.minField, val);
+            }
+            break;
+          case 'max':
+            if(typeof attributes.maxField === 'undefined'){
+              attributes.maxField = val;
+            }else{
+              attributes.maxField = Math.max(attributes.maxField, val);
+            }
+            break;
+          case 'avg':
+            c++;
+            s += val;
+            break;
+          case 'stddev':
+            break;
         }
       });
     });
 
     if(c === 0){
-      return when({
-        countField: 0
-      });
+      attributes.avgField = 0;
+    }else{
+      attributes.avgField = (c === 0)? '': s / c;
     }
-    attributes.avgField = (c === 0)? '': s / c;
 
     var vals = params.featureSet.features.filter(function(feature){
       var val = feature.attributes[params.fieldName];
@@ -176,7 +177,11 @@ define([
     attributes.stddevField = getStddevVal(vals);
 
     formatResults(params, attributes);
-    return when(attributes);
+    return attributes;
+  }
+
+  function getStatisticsResultFromClient(params){
+    return when(getStatisticsResultFromClientSync(params));
   }
 
   function getTypesFromParam(params){
@@ -225,7 +230,7 @@ define([
   }
 
   function formatResults(params, attributes){
-    if(!params.fieldInfos[params.fieldName]){
+    if(!params.fieldInfos || !params.fieldInfos[params.fieldName]){
       return;
     }
     for(var p in attributes){

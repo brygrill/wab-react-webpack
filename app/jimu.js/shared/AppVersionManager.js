@@ -914,6 +914,405 @@ function(BaseVersionManager, utils) {
       },
 
       compatible: true
+    }, {
+      version: '2.5',
+
+      description: 'The version for Online 5.2.',
+
+      upgrader: function (oldConfig) {
+        var onScreenWidgets = oldConfig.widgetOnScreen.widgets;
+        addFullScreenWidget(oldConfig, onScreenWidgets);
+
+        function addFullScreenWidget(oldConfig, onScreenWidgets) {
+          var themeName = oldConfig.theme && oldConfig.theme.name;
+          if (themeName === 'BillboardTheme') {
+            addFullScreenWidgetForBillboardTheme(onScreenWidgets);
+          } else if (themeName === 'BoxTheme') {
+            addFullScreenWidgetForBoxTheme(onScreenWidgets);
+          } else if (themeName === 'DartTheme') {
+            addFullScreenWidgetForDartTheme(onScreenWidgets);
+          } else if (themeName === 'FoldableTheme') {
+            addFullScreenWidgetForFoldableTheme(onScreenWidgets);
+          } else if (themeName === 'DashboardTheme') {
+            addFullScreenWidgetForDashboardTheme(onScreenWidgets);
+          } else if (themeName === 'JewelryBoxTheme') {
+            addFullScreenWidgetForJewelryBoxTheme(onScreenWidgets);
+          } else if (themeName === 'LaunchpadTheme') {
+            addFullScreenWidgetForLaunchpadTheme(onScreenWidgets);
+          } else if (themeName === 'PlateauTheme') {
+            addFullScreenWidgetForPlateauTheme(onScreenWidgets);
+          } else if (themeName === 'TabTheme') {
+            addFullScreenWidgetForTabTheme(onScreenWidgets);
+          }
+        }
+        //if true, means a contains b.
+        //if false, means a doesn't contain b
+        //example: {uri: "widgets/Slide/Widget",position:{left:10,right:10}} contains {position:{left:10,right:10}}}
+        function isContains(a, b) {
+          if (!a || !b) {
+            return false;
+          }
+          for (var key in b) {
+            if (b.hasOwnProperty(key)) {
+              if (typeof b[key] === "object") {
+                if (!isContains(a[key], b[key])) {
+                  return false;
+                }
+              } else {
+                if (a[key] !== b[key]) {
+                  return false;
+                }
+              }
+            }
+          }
+          return true;
+        }
+        function findWidget(onScreenWidgets, url, idx) {
+          var i = 0, len;
+          if (idx) {
+            i = idx;
+          }
+          for (len = onScreenWidgets.length; i < len; i++) {
+            var widget = onScreenWidgets[i];
+            if (widget && widget.uri && widget.uri === url) {
+              return widget;
+            }
+          }
+
+          return null;
+        }
+
+        //1 BillboardTheme
+        function addFullScreenWidgetForBillboardTheme(onScreenWidgets) {
+          function isDefaultLayoutOrLayout2() {
+            var isInThatPosition0 = isContains(onScreenWidgets[8], {
+              "position": {
+                "left": 60,
+                "top": 53
+              }
+            });
+            var isInThatPosition2 = isContains(onScreenWidgets[8], {
+              "position": {
+                "left": 15,
+                "top": 53
+              }
+            });
+            return isInThatPosition0 || isInThatPosition2;
+          }
+          /*function isLayout1OrLayout3() {
+            var isInThatPosition1 = isContains(onScreenWidgets[8], {
+              "position": {
+                "top": 10,
+                "right": 15
+              }
+            });
+            var isInThatPosition3 = isContains(onScreenWidgets[8], {
+              "position": {
+                "right": 15,
+                "top": 10
+              }
+            });
+            return isInThatPosition1 || isInThatPosition3;
+          }*/
+
+          if (isDefaultLayoutOrLayout2()) {
+            onScreenWidgets.push({
+              "uri": "widgets/FullScreen/Widget",
+              "visible": false,
+              "position": {
+                "right": 8,
+                "top": 8
+              },
+              "version": "2.5"
+            });
+          } else/* if (isLayout1OrLayout3())*/ {
+            onScreenWidgets.push({
+              "uri": "widgets/FullScreen/Widget",
+              "visible": false,
+              "position": {
+                "right": 8,
+                "bottom": 55
+              },
+              "version": "2.5"
+            });
+          }
+        }
+
+        //2 BoxTheme
+        function addFullScreenWidgetForBoxTheme(onScreenWidgets) {
+          function isDefaultLayout() {
+            var isInThatPosition0 = isContains(findWidget(onScreenWidgets,
+              "themes/BoxTheme/widgets/BoxController/Widget"), {
+                "position": {
+                  "right": 0,
+                  "bottom": 0
+                }
+              });
+            return isInThatPosition0;
+          }
+          /*function isLayout1() {
+            var isInThatPosition1 = isContains(findWidget(onScreenWidgets,
+              "themes/BoxTheme/widgets/BoxController/Widget"), {
+                "position": {
+                  "right": 0,
+                  "top": 0
+                }
+              });
+            return isInThatPosition1;
+          }*/
+
+          if (isDefaultLayout()) {
+            onScreenWidgets.push({
+              "uri": "widgets/FullScreen/Widget",
+              "visible": false,
+              "position": {
+                "right": 8,
+                "top": 8
+              },
+              "version": "2.5"
+            });
+          } else/* if (isLayout1()) */ {
+            onScreenWidgets.push({
+              "uri": "widgets/FullScreen/Widget",
+              "visible": false,
+              "position": {
+                "right": 8,
+                "bottom": 8
+              },
+              "version": "2.5"
+            });
+          }
+        }
+
+        //3 DartTheme
+        function addFullScreenWidgetForDartTheme(onScreenWidgets) {
+          onScreenWidgets.push({
+            "uri": "widgets/FullScreen/Widget",
+            "visible": false,
+            "position": {
+              "right": 8,
+              "top": 8
+            },
+            "version": "2.5"
+          });
+        }
+
+        //4 FoldableTheme
+        function addFullScreenWidgetForFoldableTheme(onScreenWidgets) {
+          onScreenWidgets.push({
+            "uri": "widgets/FullScreen/Widget",
+            "visible": false,
+            "position": {
+              "right": 8,
+              "top": 8
+            },
+            "version": "2.5"
+          });
+        }
+
+        //5 DashboardTheme
+        function addFullScreenWidgetForDashboardTheme(onScreenWidgets) {
+          onScreenWidgets.push({
+            "uri": "widgets/FullScreen/Widget",
+            "visible": false,
+            "position": {
+              "right": 8,
+              "top": 8
+            },
+            "version": "2.5"
+          });
+        }
+
+        //6 LaunchpadTheme
+        function addFullScreenWidgetForLaunchpadTheme(onScreenWidgets) {
+          onScreenWidgets.push({
+            "uri": "widgets/FullScreen/Widget",
+            "visible": false,
+            "position": {
+              "right": 70,
+              "top": 20
+            },
+            "version": "2.5"
+          });
+        }
+
+        //7 JewelryBoxTheme
+        function addFullScreenWidgetForJewelryBoxTheme(onScreenWidgets) {
+          onScreenWidgets.push({
+            "uri": "widgets/FullScreen/Widget",
+            "visible": false,
+            "position": {
+              "right": 8,
+              "top": 8
+            },
+            "version": "2.5"
+          });
+        }
+
+        //8 PlateauTheme
+        function addFullScreenWidgetForPlateauTheme(onScreenWidgets) {
+          onScreenWidgets.push({
+            "uri": "widgets/FullScreen/Widget",
+            "visible": false,
+            "position": {
+              "right": 8,
+              "top": 8
+            },
+            "version": "2.5"
+          });
+        }
+
+        //9 TabTheme
+        function addFullScreenWidgetForTabTheme(onScreenWidgets) {
+          function isDefaultLayout() {
+            var isInThatPosition0 = isContains(onScreenWidgets[7], {
+              "position": {
+                "left": 45,
+                "top": 45
+              }
+            });
+            return isInThatPosition0;
+          }
+          /*function isLayout1() {
+            var isInThatPosition1 = isContains(onScreenWidgets[7], {
+              "position": {
+                "right": 110,
+                "top": 10
+              }
+            });
+            return isInThatPosition1;
+          }*/
+
+          if (isDefaultLayout()) {
+            onScreenWidgets.push({
+              "uri": "widgets/FullScreen/Widget",
+              "visible": false,
+              "position": {
+                "right": 8,
+                "top": 8
+              },
+              "version": "2.5"
+            });
+          } else/* if (isLayout1()) */ {
+            onScreenWidgets.push({
+              "uri": "widgets/FullScreen/Widget",
+              "visible": false,
+              "position": {
+                "right": 8,
+                "bottom": 55
+              },
+              "version": "2.5"
+            });
+          }
+        }
+
+        return oldConfig;
+      },
+
+      compatible: true
+    }, {
+      version: '2.6',
+
+      description: 'The version for Online 5.3.',
+
+      upgrader: function(oldConfig){
+        return oldConfig;
+      },
+
+      compatible: true
+    }, {
+      version: '2.7',
+
+      description: 'The version for Online 5.4.',
+
+      upgrader: function(oldConfig){
+        return oldConfig;
+      },
+
+      compatible: true
+    }, {
+      version: '2.8',
+
+      description: 'The version for Online 6.1.',
+
+      upgrader: function(oldConfig){
+
+        upgradeDataSource(oldConfig);
+
+        function upgradeDataSource(oldConfig) {
+          var dataSources = oldConfig.dataSource && oldConfig.dataSource.dataSources;
+          if (dataSources) {
+            var vaildDataSources = getFeatureStatisticsDataSource(dataSources);
+            if (vaildDataSources && vaildDataSources.length) {
+              vaildDataSources.forEach(function(ds) {
+                var statistics = ds.dataSchema && ds.dataSchema.statistics;
+                if (statistics && statistics.length) {
+                  statistics.forEach(function(statistic) {
+                    if (statistic && statistic.statisticType === 'count' &&
+                      statistic.outStatisticFieldName === 'count') {
+                      statistic.outStatisticFieldName = 'STAT_COUNT';
+                      return;
+                    }
+                    statistic.outStatisticFieldName = upperCaseOutStatisticFieldName(statistic.outStatisticFieldName);
+                  });
+                }
+
+              });
+            }
+          }
+        }
+
+        function getFeatureStatisticsDataSource(dataSources) {
+          var dss = [];
+          if (typeof dataSources === 'object') {
+            for (var label in dataSources) {
+              var ds = dataSources[label];
+              if (ds.type === 'FeatureStatistics') {
+                dss.push(ds);
+              }
+            }
+          }
+          return dss;
+        }
+
+        function upperCaseOutStatisticFieldName(osName) {
+          return osName && osName.toUpperCase();
+        }
+
+        return oldConfig;
+      },
+
+      compatible: true
+    }, {
+      version: '2.9',
+
+      description: 'The version for Online 6.2.',
+
+      upgrader: function(oldConfig){
+        return oldConfig;
+      },
+
+      compatible: true
+    }, {
+      version: '2.10',
+
+      description: 'The version for Online 6.3.',
+
+      upgrader: function(oldConfig){
+        return oldConfig;
+      },
+
+      compatible: true
+    }, {
+      version: '2.11',
+
+      description: 'The version for Online 6.4.',
+
+      upgrader: function(oldConfig){
+        return oldConfig;
+      },
+
+      compatible: true
     }];
 
     this.isCompatible = function(_oldVersion, _newVersion){

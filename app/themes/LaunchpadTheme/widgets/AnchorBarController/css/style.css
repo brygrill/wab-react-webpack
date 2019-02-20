@@ -1,0 +1,325 @@
+/* for icon item */
+.jimu-anchorbar-iconitem .icon-item{
+  width: 40px;
+  height: 40px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.jimu-anchorbar-iconitem .icon-item.dockable{
+  margin-top: -20px;
+}
+
+.jimu-anchorbar-iconitem .icon-item:hover{
+  /*-ms-transform: scale(1.1, 1.1);/ /* IE 9 */
+  /*-webkit-transform: scale(1.1, 1.1);*/ /* Chrome, Safari, Opera */
+  /*transform: scale(1.1, 1.1);*/
+}
+
+.jimu-anchorbar-iconitem .icon-item.selected{
+  margin-top: -5px;
+}
+
+.jimu-anchorbar-iconitem .icon-item.dockable.selected{
+  margin-top: -25px;
+}
+
+.jimu-anchorbar-iconitem .status{
+  margin-top: 4px;
+  width: 4px;
+  height: 4px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  display: none;
+}
+
+.jimu-anchorbar-iconitem .status.selected{
+  display: block;
+  margin: 5px 18px;
+}
+
+.jimu-anchorbar-iconitem .icon-item .icon{
+  width: 24px;
+  height: 24px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.jimu-panel-content .jimu-anchorbar-iconitem{
+  margin: 10px;
+}
+
+/* for docker */
+.jimu-anchorbar-controller .docker{
+  position: relative;
+  height: 30px;
+}
+
+.jimu-anchorbar-controller .docker .iconList{
+  position: absolute;
+  left: 30px;
+  right: 30px;
+}
+
+.jimu-anchorbar-controller.mobile .docker .iconList{
+  left: 0;
+  right: 0;
+}
+
+.jimu-anchorbar-controller .docker .iconList .iconGroup{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 30px;
+}
+
+.jimu-rtl .jimu-anchorbar-controller .docker .iconList .iconGroup{
+  right: 0;
+  left: auto;
+}
+
+.jimu-anchorbar-controller .docker .previousBtn{
+  position: absolute;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  z-index: 60;
+}
+
+.jimu-anchorbar-controller.mobile .docker .previousBtn{
+  display: none;
+}
+
+.jimu-rtl .jimu-anchorbar-controller .docker .previousBtn{
+  left: auto;
+  right: 0;
+}
+
+.jimu-anchorbar-controller .docker .nextBtn{
+  position: absolute;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  z-index: 60;
+}
+
+.jimu-anchorbar-controller.mobile .docker .nextBtn{
+  display: none;
+}
+
+.jimu-rtl .jimu-anchorbar-controller .docker .nextBtn{
+  right: auto;
+  left: 0;
+}
+
+.jimu-anchorbar-controller .docker .seperatorLeft{
+  position: absolute;
+  left: 30px;
+  top: 2px;
+  width: 1px;
+  height: 26px;
+  z-index: 60;
+}
+
+.jimu-anchorbar-controller.mobile .docker .seperatorLeft{
+  display: none;
+}
+
+.jimu-anchorbar-controller .docker .seperatorRight{
+  position: absolute;
+  right: 30px;
+  top: 2px;
+  width: 1px;
+  height: 26px;
+  z-index: 60;
+}
+
+.jimu-anchorbar-controller.mobile .docker .seperatorRight{
+  display: none;
+}
+
+/* widget group */
+.jimu-anchorbar-controller-group{
+  position: absolute;
+  height: auto;
+}
+
+.jimu-anchorbar-controller-group .color-header{
+  height: 2px;
+  width: 100%;
+}
+
+.jimu-anchorbar-controller-group .title{
+  position: relative;
+  height: 30px;
+  width: 100%;
+  cursor: move;
+}
+
+.jimu-anchorbar-controller-group .title .widget-icon{
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  cursor: default;
+}
+
+.jimu-anchorbar-controller-group .title .widget-icon .icon{
+  width: 16px;
+  height: 16px;
+}
+
+.jimu-rtl .jimu-anchorbar-controller-group .title .widget-icon{
+  right: 4px;
+}
+
+.jimu-anchorbar-controller-group .title-label{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 28px;
+  position: absolute;
+  left: 48px;
+  right: 96px;
+}
+
+.jimu-rtl .jimu-anchorbar-controller-group .title-label{
+  right: 48px;
+  left: 96px;
+}
+
+.jimu-anchorbar-controller-group .title .close-icon{
+  width: 24px;
+  height: 28px;
+  cursor: pointer;
+  background: transparent url(images/x.png) center no-repeat;
+}
+
+.jimu-anchorbar-controller-group .jimu-panel-content{
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.jimu-anchorbar-controller-group .jimu-widgets-controller-item{
+  margin: 5px 10px;
+  display: inline;
+  float: left;
+}
+
+.jimu-rtl .jimu-anchorbar-controller-group .jimu-widgets-controller-item{
+  float: right;
+}
+
+/* more items popup*/
+.jimu-anchorbar-more-pupup{
+  position: absolute;
+  border-radius: 2px;
+  z-index: 111;/*same zindex with loading*/
+}
+
+.jimu-anchorbar-more-pupup .pages{
+  position: relative;
+  overflow: hidden;
+  padding: 2px;
+}
+
+.jimu-anchorbar-more-pupup .points{
+  position: absolute;
+  overflow: hidden;
+  bottom: -15px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background-color: #bababa;
+}
+
+.jimu-anchorbar-more-pupup .points-inner{
+  display: inline-block;
+  overflow: hidden;
+}
+
+.jimu-anchorbar-more-pupup .point{
+  float: left;
+  width: 8px;
+  height: 8px;
+  margin-left: 5px;
+  border-radius: 4px;
+  background-color: #f2f6f9;
+  cursor: pointer;
+}
+
+.jimu-rtl .jimu-anchorbar-more-pupup .point{
+  float: right;
+  margin-right: 5px;
+  margin-left: 0;
+}
+
+.jimu-anchorbar-more-pupup .point-selected{
+  background-color: #485566;
+}
+
+.jimu-anchorbar-more-pupup .page{
+  position: relative;
+  overflow: hidden;
+}
+
+.jimu-anchorbar-more-pupup .close{
+  position: absolute;
+/*  width: 08.92857142857143%;50/560
+  height: 08.92857142857143%;*/
+  top: -04.46428571428571%;/**/
+  right: -04.46428571428571%;
+  border-radius: 50%;/*the context is the node itself*/
+  background-color: #697a8c;
+  cursor: pointer;
+}
+
+.jimu-rtl .jimu-anchorbar-more-pupup .close{
+  left: -04.46428571428571%;
+  right: auto;
+}
+
+.jimu-anchorbar-more-pupup .close-inner{
+  width: 80%;/*40/50*/
+  height: 80%;
+  margin-left: 10%;/*5/50*/
+  margin-top: 10%;/*5/50*/
+  border-radius: 50%;/*20/50*/
+  background: #1d2123 url(images/close.png) no-repeat center center;
+}
+
+.jimu-rtl .jimu-anchorbar-more-pupup .close-inner{
+  margin-right: 10%;
+  margin-left: 0;
+}
+
+.jimu-anchorbar-more-pupup .icon-node{
+  background-color: #697a8c;
+  cursor: pointer;
+  position: relative;
+}
+
+.jimu-anchorbar-more-pupup .jimu-anchorbar-iconitem .icon-item.dockable{
+  margin-top: 0;
+}
+
+.jimu-more-icon-cover{
+  z-index: 110;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.jimu-rtl .jimu-more-icon-cover{
+  right: 0;
+  left: auto;
+}

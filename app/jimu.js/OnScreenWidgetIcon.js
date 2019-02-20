@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@ define(['dojo/_base/declare',
   'dojo/_base/array',
   'dojo/_base/html',
   'dojo/on',
+  'dojo/keys',
+  'dijit/Tooltip',
   'dijit/_WidgetBase',
   './utils'
 ],
-function(declare, lang, array, html, on, _WidgetBase, utils) {
+function(declare, lang, array, html, on, keys, Tooltip, _WidgetBase, utils) {
   /* global jimuConfig */
   return declare(_WidgetBase, {
     'class': 'jimu-widget-onscreen-icon',
@@ -30,13 +32,34 @@ function(declare, lang, array, html, on, _WidgetBase, utils) {
     postCreate: function(){
       this.inherited(arguments);
       this.iconNode = html.create('img', {
-        src: this.widgetConfig.icon
+        src: this.widgetConfig.icon,
+        alt: this.widgetConfig.label
       }, this.domNode);
+      if(window.isRTL && this.widgetConfig.mirrorIconForRTL){
+        html.addClass(this.iconNode, 'jimu-flipx');
+      }
       html.setAttr(this.domNode, 'title', this.widgetConfig.label);
       html.setAttr(this.domNode, 'data-widget-name', this.widgetConfig.name);
+      //add tabindex to icons
+      var tabindex = this.widgetConfig.tabIndex ? this.widgetConfig.tabIndex : this.widgetConfig.tabIndexJimu;
+      html.setAttr(this.domNode, 'tabindex', tabindex);
+      html.setAttr(this.domNode, 'role', 'application');
+
+
       this.own(on(this.domNode, 'click', lang.hitch(this, function(){
         this.onClick();
       })));
+
+      this.own(on(this.domNode, 'keydown', lang.hitch(this, function(evt){
+        if(evt.keyCode === keys.ENTER){
+          this.onClick();
+        }else if(evt.keyCode === keys.ESCAPE){
+          utils.trapToNextFocusContainer(this.map.container);
+        }
+      })));
+
+      //add tooltips
+      utils.addTooltipByDomNode(Tooltip, this.domNode, this.widgetConfig.label);
 
       this.position = lang.clone(this.widgetConfig.position);
       if (this.widgetConfig.position.relativeTo === 'map') {
@@ -122,8 +145,8 @@ function(declare, lang, array, html, on, _WidgetBase, utils) {
           this.widgetManager.openWidget(widget);
           this.own(on(widget, 'close', lang.hitch(this, function(){
             this.switchToClose();
+            this.iconNode.parentNode.focus();
           })));
-
           this._hideLoading();
         }));
       }else{
@@ -132,6 +155,14 @@ function(declare, lang, array, html, on, _WidgetBase, utils) {
           this.panel = panel;
           this.own(on(panel, 'close', lang.hitch(this, function(){
             this.switchToClose();
+            this.iconNode.parentNode.focus();
+          })));
+
+          this.own(on(panel.closeNode, 'keydown', lang.hitch(this, function(evt){
+            if(evt.keyCode === keys.ESCAPE){
+              evt.stopPropagation(); //stop triggering panel's esc-event for dashboard theme
+              this.iconNode.parentNode.focus();
+            }
           })));
 
           this._hideLoading();

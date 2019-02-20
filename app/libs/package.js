@@ -19,14 +19,16 @@ var profile = {
 		// Files that should be copied as-is without being modified by the build system.
 		copyOnly: function (filename, mid) {
 			/* jshint unused:false */
-			return (/polyfills/).test(filename) || /caja-html-sanitizer-minified/.test(filename);
+			return (/polyfills/).test(filename) || /caja-html-sanitizer-minified/.test(filename)
+			 || /goldenlayout\/goldenlayout\.js/.test(filename) || /jquery/.test(filename) ||
+			 /moment/.test(filename) || /Sortable\.js/.test(filename) || /cropperjs\.js/.test(filename);
 		},
 
 		// Files that are AMD modules.
 		// All JavaScript in this package should be AMD modules if you are starting a new project. If you are copying
 		// any legacy scripts from an existing project, those legacy scripts should not be given the `amd` tag.
 		amd: function (filename, mid) {
-			return false;
+			return /echarts\/echarts\.js/.test(filename) || false;
 		},
 
 		// Files that should not be copied when the `mini` build flag is set to true.

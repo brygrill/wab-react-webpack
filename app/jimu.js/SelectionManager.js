@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -125,8 +125,11 @@ define([
       },
 
       clearSelection: function(featureLayer){
+        var def = new Deferred();
         this.clearDisplayLayer(featureLayer);
-        return this.updateSelectionByFeatures(featureLayer, [], FeatureLayer.SELECTION_NEW);
+        featureLayer.clearSelection();
+        def.resolve();
+        return def;
       },
 
       clearDisplayLayer: function(featureLayer){

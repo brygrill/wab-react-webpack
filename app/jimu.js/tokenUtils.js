@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,10 +30,11 @@ define([
   'esri/IdentityManager',
   'esri/arcgis/OAuthInfo',
   'jimu/portalUrlUtils',
-  'jimu/utils'
+  'jimu/utils',
+  'esri/layers/vectorTiles/kernel'
 ],
 function(lang, array, aspect, Deferred, cookie, json, topic, dojoScript, esriNS, esriConfig,
-  esriRequest, esriUrlUtils, IdentityManager, OAuthInfo, portalUrlUtils, jimuUtils) {
+  esriRequest, esriUrlUtils, IdentityManager, OAuthInfo, portalUrlUtils, jimuUtils, vectorTilesKernel) {
   /*jshint -W069 */
 
   //patch for JS API 3.10
@@ -145,6 +146,9 @@ function(lang, array, aspect, Deferred, cookie, json, topic, dojoScript, esriNS,
             if(!credential.token){
               credential.token = response.token;
             }
+            if(!credential.expires){
+              credential.expires = response.expires;
+            }
 
             //#releated issue 4096
             /*****************************************
@@ -176,6 +180,32 @@ function(lang, array, aspect, Deferred, cookie, json, topic, dojoScript, esriNS,
 
             //should not save credential of iwa to cookie because the cookie is not useful
             def.resolve(true);
+
+            function setRegenerateTokenTimer(cre){
+              var creationTime = cre.creationTime || new Date().getTime();
+              var expires = cre.expires;
+              if(creationTime > 0 && expires > 0 && expires > creationTime){
+                var span = expires - creationTime;
+                var time = span * 0.8;
+                setTimeout(function() {
+                  dojoScript.get(httpsTokenUrl, {
+                    jsonp: 'callback'
+                  }).then(function(res) {
+                    if (res.token) {
+                      cre.token = res.token;
+                      cre.expires = res.expires;
+                      cre.creationTime = new Date().getTime();
+                      cre.refreshServerTokens();
+                      setRegenerateTokenTimer(cre);
+                    }
+                  }, function(err) {
+                    console.error(err);
+                  });
+                }, time);
+              }
+            }
+
+            setRegenerateTokenTimer(credential);
           }), lang.hitch(this, function(){
             def.resolve(true);
           }));
@@ -819,6 +849,7 @@ function(lang, array, aspect, Deferred, cookie, json, topic, dojoScript, esriNS,
         var builderWindow = window.parent;
         if(builderWindow){
           var builderIM = builderWindow.esri && builderWindow.esri.id;
+          builderIM._wab = 'builder';
           if(builderIM){
             IdentityManager = builderIM;
             //use builder's IdentityManager
@@ -832,6 +863,15 @@ function(lang, array, aspect, Deferred, cookie, json, topic, dojoScript, esriNS,
             currentIO._processedCorsServers = builderIO._processedCorsServers;
             //for 3.12 and higher api
             currentIO.corsStatus = builderIO.corsStatus;
+
+            //because vector tile has it's own identity manager, so replce it here.
+            Object.defineProperty(vectorTilesKernel, "id", {
+              get: function () {
+                return builderIM;
+              },
+              enumerable: true,
+              configurable: true
+            });
           }
         }
       }

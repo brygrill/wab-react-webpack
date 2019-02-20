@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,13 +20,15 @@ define(['dojo/_base/declare',
   'dojox/validate/regexp'],
 function(declare, html, ValidationTextBox, regexp) {
   return declare([ValidationTextBox], {
+    declaredClass: 'jimu.dijit.URLInput',
+
+    //options:
     required:true,
     invalidMessage:"Invalid url.",
     trim: true,
     rest:true,
     allowNamed: true,
     allowLocal: true,
-    declaredClass: 'jimu.dijit.URLInput',
 
     postMixInProperties:function(){
       this.inherited(arguments);
@@ -40,6 +42,9 @@ function(declare, html, ValidationTextBox, regexp) {
     },
 
     validator:function(value){
+      if (false === this.required && "" === value) {
+        return true;
+      }
       //invalid if value is a number or a number string(e.g. 5 or "5")
       if(isFinite(value)){
         return false;
@@ -51,6 +56,7 @@ function(declare, html, ValidationTextBox, regexp) {
       });
 
       var reg = new RegExp(strReg, 'g');
+      reg.lastIndex = 0;
       var b1 = reg.test(value);
 
       if(this.rest){

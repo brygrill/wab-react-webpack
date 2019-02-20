@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,44 +35,16 @@ define([
   'esri/geometry/Point',
   'require',
   './utils',
-  './dijit/LoadingShelter',
   'jimu/LayerInfos/LayerInfos',
   'jimu/dijit/Message',
   'jimu/dijit/AppStatePopup',
   './MapUrlParamsHandler',
   './AppStateManager',
   './PopupManager',
-  './FilterManager',
-], function(
-  declare,
-  lang,
-  array,
-  html,
-  query,
-  topic,
-  on,
-  aspect,
-  keys,
-  i18n,
-  dojoConfig,
-  InfoWindow,
-  PopupMobile,
-  InfoTemplate,
-  esriRequest,
-  arcgisUtils,
-  Extent,
-  Point,
-  require,
-  jimuUtils,
-  LoadingShelter,
-  LayerInfos,
-  Message,
-  AppStatePopup,
-  MapUrlParamsHandler,
-  AppStateManager,
-  PopupManager,
-  FilterManager,
-) {
+  './FilterManager'
+], function(declare, lang, array, html, query, topic, on, aspect, keys, i18n, dojoConfig, InfoWindow,
+  PopupMobile, InfoTemplate, esriRequest, arcgisUtils, Extent, Point, require, jimuUtils,
+  LayerInfos, Message, AppStatePopup, MapUrlParamsHandler, AppStateManager, PopupManager, FilterManager) {
   var instance = null,
     clazz = declare(null, {
       appConfig: null,
@@ -84,7 +56,7 @@ define([
 
       layerInfosObj: null,
 
-      constructor: function(/*Object*/ options, mapDivId) {
+      constructor: function( /*Object*/ options, mapDivId) {
         this.appConfig = options.appConfig;
         this.urlParams = options.urlParams;
         this.mapDivId = mapDivId;
@@ -93,15 +65,9 @@ define([
         this.popupManager = PopupManager.getInstance(this);
         this.filterManager = FilterManager.getInstance();
         this.nls = window.jimuNls;
-        topic.subscribe(
-          'appConfigChanged',
-          lang.hitch(this, this.onAppConfigChanged),
-        );
-        topic.subscribe(
-          'changeMapPosition',
-          lang.hitch(this, this.onChangeMapPosition),
-        );
-        topic.subscribe('syncExtent', lang.hitch(this, this.onSyncExtent));
+        topic.subscribe("appConfigChanged", lang.hitch(this, this.onAppConfigChanged));
+        topic.subscribe("syncExtent", lang.hitch(this, this.onSyncExtent));
+        topic.subscribe("mapContentModified", lang.hitch(this, this.onMapContentModified));
 
         on(window, 'resize', lang.hitch(this, this.onWindowResize));
         on(window, 'beforeunload', lang.hitch(this, this.onBeforeUnload));
@@ -115,9 +81,6 @@ define([
       _showMap: function(appConfig) {
         // console.timeEnd('before map');
         console.time('Load Map');
-        this.loading = new LoadingShelter();
-        this.loading.placeAt(this.mapDivId);
-        this.loading.startup();
         //for now, we can't create both 2d and 3d map
         if (appConfig.map['3D']) {
           if (appConfig.map.itemId) {
@@ -129,15 +92,13 @@ define([
           if (appConfig.map.itemId) {
             this._show2DWebMap(appConfig);
           } else {
-            console.log(
-              'No webmap found. Please set map.itemId in config.json.',
-            );
+            console.log('No webmap found. Please set map.itemId in config.json.');
           }
         }
       },
 
       onBeforeUnload: function() {
-        if (this.appConfig.keepAppState) {
+        if(this.appConfig.keepAppState) {
           this.appStateManager.saveWabAppState(this.map, this.layerInfosObj);
         }
       },
@@ -149,32 +110,28 @@ define([
         }
       },
 
-      getMapInfoWindow: function() {
+      getMapInfoWindow: function(){
         return {
           mobile: this._mapMobileInfoWindow,
-          bigScreen: this._mapInfoWindow,
+          bigScreen: this._mapInfoWindow
         };
       },
 
       resetInfoWindow: function(isNewMap) {
-        if (isNewMap) {
+        if(isNewMap){
           this._mapInfoWindow = this.map.infoWindow;
-          if (this._mapMobileInfoWindow) {
+          if(this._mapMobileInfoWindow){
             this._mapMobileInfoWindow.destroy();
             // working around for bug of destroying _mapMobileInfoWindow is not completely.
-            query('div.esriMobileInfoView.esriMobilePopupInfoView').forEach(
-              function(node) {
-                html.destroy(node);
-              },
-            );
-            query('div.esriMobileNavigationBar').forEach(function(node) {
+            query("div.esriMobileInfoView.esriMobilePopupInfoView").forEach(function(node){
+              html.destroy(node);
+            });
+            query("div.esriMobileNavigationBar").forEach(function(node){
               html.destroy(node);
             });
           }
-          this._mapMobileInfoWindow = new PopupMobile(
-            null,
-            html.create('div', null, null, this.map.root),
-          );
+          this._mapMobileInfoWindow =
+          new PopupMobile(null, html.create("div", null, null, this.map.root));
           this.isMobileInfoWindow = false;
         }
         if (jimuUtils.inMobileSize() && !this.isMobileInfoWindow) {
@@ -188,28 +145,8 @@ define([
         }
       },
 
-      onChangeMapPosition: function(position) {
-        var pos = lang.clone(this.mapPosition);
-        lang.mixin(pos, position);
-        this.setMapPosition(pos);
-      },
-
-      setMapPosition: function(position) {
-        this.mapPosition = position;
-
-        var posStyle = jimuUtils.getPositionStyle(position);
-        html.setStyle(this.mapDivId, posStyle);
-        if (this.map && this.map.resize) {
-          this.map.resize();
-        }
-      },
-
-      getMapPosition: function() {
-        return this.mapPosition;
-      },
-
-      onSyncExtent: function(map) {
-        if (this.map) {
+      onSyncExtent: function(map){
+        if(this.map){
           var extJson = map.extent;
           var ext = new Extent(extJson);
           this.map.setExtent(ext);
@@ -217,23 +154,15 @@ define([
       },
 
       _visitConfigMapLayers: function(appConfig, cb) {
-        array.forEach(
-          appConfig.map.basemaps,
-          function(layerConfig, i) {
-            layerConfig.isOperationalLayer = false;
-            cb(layerConfig, i);
-          },
-          this,
-        );
+        array.forEach(appConfig.map.basemaps, function(layerConfig, i) {
+          layerConfig.isOperationalLayer = false;
+          cb(layerConfig, i);
+        }, this);
 
-        array.forEach(
-          appConfig.map.operationallayers,
-          function(layerConfig, i) {
-            layerConfig.isOperationalLayer = true;
-            cb(layerConfig, i);
-          },
-          this,
-        );
+        array.forEach(appConfig.map.operationallayers, function(layerConfig, i) {
+          layerConfig.isOperationalLayer = true;
+          cb(layerConfig, i);
+        }, this);
       },
 
       _show3DLayersMap: function(appConfig) {
@@ -241,57 +170,40 @@ define([
           var initCamera = appConfig.map.mapOptions.camera,
             map;
           map = new Map(this.mapDivId, {
-            camera: initCamera,
+            camera: initCamera
           });
-          this._visitConfigMapLayers(
-            appConfig,
-            lang.hitch(this, function(layerConfig) {
-              this.createLayer(map, '3D', layerConfig);
-            }),
-          );
+          this._visitConfigMapLayers(appConfig, lang.hitch(this, function(layerConfig) {
+            this.createLayer(map, '3D', layerConfig);
+          }));
           map.usePlugin = Map.usePlugin;
           this._publishMapEvent(map);
         }));
       },
 
       _show3DWebScene: function(appConfig) {
-        this._getWebsceneData(appConfig.map.itemId).then(
-          lang.hitch(this, function(data) {
-            require(['esri3d/Map'], lang.hitch(this, function(Map) {
-              var map = new Map(this.mapDivId, appConfig.map.mapOptions);
+        this._getWebsceneData(appConfig.map.itemId).then(lang.hitch(this, function(data) {
+          require(['esri3d/Map'], lang.hitch(this, function(Map) {
+            var map = new Map(this.mapDivId, appConfig.map.mapOptions);
 
-              array.forEach(
-                data.itemData.operationalLayers,
-                function(layerConfig) {
-                  this.createLayer(map, '3D', layerConfig);
-                },
-                this,
-              );
+            array.forEach(data.itemData.operationalLayers, function(layerConfig) {
+              this.createLayer(map, '3D', layerConfig);
+            }, this);
 
-              array.forEach(
-                data.itemData.baseMap.baseMapLayers,
-                function(layerConfig) {
-                  layerConfig.type = 'tile';
-                  this.createLayer(map, '3D', layerConfig);
-                },
-                this,
-              );
+            array.forEach(data.itemData.baseMap.baseMapLayers, function(layerConfig) {
+              layerConfig.type = "tile";
+              this.createLayer(map, '3D', layerConfig);
+            }, this);
 
-              array.forEach(
-                data.itemData.baseMap.elevationLayers,
-                function(layerConfig) {
-                  layerConfig.type = 'elevation';
-                  this.createLayer(map, '3D', layerConfig);
-                },
-                this,
-              );
+            array.forEach(data.itemData.baseMap.elevationLayers, function(layerConfig) {
+              layerConfig.type = "elevation";
+              this.createLayer(map, '3D', layerConfig);
+            }, this);
 
-              map.toc = data.itemData.toc;
-              map.bookmarks = data.itemData.bookmarks;
-              map.tours = data.itemData.tours;
-            }));
-          }),
-        );
+            map.toc = data.itemData.toc;
+            map.bookmarks = data.itemData.bookmarks;
+            map.tours = data.itemData.tours;
+          }));
+        }));
       },
 
       _publishMapEvent: function(map) {
@@ -305,21 +217,18 @@ define([
           this.map = map;
           this.resetInfoWindow(true);
           console.log('map changed.');
-          topic.publish('mapChanged', this.map);
+          topic.publish('mapChanged', this.map, this.layerInfosObj);
         } else {
           this.map = map;
           this.resetInfoWindow(true);
-          topic.publish('mapLoaded', this.map);
+          topic.publish('mapLoaded', this.map, this.layerInfosObj);
         }
       },
 
       _getWebsceneData: function(itemId) {
         return esriRequest({
-          url:
-            'http://184.169.133.166/sharing/rest/content/items/' +
-            itemId +
-            '/data',
-          handleAs: 'json',
+          url: 'http://184.169.133.166/sharing/rest/content/items/' + itemId + '/data',
+          handleAs: "json"
         });
       },
 
@@ -329,11 +238,10 @@ define([
         //   var url = portalUrlUtils.getStandardPortalUrl(appConfig.portalUrl);
         //   agolUtils.arcgisUrl = url + "/sharing/content/items/";
         // }
-        if (!appConfig.map.mapOptions) {
+        if(!appConfig.map.mapOptions){
           appConfig.map.mapOptions = {};
         }
-        var mapOptions =
-          this._processMapOptions(appConfig.map.mapOptions) || {};
+        var mapOptions = this._processMapOptions(appConfig.map.mapOptions) || {};
         mapOptions.isZoomSlider = false;
 
         var webMapPortalUrl = appConfig.map.portalUrl;
@@ -341,296 +249,260 @@ define([
         var webMapOptions = {
           mapOptions: mapOptions,
           bingMapsKey: appConfig.bingMapsKey,
-          usePopupManager: true,
+          usePopupManager: true
         };
 
-        if (
-          !window.isBuilder &&
-          !appConfig.mode &&
-          appConfig.map.appProxy &&
-          appConfig.map.appProxy.mapItemId === appConfig.map.itemId
-        ) {
+        if(!window.isBuilder && !appConfig.mode && appConfig.map.appProxy &&
+            appConfig.map.appProxy.mapItemId === appConfig.map.itemId) {
           var layerMixins = [];
-          array.forEach(appConfig.map.appProxy.proxyItems, function(proxyItem) {
+          array.forEach(appConfig.map.appProxy.proxyItems, function(proxyItem){
             if (proxyItem.useProxy && proxyItem.proxyUrl) {
               layerMixins.push({
                 url: proxyItem.sourceUrl,
                 mixin: {
-                  url: proxyItem.proxyUrl,
-                },
+                  url: proxyItem.proxyUrl
+                }
               });
             }
           });
 
-          if (layerMixins.length > 0) {
+          if(layerMixins.length > 0) {
             webMapOptions.layerMixins = layerMixins;
           }
         }
 
-        var mapDeferred = this._createWebMapRaw(
-          webMapPortalUrl,
-          webMapItemId,
-          this.mapDivId,
-          webMapOptions,
-        );
+        var mapDeferred = this._createWebMapRaw(webMapPortalUrl, webMapItemId, this.mapDivId, webMapOptions);
 
-        mapDeferred.then(
-          lang.hitch(this, function(response) {
-            var map = response.map;
+        mapDeferred.then(lang.hitch(this, function(response) {
+          var map = response.map;
 
-            //hide the default zoom slider
-            map.hideZoomSlider();
+          //hide the default zoom slider
+          map.hideZoomSlider();
 
-            // set default size of infoWindow.
-            map.infoWindow.resize(270, 316);
-            //var extent;
-            map.itemId = appConfig.map.itemId;
-            map.itemInfo = response.itemInfo;
-            map.webMapResponse = response;
-            // enable snapping
-            var options = {
-              snapKey: keys.copyKey,
-            };
-            map.enableSnapping(options);
+          // set default size of infoWindow.
+          map.infoWindow.resize(270, 316);
+          //var extent;
+          map.itemId = appConfig.map.itemId;
+          map.itemInfo = response.itemInfo;
+          map.webMapResponse = response;
+          // enable snapping
+          var options = {
+            snapKey: keys.copyKey
+          };
+          map.enableSnapping(options);
 
-            html.setStyle(map.root, 'zIndex', 0);
+          html.setStyle(map.root, 'zIndex', 0);
 
-            map._initialExtent = map.extent;
+          map._initialExtent = map.extent;
 
-            LayerInfos.getInstance(map, map.itemInfo).then(
-              lang.hitch(this, function(layerInfosObj) {
-                this.layerInfosObj = layerInfosObj;
-                this._showUnreachableLayersTitleMessage();
-                this._publishMapEvent(map);
-                setTimeout(lang.hitch(this, this._checkAppState), 500);
-                this.loading.hide();
-                this._addDataLoadingOnMapUpdate(map);
-              }),
-            );
-          }),
-          lang.hitch(this, function(error) {
-            console.error(error);
-            this._destroyLoadingShelter();
-            this._showError(error);
-            topic.publish('mapCreatedFailed');
-          }),
-        );
+          this.layerInfosObj = LayerInfos.getInstanceSyncForInit(map, map.itemInfo);
+
+          //save layer's original refreshInterval
+          this.layerInfosObj.getLayerInfoArrayOfWebmap().forEach(function(layerInfo) {
+            layerInfo.getLayerObject().then(lang.hitch(this, function(layerObject){
+              if(layerObject){
+                lang.setObject("_wabProperties.originalRefreshinterval", layerObject.refreshInterval, layerObject);
+              }
+            }), lang.hitch(this, function(err){
+              console.error("can't get layerObject", err);
+            }));
+          }, this);
+
+          if(appConfig.map.mapRefreshInterval && !appConfig.map.mapRefreshInterval.useWebMapRefreshInterval){
+            this._updateRefreshInterval(appConfig.map.mapRefreshInterval);
+          }
+
+          this._showUnreachableLayersTitleMessage();
+          this._publishMapEvent(map);
+          setTimeout(lang.hitch(this, this._checkAppState), 500);
+          this._addDataLoadingOnMapUpdate(map);
+        }), lang.hitch(this, function(error) {
+          console.error(error);
+          this._showError(error);
+          topic.publish('mapCreatedFailed');
+        }));
       },
 
-      _showError: function(err) {
-        if (err && err.message) {
-          html.create(
-            'div',
-            {
-              class: 'app-error',
-              innerHTML: err.message,
-            },
-            document.body,
-          );
+      _handleRefreshLayer: function(featureLayer){
+        // var layerId = "Wildfire_5334";
+        //before refresh => update-start => after refresh => get data => graphic-remove => graphic-add => update-end
+        var _drawFeatures = featureLayer._mode._drawFeatures;
+        var _clearIf = featureLayer._mode._clearIIf;
+        var _cellMap = null;
+        featureLayer._mode._drawFeatures = function(response, cell) {
+          /*jshint unused: false*/
+          // console.log(response);
+          if (cell && typeof cell.row === 'number' && typeof cell.col === 'number') {
+            featureLayer._mode._removeCell(cell.row, cell.col);
+          }
+          _drawFeatures.apply(featureLayer._mode, arguments);
+        };
+        aspect.before(featureLayer, 'refresh', function() {
+          // console.log("before refresh");
+          _cellMap = featureLayer._mode._cellMap;
+          featureLayer._mode._clearIIf = function() {};
+        });
+        aspect.after(featureLayer, 'refresh', function() {
+          // console.log("after refresh");
+          featureLayer._mode._cellMap = _cellMap;
+          featureLayer._mode._clearIIf = _clearIf;
+        });
+
+        on(featureLayer, 'update-start', function(){
+          // console.log('update-start');
+          featureLayer.isUpdating = true;
+        });
+
+        on(featureLayer, 'update-end', function(){
+          // console.log('update-end');
+          featureLayer.isUpdating = false;
+        });
+
+        // on(featureLayer, 'graphic-add', function(){
+        //   console.log('graphic-add');
+        // });
+
+        // on(featureLayer, 'graphic-remove', function(){
+        //   console.log('graphic-remove');
+        // });
+
+        // on(featureLayer, 'graphics-clear', function(){
+        //   console.log('graphics-clear');
+        // });
+      },
+
+      _showError: function(err){
+        if(err && err.message){
+          html.create('div', {
+            'class': 'app-error',
+            innerHTML: err.message
+          }, document.body);
         }
       },
 
-      _createWebMapRaw: function(
-        webMapPortalUrl,
-        webMapItemId,
-        mapDivId,
-        webMapOptions,
-      ) {
-        var mapDef = jimuUtils.createWebMap(
-          webMapPortalUrl,
-          webMapItemId,
-          mapDivId,
-          webMapOptions,
-        );
-        return mapDef.then(
-          lang.hitch(this, function(response) {
-            return response;
-          }),
-          lang.hitch(this, function(error) {
-            console.error(error);
-            if (error && error instanceof Error && error.message) {
-              var cache = i18n.cache;
-              var key = 'esri/nls/jsapi/' + dojoConfig.locale;
-              /*if(dojoConfig.locale !== 'en'){
+      _createWebMapRaw: function(webMapPortalUrl, webMapItemId, mapDivId,  webMapOptions){
+        var mapDef = jimuUtils.createWebMap(webMapPortalUrl, webMapItemId, mapDivId, webMapOptions);
+        return mapDef.then(lang.hitch(this, function(response){
+          return response;
+        }), lang.hitch(this, function(error){
+          console.error(error);
+          if(error && error instanceof Error && error.message){
+            var cache = i18n.cache;
+            var key = "esri/nls/jsapi/" + dojoConfig.locale;
+            /*if(dojoConfig.locale !== 'en'){
               key += "/" + dojoConfig.locale;
             }*/
-              var esriLocaleNls = cache[key];
-              var str = lang.getObject(
-                'arcgis.utils.baseLayerError',
-                false,
-                esriLocaleNls,
-              );
-              if (str && error.message.indexOf(str) >= 0) {
-                new Message({
-                  message:
-                    window.jimuNls.map.basemapNotAvailable +
-                    window.jimuNls.map.displayDefaultBasemap,
-                });
-                return arcgisUtils.getItem(webMapItemId).then(
-                  lang.hitch(this, function(itemInfo) {
-                    itemInfo.itemData.spatialReference = {
-                      wkid: 102100,
-                      latestWkid: 3857,
-                    };
-                    itemInfo.itemData.baseMap = {
-                      baseMapLayers: [
-                        {
-                          url:
-                            'http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer',
-                          opacity: 1,
-                          layerType: 'ArcGISTiledMapServiceLayer',
-                          visibility: true,
-                          id: 'defaultBasemap_0',
-                        },
-                      ],
-                      title: 'Topographic',
-                    };
-                    return jimuUtils.createWebMap(
-                      webMapPortalUrl,
-                      itemInfo,
-                      mapDivId,
-                      webMapOptions,
-                    );
-                  }),
-                );
-              }
+            var esriLocaleNls = cache[key];
+            var str = lang.getObject("arcgis.utils.baseLayerError", false, esriLocaleNls);
+            if(str && error.message.indexOf(str) >= 0){
+              //The original basemap is not available. We can create the webmap with another basemap layer.
+              new Message({
+                message: window.jimuNls.map.basemapNotAvailable + window.jimuNls.map.displayDefaultBasemap
+              });
+              return arcgisUtils.getItem(webMapItemId).then(lang.hitch(this, function(itemInfo){
+                itemInfo.itemData.spatialReference = {
+                  wkid: 102100,
+                  latestWkid: 3857
+                };
+                itemInfo.itemData.baseMap = {
+                  baseMapLayers: [{
+                    url: "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
+                    opacity: 1,
+                    layerType: "ArcGISTiledMapServiceLayer",
+                    visibility: true,
+                    id: "defaultBasemap_0"
+                  }],
+                  title: "Topographic"
+                };
+                return jimuUtils.createWebMap(webMapPortalUrl, itemInfo, mapDivId, webMapOptions);
+              }));
             }
+          }
 
-            throw error;
-          }),
-        );
+          throw error;
+        }));
       },
 
       _showUnreachableLayersTitleMessage: function() {
         var unreachableLayersTitle = this.layerInfosObj.getUnreachableLayersTitle();
-        var layersTitleString = '';
-        var message =
-          window.jimuNls.map.layerLoadedError ||
-          'The layer, ${layers} cannot be added to the map.';
-        if (
-          message &&
-          unreachableLayersTitle &&
-          unreachableLayersTitle.length > 0
-        ) {
-          array.forEach(
-            unreachableLayersTitle,
-            lang.hitch(this, function(title) {
-              layersTitleString = layersTitleString + title + ', ';
-            }),
-          );
+        var layersTitleString = "";
+        var message = window.jimuNls.map.layerLoadedError ||
+          "The layer, ${layers} cannot be added to the map.";
+        if(message && unreachableLayersTitle && unreachableLayersTitle.length > 0) {
+          array.forEach(unreachableLayersTitle, lang.hitch(this, function(title) {
+            layersTitleString = layersTitleString +  title + ", ";
+          }));
 
           new Message({
-            message: message.replace('${layers}', layersTitleString),
+            message: message.replace("${layers}", layersTitleString)
           });
         }
       },
 
       _addDataLoadingOnMapUpdate: function(map) {
-        var loadHtml =
-          '<div class="load-container">' +
-          '<div class="loader">Loading...</div>' +
-          '</div>';
+        var loadHtml = '<div class="map-loading">Loading...</div>';
         var loadContainer = html.toDom(loadHtml);
         html.place(loadContainer, map.root);
-        if (map.updating) {
+        if(map.updating){
           html.addClass(loadContainer, 'loading');
         }
-        on(
-          map,
-          'update-start',
-          lang.hitch(this, function() {
-            html.addClass(loadContainer, 'loading');
-          }),
-        );
-        on(
-          map,
-          'update-end',
-          lang.hitch(this, function() {
-            html.removeClass(loadContainer, 'loading');
-          }),
-        );
-        on(
-          map,
-          'unload',
-          lang.hitch(this, function() {
-            html.destroy(loadContainer);
-            loadContainer = null;
-            this._destroyLoadingShelter();
-          }),
-        );
-      },
-
-      _destroyLoadingShelter: function() {
-        if (this.loading) {
-          this.loading.destroy();
-          this.loading = null;
-        }
+        on(map, 'update-start', lang.hitch(this, function() {
+          html.addClass(loadContainer, 'loading');
+        }));
+        on(map, 'update-end', lang.hitch(this, function() {
+          html.removeClass(loadContainer, 'loading');
+        }));
+        on(map, 'unload', lang.hitch(this, function() {
+          html.destroy(loadContainer);
+          loadContainer = null;
+        }));
       },
 
       _checkAppState: function() {
         //URL parameters that affect map extent
-        var urlKeys = [
-          'extent',
-          'center',
-          'marker',
-          'find',
-          'query',
-          'scale',
-          'level',
-        ];
+        var urlKeys = ['extent', 'center', 'marker', 'find', 'query', 'scale', 'level'];
         var useAppState = this.appConfig.keepAppState;
 
-        if (useAppState) {
-          array.forEach(
-            urlKeys,
-            function(k) {
-              if (k in this.urlParams) {
-                useAppState = false;
-              }
-            },
-            this,
-          );
+        if(useAppState) {
+          array.forEach(urlKeys, function(k){
+            if(k in this.urlParams){
+              useAppState = false;
+            }
+          }, this);
         }
 
-        if (useAppState) {
-          this.appStateManager.getWabAppState().then(
-            lang.hitch(this, function(stateData) {
-              if (stateData.extent || stateData.layers) {
-                var appStatePopup = new AppStatePopup({
-                  nls: {
-                    title: this.nls.appState.title,
-                    restoreMap: this.nls.appState.restoreMap,
-                  },
-                });
-                appStatePopup.placeAt('main-page');
-                on(
-                  appStatePopup,
-                  'applyAppState',
-                  lang.hitch(this, function() {
-                    this._applyAppState(stateData, this.map);
-                  }),
-                );
-                appStatePopup.startup();
-                /* CUSTOM MAP STATE START */
-                console.log('applying App State via custom override');
+        if(useAppState){
+          this.appStateManager.getWabAppState().then(lang.hitch(this, function(stateData) {
+            if (stateData.extent || stateData.layers) {
+              var appStatePopup = new AppStatePopup({
+                nls: {
+                  title: this.nls.appState.title,
+                  restoreMap: this.nls.appState.restoreMap
+                }
+              });
+              appStatePopup.placeAt('main-page');
+              on(appStatePopup, 'applyAppState', lang.hitch(this, function() {
                 this._applyAppState(stateData, this.map);
-                // appStatePopup.show();
-                /* CUSTOM MAP STATE END */
-              }
-            }),
-          );
+              }));
+              appStatePopup.startup();
+              /* CUSTOM MAP STATE START */
+              console.log('applying App State via custom override');
+              this._applyAppState(stateData, this.map);
+              // appStatePopup.show();
+              /* CUSTOM MAP STATE END */
+            }
+          }));
         }
       },
 
       _applyAppState: function(stateData, map) {
         var layerOptions = stateData.layers;
         this.layerInfosObj.restoreState({
-          layerOptions: layerOptions || null,
+          layerOptions: layerOptions || null
         });
         if (stateData.extent) {
           map.setExtent(stateData.extent);
         }
-        this._publishMapEvent(map);
       },
 
       _processMapOptions: function(mapOptions) {
@@ -638,10 +510,10 @@ define([
           return;
         }
 
-        if (!mapOptions.lods) {
+        if(!mapOptions.lods){
           delete mapOptions.lods;
         }
-        if (mapOptions.lods && mapOptions.lods.length === 0) {
+        if(mapOptions.lods && mapOptions.lods.length === 0){
           delete mapOptions.lods;
         }
 
@@ -653,10 +525,7 @@ define([
           ret.center = new Point(ret.center);
         }
         if (ret.infoWindow) {
-          ret.infoWindow = new InfoWindow(
-            ret.infoWindow,
-            html.create('div', {}, this.mapDivId),
-          );
+          ret.infoWindow = new InfoWindow(ret.infoWindow, html.create('div', {}, this.mapDivId));
         }
 
         return ret;
@@ -678,79 +547,100 @@ define([
           '3D_image': 'esri3d/layers/ArcGISImageServiceLayer',
           '3D_feature': 'esri3d/layers/FeatureLayer',
           '3D_elevation': 'esri3d/layers/ArcGISElevationServiceLayer',
-          '3D_3dmodle': 'esri3d/layers/SceneLayer',
+          '3D_3dmodle': 'esri3d/layers/SceneLayer'
         };
 
-        require([layMap[maptype + '_' + layerConfig.type]], lang.hitch(
-          this,
-          function(layerClass) {
-            var layer,
-              infoTemplate,
-              options = {},
-              keyProperties = [
-                'label',
-                'url',
-                'type',
-                'icon',
-                'infoTemplate',
-                'isOperationalLayer',
-              ];
-            for (var p in layerConfig) {
-              if (keyProperties.indexOf(p) < 0) {
-                options[p] = layerConfig[p];
-              }
+        require([layMap[maptype + '_' + layerConfig.type]], lang.hitch(this, function(layerClass) {
+          var layer, infoTemplate, options = {},
+            keyProperties = ['label', 'url', 'type', 'icon', 'infoTemplate', 'isOperationalLayer'];
+          for (var p in layerConfig) {
+            if (keyProperties.indexOf(p) < 0) {
+              options[p] = layerConfig[p];
             }
-            if (layerConfig.infoTemplate) {
-              infoTemplate = new InfoTemplate(
-                layerConfig.infoTemplate.title,
-                layerConfig.infoTemplate.content,
-              );
-              options.infoTemplate = infoTemplate;
+          }
+          if (layerConfig.infoTemplate) {
+            infoTemplate = new InfoTemplate(layerConfig.infoTemplate.title,
+              layerConfig.infoTemplate.content);
+            options.infoTemplate = infoTemplate;
 
-              layer = new layerClass(layerConfig.url, options);
+            layer = new layerClass(layerConfig.url, options);
 
-              if (
-                layerConfig.infoTemplate.width &&
-                layerConfig.infoTemplate.height
-              ) {
-                aspect.after(
-                  layer,
-                  'onClick',
-                  lang.hitch(this, function() {
-                    map.infoWindow.resize(
-                      layerConfig.infoTemplate.width,
-                      layerConfig.infoTemplate.height,
-                    );
-                  }),
-                  true,
-                );
-              }
-            } else {
-              layer = new layerClass(layerConfig.url, options);
+            if (layerConfig.infoTemplate.width && layerConfig.infoTemplate.height) {
+              aspect.after(layer, 'onClick', lang.hitch(this, function() {
+                map.infoWindow.resize(layerConfig.infoTemplate.width,
+                  layerConfig.infoTemplate.height);
+              }), true);
             }
+          } else {
+            layer = new layerClass(layerConfig.url, options);
+          }
 
-            layer.isOperationalLayer = layerConfig.isOperationalLayer;
-            layer.label = layerConfig.label;
-            layer.icon = layerConfig.icon;
-            map.addLayer(layer);
-          },
-        ));
+          layer.isOperationalLayer = layerConfig.isOperationalLayer;
+          layer.label = layerConfig.label;
+          layer.icon = layerConfig.icon;
+          map.addLayer(layer);
+        }));
       },
 
       onAppConfigChanged: function(appConfig, reason, changedJson) {
         // jshint unused:false
         this.appConfig = appConfig;
-        if (reason === 'mapChange') {
+        if(reason === 'mapChange'){
           this._recreateMap(appConfig);
-        } else if (reason === 'mapOptionsChange') {
-          if (changedJson.lods) {
+        }else if(reason === 'mapOptionsChange'){
+          if(changedJson.lods){
             this._recreateMap(appConfig);
+          }
+        }else if(reason === 'mapRefreshIntervalChange'){
+          var itemData = this.map && this.map.itemInfo.itemData;
+          if (itemData && this.layerInfosObj) {
+            this._updateRefreshInterval(changedJson);
           }
         }
       },
 
-      _recreateMap: function(appConfig) {
-        if (this.map) {
+      onMapContentModified: function() {
+        this._recreateMap(this.appConfig);
+      },
+
+      _updateRefreshInterval: function(refreshInterval){
+        var minutes = -1;
+
+        if (refreshInterval.useWebMapRefreshInterval) {
+          //Honor the individual interval of each layer
+          minutes = -1;
+        } else {
+          //Use a single interval for all layers
+          minutes = refreshInterval.minutes;
+        }
+
+        this.layerInfosObj.getLayerInfoArrayOfWebmap().forEach(function(layerInfo) {
+          layerInfo.getLayerObject().then(lang.hitch(this, function(layerObject) {
+            if(!layerObject){
+              return;
+            }
+            //only handle non-static layer
+            var originalRefreshinterval = lang.getObject("_wabProperties.originalRefreshinterval", false, layerObject);
+
+            if(originalRefreshinterval > 0){
+              if (typeof layerObject.setRefreshInterval === 'function') {
+                if (minutes < 0) {
+                  //Honor the individual interval of each layer
+                  layerObject.setRefreshInterval(originalRefreshinterval);
+                } else {
+                  //Use a single interval for all layers
+                  layerObject.setRefreshInterval(minutes);
+                }
+              }
+            }
+          }), lang.hitch(this, function(err) {
+            console.error("can't get layerObject", err);
+          }));
+        }, this);
+      },
+
+      _recreateMap: function(appConfig){
+        if(this.map){
           topic.publish('beforeMapDestory', this.map);
           this.map.destroy();
         }
@@ -763,7 +653,8 @@ define([
 
       enableWebMapPopup: function() {
         this.map.setInfoWindowOnClick(true);
-      },
+      }
+
     });
 
   clazz.getInstance = function(options, mapDivId) {

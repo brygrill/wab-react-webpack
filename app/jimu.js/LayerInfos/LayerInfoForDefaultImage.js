@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2016 Esri. All Rights Reserved.
+// Copyright © 2014 - 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -181,6 +181,15 @@ define([
         def.resolve(resultValue);
       });
       return def;
+    },
+
+    /***************************************************
+     * methods for control service definition
+     ***************************************************/
+    _getServiceDefinition: function() {
+      var url = this.getUrl();
+      var requestProxy = this._serviceDefinitionBuffer.getRequest(this.subId);
+      return requestProxy.request(url);
     },
 
     /****************
