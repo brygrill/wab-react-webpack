@@ -21,9 +21,9 @@
   },
   "dependencies": {
     "lodash": "^4.17.11",
-    "prop-types": "^15.6.2",
-    "semantic-ui-react": "^0.84.0",
-    "styled-components": "^4.1.2"
+    "prop-types": "^15.7.2",
+    "semantic-ui-react": "^0.87.1",
+    "styled-components": "^4.2.1"
   },
   "peerDependencies": {
     "react": "^16.8.6",
