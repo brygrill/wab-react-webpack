@@ -5,7 +5,7 @@ const Dotenv = require('dotenv-webpack');
 const packageJson = require('./package.json');
 
 module.exports = {
-  entry: ['@babel/polyfill', './src/index.js'],
+  entry: ['./src/index.js'],
   devtool: 'source-map',
   mode: 'production',
   output: {

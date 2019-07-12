@@ -1,7 +1,7 @@
 import React from 'react';
-import 'react-testing-library/cleanup-after-each';
-import { render, cleanup, wait } from 'react-testing-library';
-import 'jest-dom/extend-expect';
+import '@testing-library/react/cleanup-after-each';
+import { render, cleanup, wait } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
 import MyComponent from '../components/MyComponent';
 

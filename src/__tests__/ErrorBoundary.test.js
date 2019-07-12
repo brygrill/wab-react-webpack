@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, cleanup } from 'react-testing-library';
+import { render, cleanup } from '@testing-library/react';
 import { StateMock } from '@react-mock/state';
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 
 import ErrorBoundary from '../components/ErrorBoundary';
 
