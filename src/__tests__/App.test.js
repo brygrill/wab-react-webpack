@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, wait, cleanup } from 'react-testing-library';
-import 'jest-dom/extend-expect';
+import { render, wait, cleanup } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
 import App from '../components/App';
 
