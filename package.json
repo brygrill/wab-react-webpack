@@ -48,6 +48,7 @@
     "babel-plugin-styled-components": "^1.10.0",
     "browser-sync": "^2.26.5",
     "css-loader": "^1.0.1",
+    "del": "^5.0.0",
     "dotenv-webpack": "^1.5.7",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.1",
