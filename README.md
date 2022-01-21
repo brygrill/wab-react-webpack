@@ -1,10 +1,11 @@
+# This repo is archived now!
+
 # :globe_with_meridians: Web AppBuilder + React Template
 
 A template for building custom WAB widgets with React and modern JS.
 
 [![CircleCI](https://circleci.com/gh/brygrill/wab-react-webpack.svg?style=svg)](https://circleci.com/gh/brygrill/wab-react-webpack)
 
-> ### Heads Up! As of v1.2, components have been migrated to [Hooks](https://reactjs.org/docs/hooks-intro.html).
 
 ## How It Works
 
