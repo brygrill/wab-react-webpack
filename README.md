@@ -1,4 +1,4 @@
-# This repo is archived now!
+### Heads up! This repo is archived. I don't use this for work anymore, and don't have the bandwidth to maintain. It needs to be rewritten with Typescript and newer build tools anyway. 
 
 # :globe_with_meridians: Web AppBuilder + React Template
 
